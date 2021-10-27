@@ -1,8 +1,8 @@
 package com.connect.oneboardserver.web;
 
-import com.connect.oneboardserver.domain.posts.Posts;
-import com.connect.oneboardserver.domain.posts.PostsRepository;
-import com.connect.oneboardserver.web.dto.PostsSaveRequestDto;
+import com.connect.oneboardserver.domain.lesson.Lesson;
+import com.connect.oneboardserver.domain.lesson.LessonRepository;
+import com.connect.oneboardserver.web.dto.LessonCreateRequestDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,13 +15,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class PostsApiControllerTest {
+public class LessonApiControllerTest {
 
     @LocalServerPort
     private int port;
@@ -30,27 +31,35 @@ public class PostsApiControllerTest {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private PostsRepository postsRepository;
+    private LessonRepository lessonRepository;
 
     @AfterEach
     public void tearDown() throws Exception {
-        postsRepository.deleteAll();
+        lessonRepository.deleteAll();
     }
 
     @Test
-    @DisplayName("Posts 등록하기")
-    public void requestSavePost() {
+    @DisplayName("수업 생성하기")
+    public void requestCreateLesson() {
         // given
-        String title = "title";
-        String content = "content";
+        String title = "Test Title";
+        LocalDateTime date = LocalDateTime.now();
+        String note = "lesson note file url";
+        int type = 1;
+        String room = "Paldal 410";
+        String meeting_id = "zoom meeting url";
+        String video_url = "lesson video url";
 
-        PostsSaveRequestDto requestDto = PostsSaveRequestDto.builder()
+        LessonCreateRequestDto requestDto = LessonCreateRequestDto.builder()
                 .title(title)
-                .content(content)
-                .author("author")
+                .date(date).note(note)
+                .type(type)
+                .room(room)
+                .meeting_id(meeting_id)
+                .video_url(video_url)
                 .build();
 
-        String url = "http://localhost:" + port + "/api/v1/posts";
+        String url = "http://localhost:" + port + "/lecture/lesson";
 
         // when
         ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url, requestDto, Long.class);
@@ -59,8 +68,8 @@ public class PostsApiControllerTest {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isGreaterThan(0L);
 
-        List<Posts> all = postsRepository.findAll();
+        List<Lesson> all = lessonRepository.findAll();
         assertThat(all.get(0).getTitle()).isEqualTo(title);
-        assertThat(all.get(0).getContent()).isEqualTo(content);
+        assertThat(all.get(0).getDate()).isEqualTo(date);
     }
 }
