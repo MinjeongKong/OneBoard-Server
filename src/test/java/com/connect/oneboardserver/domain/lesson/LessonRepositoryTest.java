@@ -20,10 +20,10 @@ public class LessonRepositoryTest {
     @Autowired
     LessonRepository lessonRepository;
 
-    @AfterEach
-    public void cleanUp() {
-        lessonRepository.deleteAll();
-    }
+//    @AfterEach
+//    public void cleanUp() {
+//        lessonRepository.deleteAll();
+//    }
 
     @Test
     @DisplayName("수업 생성 및 불러오기")
