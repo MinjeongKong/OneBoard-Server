@@ -16,7 +16,7 @@ public class Member {
     private Long id;
 
     @Column(length = 30, nullable = false)
-    private String student_num;
+    private String studentNumber;
 
     @Column(length = 30, nullable = false)
     private String name;
@@ -24,8 +24,8 @@ public class Member {
     @Column(length = 30, nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private int user_type;
+    @Column(length = 30, nullable = false)
+    private String user_type;    // S = 학생, T = 강의자
 
     @Column(length = 30, nullable = false)
     private String email;
@@ -40,8 +40,8 @@ public class Member {
     private String lecture_id;
 
     @Builder
-    public Member(String student_num, String name, String password, int user_type, String email, String university, String major, String lecture_id) {
-        this.student_num = student_num;
+    public Member(String studentNumber, String name, String password, String user_type, String email, String university, String major, String lecture_id) {
+        this.studentNumber = studentNumber;
         this.name = name;
         this.password = password;
         this.user_type = user_type;

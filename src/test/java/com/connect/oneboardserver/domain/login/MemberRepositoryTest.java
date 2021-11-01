@@ -30,7 +30,7 @@ public class MemberRepositoryTest {
         String name = "Minjeong Kong";
         String password = "0000";
         String email = "kong1301@ajou.ac.kr";
-        int user_type = 0;
+        String user_type = "S";
         String university = "Ajou";
         String major = "Software";
         String lecture_id = "F034";
@@ -51,8 +51,7 @@ public class MemberRepositoryTest {
 
         //then
         Member a = memberList.get(0);
-        assertThat(a.getStudent_num()).isEqualTo(student_num);
+        assertThat(a.getStudentNumber()).isEqualTo(student_num);
         assertThat(a.getEmail()).isEqualTo(email);
-        assertThat(a.getUser_type()).isEqualTo(user_type);
     }
 }
