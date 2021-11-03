@@ -19,15 +19,15 @@ public class Lecture {
     private String title;
 
     @Column(length = 128)
-    private String lecture_plan;
+    private String lecturePlan;
 
     @Column(length = 30)
     private String semester;
 
     @Builder
-    public Lecture(String title, String lecture_plan, String semester) {
+    public Lecture(String title, String lecturePlan, String semester) {
         this.title = title;
-        this.lecture_plan = lecture_plan;
+        this.lecturePlan = lecturePlan;
         this.semester = semester;
     }
 }
