@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,11 +47,13 @@ public class NoticeRepositoryTest {
 
         String noticeTitle = "test notice";
         String content = "test content";
+        LocalDateTime now = LocalDateTime.now();
 
         noticeRepository.save(Notice.builder()
                 .lecture(lecture)
                 .title(noticeTitle)
                 .content(content)
+                .exposeDt(now)
                 .build());
 
         // when
@@ -60,6 +63,7 @@ public class NoticeRepositoryTest {
         Notice notice = noticeList.get(0);
         assertThat(notice.getTitle()).isEqualTo(noticeTitle);
         assertThat(notice.getLecture().getId()).isEqualTo(lecture.getId());
+        assertThat(notice.getExposeDt()).isEqualTo(now);
+        assertThat(notice.getCreatedDt()).isAfter(now);
     }
-
 }
