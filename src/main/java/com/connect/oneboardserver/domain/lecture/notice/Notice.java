@@ -39,4 +39,8 @@ public class Notice extends BaseTimeEntity {
         this.content = content;
         this.exposeDt = exposeDt;
     }
+
+    public void setLecture(Lecture lecture) {
+        this.lecture = lecture;
+    }
 }
