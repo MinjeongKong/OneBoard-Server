@@ -65,6 +65,11 @@ public class LessonApiControllerTest {
         ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url, requestDto, Long.class);
 
         // then
+        System.out.println("responseEntity");
+        System.out.println(responseEntity);
+        System.out.println(responseEntity.getStatusCode());
+        System.out.println(responseEntity.getBody());
+
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isGreaterThan(0L);
 
