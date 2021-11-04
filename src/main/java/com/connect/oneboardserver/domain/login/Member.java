@@ -31,7 +31,7 @@ public class Member implements UserDetails {
     @Column(length = 30, nullable = false)
     private String name;
 
-    @Column(length = 30, nullable = false)
+    @Column(length = 256, nullable = false)
     private String password;
 
     @Column(length = 30, nullable = false)

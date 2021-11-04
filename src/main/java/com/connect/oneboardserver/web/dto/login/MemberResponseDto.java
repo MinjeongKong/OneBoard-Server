@@ -1,13 +1,10 @@
 package com.connect.oneboardserver.web.dto.login;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 //@JsonInclude(JsonInclude.Include.ALWAYS)
-@Data
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

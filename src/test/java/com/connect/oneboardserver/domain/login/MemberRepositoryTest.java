@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,7 +27,7 @@ public class MemberRepositoryTest {
     @Test
     public void save_and_findAll() {
         //given
-        String student_num = "201823787";
+        String studentNumber = "201823787";
         String name = "Minjeong Kong";
         String password = "0000";
         String email = "kong1301@ajou.ac.kr";
@@ -36,7 +37,7 @@ public class MemberRepositoryTest {
         String lecture_id = "F034";
 
         memberRepository.save(Member.builder()
-                .student_num(student_num)
+                .studentNumber(studentNumber)
                 .name(name)
                 .password(password)
                 .email(email)
@@ -44,6 +45,7 @@ public class MemberRepositoryTest {
                 .university(university)
                 .major(major)
                 .lecture_id(lecture_id)
+                .roles(Collections.singletonList(user_type))
                 .build());
 
         //when
@@ -51,7 +53,7 @@ public class MemberRepositoryTest {
 
         //then
         Member a = memberList.get(0);
-        assertThat(a.getStudentNumber()).isEqualTo(student_num);
+        assertThat(a.getStudentNumber()).isEqualTo(studentNumber);
         assertThat(a.getEmail()).isEqualTo(email);
     }
 }
