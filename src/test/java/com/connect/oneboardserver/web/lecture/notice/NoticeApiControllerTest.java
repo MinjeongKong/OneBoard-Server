@@ -7,6 +7,7 @@ import com.connect.oneboardserver.domain.lecture.notice.NoticeRepository;
 import com.connect.oneboardserver.domain.lesson.Lesson;
 import com.connect.oneboardserver.web.dto.lecture.notice.NoticeCreateRequestDto;
 import com.connect.oneboardserver.web.dto.lecture.notice.NoticeCreateResponseDto;
+import com.connect.oneboardserver.web.dto.lecture.notice.NoticeResponseDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -92,4 +93,49 @@ public class NoticeApiControllerTest {
         assertThat(noticeList.get(0).getLecture().getId()).isEqualTo(lectureList.get(0).getId());
     }
 
+    @Test
+    @DisplayName("과목 공지사항 조회")
+    void requestFindNotice() {
+        // given
+        String lectureTitle = "test lecture";
+        String lecturePlan = "test url";
+        String semester = "2021-2";
+
+        Lecture lecture = Lecture.builder()
+                .title(lectureTitle)
+                .lecturePlan(lecturePlan)
+                .semester(semester)
+                .build();
+
+        Long lectureId = lectureRepository.save(lecture).getId();
+
+        String noticeTitle = "test notice";
+        String content = "test content";
+        LocalDateTime now = LocalDateTime.now();
+
+        Notice notice = Notice.builder()
+                .lecture(lecture)
+                .title(noticeTitle)
+                .content(content)
+                .exposeDt(now)
+                .build();
+
+        Long noticeId = noticeRepository.save(notice).getId();
+
+        String url = "http://localhost:" + port + "/lecture/{lectureId}/notice/{noticeId}";
+
+        // when
+        ResponseEntity<NoticeResponseDto> responseEntity
+                = restTemplate.getForEntity(url, NoticeResponseDto.class, lectureId, noticeId);
+
+        // then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        List<Lecture> lectureList = lectureRepository.findAll();
+        List<Notice> noticeList = noticeRepository.findAll();
+
+        assertThat(noticeList.get(0).getTitle()).isEqualTo(noticeTitle);
+        assertThat(noticeList.get(0).getExposeDt()).isEqualToIgnoringNanos(now);
+        assertThat(noticeList.get(0).getLecture().getId()).isEqualTo(lectureList.get(0).getId());
+    }
 }
