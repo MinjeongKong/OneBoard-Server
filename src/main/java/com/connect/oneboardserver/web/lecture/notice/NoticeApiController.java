@@ -5,6 +5,7 @@ import com.connect.oneboardserver.service.lecture.notice.NoticeService;
 import com.connect.oneboardserver.web.dto.LessonCreateRequestDto;
 import com.connect.oneboardserver.web.dto.lecture.notice.NoticeCreateRequestDto;
 import com.connect.oneboardserver.web.dto.lecture.notice.NoticeCreateResponseDto;
+import com.connect.oneboardserver.web.dto.lecture.notice.NoticeResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,13 @@ public class NoticeApiController {
         return noticeService.createNotice(lectureId, requestDto);
     }
 
-    // 과목 공지사항 수정
+    // 과목 공지사항 조회
+    @GetMapping("/lecture/{lectureId}/notice/{noticeId}")
+    public NoticeResponseDto findNotice(@PathVariable Long lectureId, @PathVariable Long noticeId) {
+        return noticeService.findNotice(lectureId, noticeId);
+    }
+
+   // 과목 공지사항 수정
 //    @PostMapping("/lecture/{lectureId}/notice/{noticeId}")
 
 

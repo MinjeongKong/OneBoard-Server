@@ -6,6 +6,7 @@ import com.connect.oneboardserver.domain.lecture.notice.Notice;
 import com.connect.oneboardserver.domain.lecture.notice.NoticeRepository;
 import com.connect.oneboardserver.web.dto.lecture.notice.NoticeCreateRequestDto;
 import com.connect.oneboardserver.web.dto.lecture.notice.NoticeCreateResponseDto;
+import com.connect.oneboardserver.web.dto.lecture.notice.NoticeResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,5 +41,29 @@ public class NoticeService {
                 .result("SUCCESS")
                 .data(noticeRepository.save(notice).getId())
                 .build();
+    }
+
+    public NoticeResponseDto findNotice(Long lectureId, Long noticeId) {
+        Notice notice = null;
+        try {
+            notice = noticeRepository.findById(noticeId)
+                    .orElseThrow(Exception::new);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return NoticeResponseDto.builder()
+                    .result("FAIL")
+                    .build();
+        }
+
+        if(!lectureId.equals(notice.getLecture().getId())) {
+            return NoticeResponseDto.builder()
+                    .result("FAIL")
+                    .build();
+        } else {
+            return NoticeResponseDto.builder()
+                    .result("SUCCESS")
+                    .notice(notice)
+                    .build();
+        }
     }
 }
