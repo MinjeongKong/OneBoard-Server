@@ -131,11 +131,8 @@ public class NoticeApiControllerTest {
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        List<Lecture> lectureList = lectureRepository.findAll();
-        List<Notice> noticeList = noticeRepository.findAll();
-
-        assertThat(noticeList.get(0).getTitle()).isEqualTo(noticeTitle);
-        assertThat(noticeList.get(0).getExposeDt()).isEqualToIgnoringNanos(now);
-        assertThat(noticeList.get(0).getLecture().getId()).isEqualTo(lectureList.get(0).getId());
+        assertThat(responseEntity.getBody().getNoticeList().get(0).getId()).isEqualTo(noticeId);
+        assertThat(responseEntity.getBody().getNoticeList().get(0).getExposeDt()).isEqualToIgnoringNanos(now);
+        assertThat(responseEntity.getBody().getNoticeList().get(0).getLecture().getId()).isEqualTo(lectureId);
     }
 }
