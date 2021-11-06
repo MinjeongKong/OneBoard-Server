@@ -20,10 +20,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class NoticeRepositoryTest {
 
     @Autowired
-    NoticeRepository noticeRepository;
+    private NoticeRepository noticeRepository;
 
     @Autowired
-    LectureRepository lectureRepository;
+    private LectureRepository lectureRepository;
 
     @AfterEach
     public void cleanUp() {
@@ -65,5 +65,58 @@ public class NoticeRepositoryTest {
         assertThat(notice.getLecture().getId()).isEqualTo(lecture.getId());
         assertThat(notice.getExposeDt()).isEqualTo(now);
         assertThat(notice.getCreatedDt()).isAfter(now);
+    }
+
+    @Test
+    @DisplayName("과목 공지사항 목록 조회")
+    void findAllByLectureId() {
+        // given
+        Lecture lecture1 = lectureRepository.save(Lecture.builder()
+                .title("title1")
+                .lecturePlan("plan1")
+                .semester("semester1")
+                .build());
+
+        Lecture lecture2 = lectureRepository.save(Lecture.builder()
+                .title("title2")
+                .lecturePlan("plan2")
+                .semester("semester2")
+                .build());
+
+        Notice notice1 = noticeRepository.save(Notice.builder()
+                .lecture(lecture1)
+                .title("title1")
+                .content("content1")
+                .exposeDt(LocalDateTime.now())
+                .build());
+
+        Notice notice2 = noticeRepository.save(Notice.builder()
+                .lecture(lecture1)
+                .title("title2")
+                .content("content2")
+                .exposeDt(LocalDateTime.now())
+                .build());
+
+        Notice notice3 = noticeRepository.save(Notice.builder()
+                .lecture(lecture2)
+                .title("title3")
+                .content("content3")
+                .exposeDt(LocalDateTime.now())
+                .build());
+
+        // when
+        List<Notice> noticeList = noticeRepository.findAllByLectureId(lecture1.getId());
+
+        // then
+        System.out.println(noticeList);
+        for (Notice n : noticeList) {
+            System.out.println(n.getId());
+            System.out.println(n.getTitle());
+        }
+
+        assertThat(noticeList.size()).isEqualTo(2);
+        for (int i = 0; i < noticeList.size(); i++) {
+            assertThat(noticeList.get(i).getLecture().getId()).isEqualTo(lecture1.getId());
+        }
     }
 }
