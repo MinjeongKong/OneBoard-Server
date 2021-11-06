@@ -5,16 +5,18 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 public class NoticeResponseDto {
 
     private String result;
-    private Notice notice;
+    private List<Notice> noticeList;
 
     @Builder
-    public NoticeResponseDto(String result, Notice notice) {
+    public NoticeResponseDto(String result, List<Notice> noticeList) {
         this.result = result;
-        this.notice = notice;
+        this.noticeList = noticeList;
     }
 }

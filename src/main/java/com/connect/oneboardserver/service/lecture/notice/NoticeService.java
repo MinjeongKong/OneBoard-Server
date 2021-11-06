@@ -11,7 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -19,6 +20,14 @@ public class NoticeService {
 
     private final LectureRepository lectureRepository;
     private final NoticeRepository noticeRepository;
+
+    public NoticeResponseDto findNoticeList(Long lectureId) {
+        List<Notice> noticeList = noticeRepository.findAllByLectureId(lectureId);
+        return NoticeResponseDto.builder()
+                .result("SUCCESS")
+                .noticeList(noticeList)
+                .build();
+    }
 
     @Transactional
     public NoticeCreateResponseDto createNotice(Long lectureId, NoticeCreateRequestDto requestDto) {
@@ -44,10 +53,9 @@ public class NoticeService {
     }
 
     public NoticeResponseDto findNotice(Long lectureId, Long noticeId) {
-        Notice notice = null;
+        List<Notice> noticeList = new ArrayList<>();
         try {
-            notice = noticeRepository.findById(noticeId)
-                    .orElseThrow(Exception::new);
+            noticeList.add(noticeRepository.findById(noticeId).orElseThrow(Exception::new));
         } catch (Exception e) {
             e.printStackTrace();
             return NoticeResponseDto.builder()
@@ -55,14 +63,14 @@ public class NoticeService {
                     .build();
         }
 
-        if(!lectureId.equals(notice.getLecture().getId())) {
+        if(!lectureId.equals(noticeList.get(0).getLecture().getId())) {
             return NoticeResponseDto.builder()
                     .result("FAIL")
                     .build();
         } else {
             return NoticeResponseDto.builder()
                     .result("SUCCESS")
-                    .notice(notice)
+                    .noticeList(noticeList)
                     .build();
         }
     }

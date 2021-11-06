@@ -15,6 +15,12 @@ public class NoticeApiController {
 
     private final NoticeService noticeService;
 
+    // 과목 공지사항 목록 조회
+    @GetMapping("/lecture/{lectureId}/notices")
+    public NoticeResponseDto findNoticeList(@PathVariable Long lectureId) {
+        return noticeService.findNoticeList(lectureId);
+    }
+
     // 과목 공지사항 등록
     @PostMapping("/lecture/{lectureId}/notice")
     public NoticeCreateResponseDto createNotice(@PathVariable Long lectureId, @RequestBody NoticeCreateRequestDto requestDto) {
@@ -31,6 +37,4 @@ public class NoticeApiController {
 //    @PostMapping("/lecture/{lectureId}/notice/{noticeId}")
 
 
-    // 과목 공지사항 목록 조회
-//    @GetMapping("/lecture/{lectureId}/notice")
 }
