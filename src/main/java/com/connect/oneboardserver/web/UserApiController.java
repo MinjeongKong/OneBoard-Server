@@ -12,7 +12,7 @@ public class UserApiController {
 
     private final UserService userService;
 
-    @GetMapping("/user")
+    @GetMapping("/user2")
     public UserResponseDto findUser() {
         return userService.findUser();
     }
