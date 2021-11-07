@@ -4,9 +4,7 @@ import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;
 import com.connect.oneboardserver.domain.lecture.notice.Notice;
 import com.connect.oneboardserver.domain.lecture.notice.NoticeRepository;
-import com.connect.oneboardserver.web.dto.lecture.notice.NoticeCreateRequestDto;
-import com.connect.oneboardserver.web.dto.lecture.notice.NoticeCreateResponseDto;
-import com.connect.oneboardserver.web.dto.lecture.notice.NoticeResponseDto;
+import com.connect.oneboardserver.web.dto.lecture.notice.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,5 +71,28 @@ public class NoticeService {
                     .noticeList(noticeList)
                     .build();
         }
+    }
+
+    @Transactional
+    public NoticeUpdateResponseDto updateNotice(Long lectureId, long noticeId, NoticeUpdateRequestDto requestDto) {
+        Notice notice = null;
+        NoticeUpdateResponseDto responseDto = NoticeUpdateResponseDto.builder()
+                .result("FAIL")
+                .build();
+        try {
+            notice = noticeRepository.findById(noticeId)
+                    .orElseThrow(Exception::new);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return responseDto;
+        }
+
+        notice.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getExposeDt());
+
+        responseDto.setResult("SUCCESS");
+//        responseDto.setNoticeId(notice.getId());
+        responseDto.setData(notice.getId());
+
+        return responseDto;
     }
 }

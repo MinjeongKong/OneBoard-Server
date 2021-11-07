@@ -43,4 +43,10 @@ public class Notice extends BaseTimeEntity {
     public void setLecture(Lecture lecture) {
         this.lecture = lecture;
     }
+
+    public void update(String title, String content, LocalDateTime exposeDt) {
+        this.title = title;
+        this.content = content;
+        this.exposeDt = exposeDt;
+    }
 }

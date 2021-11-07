@@ -3,9 +3,7 @@ package com.connect.oneboardserver.web.lecture.notice;
 import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.service.lecture.notice.NoticeService;
 import com.connect.oneboardserver.web.dto.LessonCreateRequestDto;
-import com.connect.oneboardserver.web.dto.lecture.notice.NoticeCreateRequestDto;
-import com.connect.oneboardserver.web.dto.lecture.notice.NoticeCreateResponseDto;
-import com.connect.oneboardserver.web.dto.lecture.notice.NoticeResponseDto;
+import com.connect.oneboardserver.web.dto.lecture.notice.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +32,12 @@ public class NoticeApiController {
     }
 
    // 과목 공지사항 수정
-//    @PostMapping("/lecture/{lectureId}/notice/{noticeId}")
+    @PutMapping("/lecture/{lectureId}/notice/{noticeId}")
+    public NoticeUpdateResponseDto updateNotice(@PathVariable Long lectureId, @PathVariable long noticeId,
+                                                @RequestBody NoticeUpdateRequestDto requestDto) {
+        return noticeService.updateNotice(lectureId, noticeId, requestDto);
+    }
 
 
+    // 과목 공지사항 삭제
 }
