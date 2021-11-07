@@ -21,7 +21,7 @@ public class MemberJoinDto {
     @NotEmpty
     private String password;
     @NotEmpty
-    private String user_type;
+    private String userType;
     @NotEmpty
     @Email
     private String email;

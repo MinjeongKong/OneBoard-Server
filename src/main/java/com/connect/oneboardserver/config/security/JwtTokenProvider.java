@@ -41,7 +41,6 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims().setSubject(userPk); // JWT payload 에 저장되는 정보단위
         claims.put("roles", roles); // 정보는 key / value 쌍으로 저장된다.
         Date now = new Date();
-        log.info("userPK:"+userPk);
 
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장
@@ -55,8 +54,6 @@ public class JwtTokenProvider {
     // JWT 토큰에서 인증 정보 조회
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
-        log.info("userPK:"+this.getUserPk(token));
-        log.info("userPK:"+userDetails.getAuthorities());
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 

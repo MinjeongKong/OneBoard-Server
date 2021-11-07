@@ -1,21 +1,28 @@
 package com.connect.oneboardserver.web.dto.login;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.connect.oneboardserver.domain.login.Member;
 import lombok.*;
 
-//@JsonInclude(JsonInclude.Include.ALWAYS)
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class MemberResponseDto {
 
     private String studentNumber;
     private String name;
-    private String user_type;
+    private String userType;
     private String email;
     private String university;
     private String major;
-    private String lecture_id;
+
+    public MemberResponseDto(Member entity) {
+        this.studentNumber = entity.getStudentNumber();
+        this.name = entity.getName();
+        this.userType = entity.getUserType();
+        this.email = entity.getEmail();
+        this.university = entity.getUniversity();
+        this.major = entity.getMajor();
+    }
+
+
 
 }

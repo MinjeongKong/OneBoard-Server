@@ -41,7 +41,7 @@ public class MemberRepositoryTest {
                 .name(name)
                 .password(password)
                 .email(email)
-                .user_type(user_type)
+                .userType(user_type)
                 .university(university)
                 .major(major)
                 .lecture_id(lecture_id)

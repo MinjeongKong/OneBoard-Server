@@ -35,7 +35,7 @@ public class Member implements UserDetails {
     private String password;
 
     @Column(length = 30, nullable = false)
-    private String user_type;    // S = 학생, T = 강의자
+    private String userType;    // S = 학생, T = 강의자
 
     @Column(length = 30, nullable = false)
     private String email;

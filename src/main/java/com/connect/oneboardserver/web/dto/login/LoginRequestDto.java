@@ -1,11 +1,13 @@
 package com.connect.oneboardserver.web.dto.login;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-@Data
+@Getter
+@NoArgsConstructor
 public class LoginRequestDto {
 
     @NotEmpty

@@ -3,18 +3,22 @@ package com.connect.oneboardserver.web.login;
 import com.connect.oneboardserver.config.security.JwtTokenProvider;
 import com.connect.oneboardserver.domain.login.Member;
 import com.connect.oneboardserver.domain.login.MemberRepository;
+import com.connect.oneboardserver.web.dto.ReturnDto;
 import com.connect.oneboardserver.web.dto.login.LoginRequestDto;
 import com.connect.oneboardserver.web.dto.login.MemberJoinDto;
+import com.connect.oneboardserver.web.dto.login.MemberResponseDto;
 import com.connect.oneboardserver.web.dto.login.TokenDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 
 @Slf4j
@@ -25,6 +29,7 @@ public class MemberApiController {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
+    private final UserDetailsService userDetailsService;
 
     // 회원가입
     @PostMapping("/join")
@@ -35,24 +40,25 @@ public class MemberApiController {
                 .password(passwordEncoder.encode(user.getPassword()))
 //                .password(user.getPassword())
                 .email(user.getEmail())
-                .user_type(user.getUser_type())
+                .userType(user.getUserType())
                 .university(user.getUniversity())
                 .major(user.getMajor())
                 .lecture_id(user.getLecture_id())
-                .roles(Collections.singletonList("ROLE_"+user.getUser_type()))
+                .roles(Collections.singletonList("ROLE_" + user.getUserType()))
                 .build()).getId();
 
     }
 
     // 로그인
     @PostMapping("/auth/login")
-    public TokenDto login(@Valid @RequestBody LoginRequestDto user) {
+    public ReturnDto login(@Valid @RequestBody LoginRequestDto user) {
         Member member = memberRepository.findByEmail(user.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
-        if (!passwordEncoder.matches(user.getPassword(),  member.getPassword())) {
+        if (!passwordEncoder.matches(user.getPassword(), member.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
         }
-        return new TokenDto(member, jwtTokenProvider.createToken(member.getUsername(), member.getRoles()));
+        TokenDto tokenDto = new TokenDto(member, jwtTokenProvider.createToken(member.getUsername(), member.getRoles()));
+        return new ReturnDto("SUCCESS", tokenDto);
     }
 
     @GetMapping("/member")
@@ -65,10 +71,17 @@ public class MemberApiController {
         return "hello student!";
     }
 
-    @GetMapping("/teacher")
-    public String teacher() {
-        return "hello teacher!";
+    @GetMapping("/user")
+    public ReturnDto userInfo(ServletRequest request) {
+        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+        Member member = (Member) userDetailsService.loadUserByUsername(jwtTokenProvider.getUserPk(token));
+        MemberResponseDto memberResponseDto = new MemberResponseDto(member);
+        return new ReturnDto("SUCCESS", memberResponseDto);
     }
 
+    @GetMapping("/auth/check")
+    public ReturnDto authcheck(ServletRequest request) {
+        return new ReturnDto("SUCCESS");
+    }
 }
 
