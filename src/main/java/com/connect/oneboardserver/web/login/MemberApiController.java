@@ -20,7 +20,7 @@ import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 
-
+@CrossOrigin(origins = "*")
 @Slf4j
 @RequiredArgsConstructor
 @RestController

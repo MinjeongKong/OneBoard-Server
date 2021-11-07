@@ -3,9 +3,11 @@ package com.connect.oneboardserver.web;
 import com.connect.oneboardserver.service.user.UserService;
 import com.connect.oneboardserver.web.dto.UserResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @RestController
 public class UserApiController {
