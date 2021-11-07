@@ -7,23 +7,22 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-public class Assignment {
+public class Submit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private Long lectureId;
+    private Long assignmentId;
 
-    @Column(length = 30, nullable = false)
-    private String title;
+    @Column(nullable = false)
+    private Long studentId;
 
     @Column(length = 300)
     private String content;
@@ -31,19 +30,17 @@ public class Assignment {
     @Column(length = 128)
     private String fileUrl;
 
-    @Column(nullable = false)
-    private LocalDateTime startDt;
-
-    @Column(nullable = false)
-    private LocalDateTime endDt;
-
     @Column
-    private LocalDateTime exposeDt;
+    private int score;
+
+    @Column(length = 300)
+    private String feedback;
 
     @Column(nullable = false)
     private Timestamp createdDt;
 
     @Column
     private Timestamp updatedDt;
+
 
 }
