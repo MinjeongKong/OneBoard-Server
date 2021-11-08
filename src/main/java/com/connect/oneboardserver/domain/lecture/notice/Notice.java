@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @EntityListeners(AuditingEntityListener.class)
 @Getter
@@ -30,10 +29,10 @@ public class Notice extends BaseTimeEntity {
     private String content;
 
     @Column
-    private LocalDateTime exposeDt;
+    private String exposeDt;
 
     @Builder
-    public Notice(Lecture lecture, String title, String content, LocalDateTime exposeDt) {
+    public Notice(Lecture lecture, String title, String content, String exposeDt) {
         this.lecture = lecture;
         this.title = title;
         this.content = content;
@@ -44,7 +43,7 @@ public class Notice extends BaseTimeEntity {
         this.lecture = lecture;
     }
 
-    public void update(String title, String content, LocalDateTime exposeDt) {
+    public void update(String title, String content, String exposeDt) {
         this.title = title;
         this.content = content;
         this.exposeDt = exposeDt;

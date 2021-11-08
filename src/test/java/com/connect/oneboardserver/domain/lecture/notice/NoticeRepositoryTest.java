@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,7 +48,7 @@ public class NoticeRepositoryTest {
 
         String noticeTitle = "test notice";
         String content = "test content";
-        LocalDateTime now = LocalDateTime.now();
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         noticeRepository.save(Notice.builder()
                 .lecture(lecture)
@@ -64,7 +65,7 @@ public class NoticeRepositoryTest {
         assertThat(notice.getTitle()).isEqualTo(noticeTitle);
         assertThat(notice.getLecture().getId()).isEqualTo(lecture.getId());
         assertThat(notice.getExposeDt()).isEqualTo(now);
-        assertThat(notice.getCreatedDt()).isAfter(now);
+        assertThat(notice.getCreatedDt()).isGreaterThanOrEqualTo(now);
     }
 
     @Test
@@ -87,21 +88,21 @@ public class NoticeRepositoryTest {
                 .lecture(lecture1)
                 .title("title1")
                 .content("content1")
-                .exposeDt(LocalDateTime.now())
+                .exposeDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .build());
 
         Notice notice2 = noticeRepository.save(Notice.builder()
                 .lecture(lecture1)
                 .title("title2")
                 .content("content2")
-                .exposeDt(LocalDateTime.now())
+                .exposeDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .build());
 
         Notice notice3 = noticeRepository.save(Notice.builder()
                 .lecture(lecture2)
                 .title("title3")
                 .content("content3")
-                .exposeDt(LocalDateTime.now())
+                .exposeDt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .build());
 
         // when

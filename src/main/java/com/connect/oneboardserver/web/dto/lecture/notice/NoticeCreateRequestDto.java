@@ -5,18 +5,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Getter
 @NoArgsConstructor
 public class NoticeCreateRequestDto {
 
     private String title;
     private String content;
-    private LocalDateTime exposeDt;
+    private String exposeDt;
 
     @Builder
-    public NoticeCreateRequestDto(String title, String content, LocalDateTime exposeDt) {
+    public NoticeCreateRequestDto(String title, String content, String exposeDt) {
         this.title = title;
         this.content = content;
         this.exposeDt = exposeDt;
