@@ -5,9 +5,7 @@ import com.connect.oneboardserver.domain.lecture.LectureRepository;
 import com.connect.oneboardserver.domain.lecture.notice.Notice;
 import com.connect.oneboardserver.domain.lecture.notice.NoticeRepository;
 import com.connect.oneboardserver.domain.lesson.Lesson;
-import com.connect.oneboardserver.web.dto.lecture.notice.NoticeCreateRequestDto;
-import com.connect.oneboardserver.web.dto.lecture.notice.NoticeCreateResponseDto;
-import com.connect.oneboardserver.web.dto.lecture.notice.NoticeResponseDto;
+import com.connect.oneboardserver.web.dto.lecture.notice.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -134,5 +134,57 @@ public class NoticeApiControllerTest {
         assertThat(responseEntity.getBody().getNoticeList().get(0).getId()).isEqualTo(noticeId);
         assertThat(responseEntity.getBody().getNoticeList().get(0).getExposeDt()).isEqualToIgnoringNanos(now);
         assertThat(responseEntity.getBody().getNoticeList().get(0).getLecture().getId()).isEqualTo(lectureId);
+    }
+
+    @Test
+    @DisplayName("과목 공지사항 수정")
+    void requestUpdateNotice() {
+        // given
+        String lectureTitle = "test lecture";
+        String lecturePlan = "test url";
+        String semester = "2021-2";
+
+        Lecture lecture = Lecture.builder()
+                .title(lectureTitle)
+                .lecturePlan(lecturePlan)
+                .semester(semester)
+                .build();
+
+        Long lectureId = lectureRepository.save(lecture).getId();
+
+        String noticeTitle = "test notice";
+        String content = "test content";
+        LocalDateTime now = LocalDateTime.now();
+
+        Notice notice = Notice.builder()
+                .lecture(lecture)
+                .title(noticeTitle)
+                .content(content)
+                .exposeDt(now)
+                .build();
+
+        Long noticeId = noticeRepository.save(notice).getId();
+
+        String updateTitle = "updated title";
+        String updateContent = "updated content";
+        NoticeUpdateRequestDto requestDto = NoticeUpdateRequestDto.builder()
+                .title(updateTitle)
+                .content(updateContent)
+                .exposeDt(now).build();
+
+        String url = "http://localhost:" + port + "/lecture/{lectureId}/notice/{noticeId}";
+
+        HttpEntity<NoticeUpdateRequestDto> requestEntity = new HttpEntity<>(requestDto);
+
+        // when
+        ResponseEntity<NoticeUpdateResponseDto> responseEntity
+                = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, NoticeUpdateResponseDto.class, lectureId, noticeId);
+
+        // then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        Notice updatedNotice = noticeRepository.findById(responseEntity.getBody().getNoticeId()).orElseThrow();
+        assertThat(updatedNotice.getTitle()).isEqualTo(updateTitle);
+        assertThat(updatedNotice.getContent()).isEqualTo(updateContent);
     }
 }

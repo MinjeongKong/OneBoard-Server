@@ -90,8 +90,8 @@ public class NoticeService {
         notice.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getExposeDt());
 
         responseDto.setResult("SUCCESS");
-//        responseDto.setNoticeId(notice.getId());
-        responseDto.setData(notice.getId());
+        responseDto.setNoticeId(notice.getId());
+//        responseDto.setData(notice.getId());
 
         return responseDto;
     }

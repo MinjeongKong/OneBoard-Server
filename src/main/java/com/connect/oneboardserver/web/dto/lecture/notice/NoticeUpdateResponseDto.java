@@ -4,21 +4,22 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-class Data {
-    private Long noticeId;
-
-    public Data(Long noticeId) {
-        this.noticeId = noticeId;
-    }
-}
+//@Getter
+//class Data {
+//    private Long noticeId;
+//
+//    public Data(Long noticeId) {
+//        this.noticeId = noticeId;
+//    }
+//}
 
 @Getter
 @NoArgsConstructor
 public class NoticeUpdateResponseDto {
 
     private String result;
-//    private Long noticeId;
-    private Data data;
+    private Long noticeId;
+//    private Data data;
 
 //    @NoArgsConstructor
 //    private class Data {
@@ -30,20 +31,20 @@ public class NoticeUpdateResponseDto {
 //    }
 
     @Builder
-    public NoticeUpdateResponseDto(String result, Data data) {
+    public NoticeUpdateResponseDto(String result, Long noticeId) {
         this.result = result;
-        this.data = data;
+        this.noticeId = noticeId;
     }
 
     public void setResult(String result) {
         this.result = result;
     }
 
-//    public void setNoticeId(Long noticeId) {
-//        this.noticeId = noticeId;
-//    }
-
-    public void setData(Long noticeId) {
-        this.data = new Data(noticeId);
+    public void setNoticeId(Long noticeId) {
+        this.noticeId = noticeId;
     }
+
+//    public void setData(Long noticeId) {
+//        this.data = new Data(noticeId);
+//    }
 }
