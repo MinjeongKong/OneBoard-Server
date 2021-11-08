@@ -1,6 +1,5 @@
 package com.connect.oneboardserver.web.dto.lecture.notice;
 
-import com.connect.oneboardserver.domain.lecture.notice.Notice;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,13 +17,5 @@ public class NoticeUpdateRequestDto {
         this.title = title;
         this.content = content;
         this.exposeDt = exposeDt;
-    }
-
-    public Notice toEntity() {
-        return Notice.builder()
-                .title(title)
-                .content(content)
-                .exposeDt(exposeDt)
-                .build();
     }
 }

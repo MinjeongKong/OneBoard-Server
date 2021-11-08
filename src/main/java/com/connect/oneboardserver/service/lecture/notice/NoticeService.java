@@ -4,12 +4,12 @@ import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;
 import com.connect.oneboardserver.domain.lecture.notice.Notice;
 import com.connect.oneboardserver.domain.lecture.notice.NoticeRepository;
+import com.connect.oneboardserver.web.dto.ReturnDto;
 import com.connect.oneboardserver.web.dto.lecture.notice.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -19,94 +19,101 @@ public class NoticeService {
     private final LectureRepository lectureRepository;
     private final NoticeRepository noticeRepository;
 
-    public NoticeResponseDto findNoticeList(Long lectureId) {
-        List<Notice> noticeList = noticeRepository.findAllByLectureId(lectureId);
-        return NoticeResponseDto.builder()
-                .result("SUCCESS")
-                .noticeList(noticeList)
-                .build();
-    }
-
-    @Transactional
-    public NoticeCreateResponseDto createNotice(Long lectureId, NoticeCreateRequestDto requestDto) {
+    public ReturnDto findNoticeList(Long lectureId) {
         Lecture lecture = null;
 
         try {
-            lecture = lectureRepository.findById(lectureId)
-                    .orElseThrow(Exception::new);
+            lecture = lectureRepository.findById(lectureId).orElseThrow(Exception::new);
         } catch (Exception e) {
             e.printStackTrace();
-            return NoticeCreateResponseDto.builder()
-                    .result("FAIL")
-                    .build();
+            return new ReturnDto("FAIL");
+        }
+        List<Notice> noticeList = noticeRepository.findAllByLectureId(lecture.getId());
+        NoticeListFindResponseDto responseDto = NoticeListFindResponseDto.builder()
+                .noticeList(noticeList)
+                .build();
+        return new ReturnDto("SUCCESS", responseDto);
+    }
+
+    @Transactional
+    public ReturnDto createNotice(Long lectureId, NoticeCreateRequestDto requestDto) {
+        Lecture lecture = null;
+
+        try {
+            lecture = lectureRepository.findById(lectureId).orElseThrow(Exception::new);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ReturnDto("FAIL");
         }
 
         Notice notice = requestDto.toEntity();
         notice.setLecture(lecture);
 
-        return NoticeCreateResponseDto.builder()
-                .result("SUCCESS")
-                .data(noticeRepository.save(notice).getId())
+        NoticeCreateResponseDto responseDto = NoticeCreateResponseDto.builder()
+                .noticeId(noticeRepository.save(notice).getId())
                 .build();
+        return new ReturnDto("SUCCESS", responseDto);
     }
 
-    public NoticeResponseDto findNotice(Long lectureId, Long noticeId) {
-        List<Notice> noticeList = new ArrayList<>();
+    public ReturnDto findNotice(Long lectureId, Long noticeId) {
+        Notice notice = null;
+
         try {
-            noticeList.add(noticeRepository.findById(noticeId).orElseThrow(Exception::new));
+            notice = noticeRepository.findById(noticeId).orElseThrow(Exception::new);
         } catch (Exception e) {
             e.printStackTrace();
-            return NoticeResponseDto.builder()
-                    .result("FAIL")
-                    .build();
+            return new ReturnDto("FAIL");
         }
 
-        if(!lectureId.equals(noticeList.get(0).getLecture().getId())) {
-            return NoticeResponseDto.builder()
-                    .result("FAIL")
-                    .build();
+        if(!notice.getLecture().getId().equals(lectureId)) {
+            return new ReturnDto("FAIL");
         } else {
-            return NoticeResponseDto.builder()
-                    .result("SUCCESS")
-                    .noticeList(noticeList)
+            NoticeFindResponseDto responseDto = NoticeFindResponseDto.builder()
+                    .notice(notice)
                     .build();
+            return new ReturnDto("SUCCESS", responseDto);
         }
     }
 
     @Transactional
-    public NoticeUpdateResponseDto updateNotice(Long lectureId, long noticeId, NoticeUpdateRequestDto requestDto) {
+    public ReturnDto updateNotice(Long lectureId, long noticeId, NoticeUpdateRequestDto requestDto) {
         Notice notice = null;
-        NoticeUpdateResponseDto responseDto = NoticeUpdateResponseDto.builder()
-                .result("FAIL")
-                .build();
+
         try {
             notice = noticeRepository.findById(noticeId)
                     .orElseThrow(Exception::new);
         } catch (Exception e) {
             e.printStackTrace();
-            return responseDto;
+            return new ReturnDto("FAIL");
         }
 
-        notice.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getExposeDt());
-
-        responseDto.setResult("SUCCESS");
-        responseDto.setNoticeId(notice.getId());
-//        responseDto.setData(notice.getId());
-
-        return responseDto;
+        if(!notice.getLecture().getId().equals(lectureId)) {
+            return new ReturnDto("FAIL");
+        } else {
+            notice.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getExposeDt());
+            NoticeUpdateResponseDto responseDto = NoticeUpdateResponseDto.builder()
+                    .noticeId(notice.getId())
+                    .build();
+            return new ReturnDto("SUCCESS", responseDto);
+        }
     }
 
-    public NoticeUpdateResponseDto deleteNotice(Long lectureId, Long noticeId) {
-        Notice notice = noticeRepository.findById(noticeId).orElseThrow();
-        NoticeUpdateResponseDto responseDto = NoticeUpdateResponseDto.builder()
-                .result("FAIL")
-                .build();
+    @Transactional
+    public ReturnDto deleteNotice(Long lectureId, Long noticeId) {
+        Notice notice = null;
+
+        try {
+            notice = noticeRepository.findById(noticeId).orElseThrow(Exception::new);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ReturnDto("FAIL");
+        }
+
         if(!notice.getLecture().getId().equals(lectureId)) {
-            return responseDto;
+            return new ReturnDto("FAIL");
         } else {
             noticeRepository.deleteById(noticeId);
-            responseDto.setResult("SUCCESS");
-            return responseDto;
+            return new ReturnDto("SUCCESS");
         }
 
     }

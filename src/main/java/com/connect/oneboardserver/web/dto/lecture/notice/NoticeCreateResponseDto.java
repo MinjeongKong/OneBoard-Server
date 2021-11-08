@@ -9,12 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NoticeCreateResponseDto {
 
-    private String result;
-    private Long data;
+    private Long noticeId;
 
     @Builder
-    public NoticeCreateResponseDto(String result, Long data) {
-        this.result = result;
-        this.data = data;
+    public NoticeCreateResponseDto(String result, Long noticeId) {
+        this.noticeId = noticeId;
     }
 }

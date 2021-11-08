@@ -4,8 +4,9 @@ import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;
 import com.connect.oneboardserver.domain.lecture.notice.Notice;
 import com.connect.oneboardserver.domain.lecture.notice.NoticeRepository;
-import com.connect.oneboardserver.domain.lesson.Lesson;
+import com.connect.oneboardserver.web.dto.ReturnDto;
 import com.connect.oneboardserver.web.dto.lecture.notice.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ import org.springframework.http.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -60,7 +61,7 @@ public class NoticeApiControllerTest {
 
         String noticeTitle = "test notice";
         String content = "test content";
-        LocalDateTime now = LocalDateTime.now();
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         NoticeCreateRequestDto requestDto = NoticeCreateRequestDto.builder()
                 .title(noticeTitle)
@@ -71,27 +72,27 @@ public class NoticeApiControllerTest {
         String url = "http://localhost:" + port + "/lecture/{lectureId}/notice";
 
         // when
-        ResponseEntity<NoticeCreateResponseDto> responseEntity
-                = restTemplate.postForEntity(url, requestDto, NoticeCreateResponseDto.class, lectureId);
-//        NoticeCreateResponseDto responseDto = restTemplate.postForObject(url, requestDto, NoticeCreateResponseDto.class, lectureId);
+        ResponseEntity<ReturnDto> responseEntity
+                = restTemplate.postForEntity(url, requestDto, ReturnDto.class, lectureId);
 
         // then
-        System.out.println(responseEntity);
-        System.out.println(responseEntity.getStatusCode());
-        System.out.println(responseEntity.getBody());
-
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        List<Lecture> lectureList = lectureRepository.findAll();
-        List<Notice> noticeList = noticeRepository.findAll();
+        // responseData: LinkedHashMap
+        Object responseData = responseEntity.getBody().getData();
 
-        assertThat(noticeList.get(0).getTitle()).isEqualTo(noticeTitle);
-        assertThat(noticeList.get(0).getExposeDt()).isEqualToIgnoringNanos(now);
-        assertThat(noticeList.get(0).getLecture().getId()).isEqualTo(lectureList.get(0).getId());
+        ObjectMapper mapper = new ObjectMapper();
+        NoticeCreateResponseDto responseDto = mapper.convertValue(responseData, NoticeCreateResponseDto.class);
+
+        Notice newNotice = noticeRepository.findById(responseDto.getNoticeId()).orElseThrow();
+
+        assertThat(newNotice.getTitle()).isEqualTo(noticeTitle);
+        assertThat(newNotice.getExposeDt()).isEqualTo(now);
+        assertThat(newNotice.getLecture().getId()).isEqualTo(lectureId);
     }
 
     @Test
-    @DisplayName("과목 공지사항 조회")
+    @DisplayName("과목 공지사항 조회 요청")
     void requestFindNotice() {
         // given
         String lectureTitle = "test lecture";
@@ -108,7 +109,7 @@ public class NoticeApiControllerTest {
 
         String noticeTitle = "test notice";
         String content = "test content";
-        LocalDateTime now = LocalDateTime.now();
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         Notice notice = Notice.builder()
                 .lecture(lecture)
@@ -122,19 +123,25 @@ public class NoticeApiControllerTest {
         String url = "http://localhost:" + port + "/lecture/{lectureId}/notice/{noticeId}";
 
         // when
-        ResponseEntity<NoticeResponseDto> responseEntity
-                = restTemplate.getForEntity(url, NoticeResponseDto.class, lectureId, noticeId);
+        ResponseEntity<ReturnDto> responseEntity
+                = restTemplate.getForEntity(url, ReturnDto.class, lectureId, noticeId);
 
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        assertThat(responseEntity.getBody().getNoticeList().get(0).getId()).isEqualTo(noticeId);
-        assertThat(responseEntity.getBody().getNoticeList().get(0).getExposeDt()).isEqualToIgnoringNanos(now);
-        assertThat(responseEntity.getBody().getNoticeList().get(0).getLecture().getId()).isEqualTo(lectureId);
+        // responseData: LinkedHashMap
+        Object responseData = responseEntity.getBody().getData();
+
+        ObjectMapper mapper = new ObjectMapper();
+        NoticeFindResponseDto responseDto = mapper.convertValue(responseData, NoticeFindResponseDto.class);
+
+        assertThat(responseDto.getNotice().getId()).isEqualTo(noticeId);
+        assertThat(responseDto.getNotice().getExposeDt()).isEqualTo(now);
+        assertThat(responseDto.getNotice().getLecture().getId()).isEqualTo(lectureId);
     }
 
     @Test
-    @DisplayName("과목 공지사항 수정")
+    @DisplayName("과목 공지사항 수정 요청")
     void requestUpdateNotice() {
         // given
         String lectureTitle = "test lecture";
@@ -151,7 +158,7 @@ public class NoticeApiControllerTest {
 
         String noticeTitle = "test notice";
         String content = "test content";
-        LocalDateTime now = LocalDateTime.now();
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         Notice notice = Notice.builder()
                 .lecture(lecture)
@@ -167,26 +174,34 @@ public class NoticeApiControllerTest {
         NoticeUpdateRequestDto requestDto = NoticeUpdateRequestDto.builder()
                 .title(updateTitle)
                 .content(updateContent)
-                .exposeDt(now).build();
+                .exposeDt(now)
+                .build();
 
         String url = "http://localhost:" + port + "/lecture/{lectureId}/notice/{noticeId}";
 
         HttpEntity<NoticeUpdateRequestDto> requestEntity = new HttpEntity<>(requestDto);
 
         // when
-        ResponseEntity<NoticeUpdateResponseDto> responseEntity
-                = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, NoticeUpdateResponseDto.class, lectureId, noticeId);
+        ResponseEntity<ReturnDto> responseEntity
+                = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, ReturnDto.class, lectureId, noticeId);
 
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        Notice updatedNotice = noticeRepository.findById(responseEntity.getBody().getNoticeId()).orElseThrow();
+        // responseData: LinkedHashMap
+        Object responseData = responseEntity.getBody().getData();
+
+        ObjectMapper mapper = new ObjectMapper();
+        NoticeUpdateResponseDto responseDto = mapper.convertValue(responseData, NoticeUpdateResponseDto.class);
+
+        Notice updatedNotice = noticeRepository.findById(responseDto.getNoticeId()).orElseThrow();
+
         assertThat(updatedNotice.getTitle()).isEqualTo(updateTitle);
         assertThat(updatedNotice.getContent()).isEqualTo(updateContent);
     }
 
     @Test
-    @DisplayName("과목 공지사항 삭제")
+    @DisplayName("과목 공지사항 삭제 요청")
     void requestDeleteNotice() {
         // given
         String lectureTitle = "test lecture";
@@ -203,7 +218,7 @@ public class NoticeApiControllerTest {
 
         String noticeTitle = "test notice";
         String content = "test content";
-        LocalDateTime now = LocalDateTime.now();
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         Notice notice = Notice.builder()
                 .lecture(lecture)
@@ -216,19 +231,10 @@ public class NoticeApiControllerTest {
 
         String url = "http://localhost:" + port + "/lecture/{lectureId}/notice/{noticeId}";
 
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-//        HttpEntity<?> httpEntity = new HttpEntity<>(headers);
-
-
         // when
-//        ResponseEntity<NoticeUpdateResponseDto> responseEntity
-//                = restTemplate.exchange(url, HttpMethod.DELETE, httpEntity, NoticeUpdateResponseDto.class, lectureId, noticeId);
         restTemplate.delete(url, lectureId, noticeId);
 
         // then
-//        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-
         assertThat(noticeRepository.findById(noticeId)).isEmpty();
     }
 }

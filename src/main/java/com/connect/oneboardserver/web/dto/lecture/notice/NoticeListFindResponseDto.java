@@ -9,14 +9,12 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class NoticeResponseDto {
+public class NoticeListFindResponseDto {
 
-    private String result;
     private List<Notice> noticeList;
 
     @Builder
-    public NoticeResponseDto(String result, List<Notice> noticeList) {
-        this.result = result;
+    public NoticeListFindResponseDto(List<Notice> noticeList) {
         this.noticeList = noticeList;
     }
 }
