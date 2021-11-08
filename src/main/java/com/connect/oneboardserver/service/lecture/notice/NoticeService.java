@@ -95,4 +95,19 @@ public class NoticeService {
 
         return responseDto;
     }
+
+    public NoticeUpdateResponseDto deleteNotice(Long lectureId, Long noticeId) {
+        Notice notice = noticeRepository.findById(noticeId).orElseThrow();
+        NoticeUpdateResponseDto responseDto = NoticeUpdateResponseDto.builder()
+                .result("FAIL")
+                .build();
+        if(!notice.getLecture().getId().equals(lectureId)) {
+            return responseDto;
+        } else {
+            noticeRepository.deleteById(noticeId);
+            responseDto.setResult("SUCCESS");
+            return responseDto;
+        }
+
+    }
 }

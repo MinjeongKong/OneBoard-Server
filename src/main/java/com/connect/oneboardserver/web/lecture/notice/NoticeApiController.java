@@ -33,11 +33,15 @@ public class NoticeApiController {
 
    // 과목 공지사항 수정
     @PutMapping("/lecture/{lectureId}/notice/{noticeId}")
-    public NoticeUpdateResponseDto updateNotice(@PathVariable Long lectureId, @PathVariable long noticeId,
+    public NoticeUpdateResponseDto updateNotice(@PathVariable Long lectureId, @PathVariable Long noticeId,
                                                 @RequestBody NoticeUpdateRequestDto requestDto) {
         return noticeService.updateNotice(lectureId, noticeId, requestDto);
     }
 
 
     // 과목 공지사항 삭제
+    @DeleteMapping("/lecture/{lectureId}/notice/{noticeId}")
+    public NoticeUpdateResponseDto deleteNotice(@PathVariable Long lectureId, @PathVariable Long noticeId) {
+        return noticeService.deleteNotice(lectureId, noticeId);
+    }
 }
