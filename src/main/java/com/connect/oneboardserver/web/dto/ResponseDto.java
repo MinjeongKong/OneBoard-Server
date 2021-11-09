@@ -5,16 +5,16 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ReturnDto {
+public class ResponseDto {
 
     private String result;
     private Object data;
 
-    public ReturnDto(String result) {
+    public ResponseDto(String result) {
         this.result = result;
     }
 
-    public ReturnDto(String result, Object data) {
+    public ResponseDto(String result, Object data) {
         this.result = result;
         this.data = data;
     }
