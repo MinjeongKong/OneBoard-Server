@@ -4,7 +4,7 @@ import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;
 import com.connect.oneboardserver.domain.lecture.notice.Notice;
 import com.connect.oneboardserver.domain.lecture.notice.NoticeRepository;
-import com.connect.oneboardserver.web.dto.ReturnDto;
+import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.notice.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -72,8 +72,8 @@ public class NoticeApiControllerTest {
         String url = "http://localhost:" + port + "/lecture/{lectureId}/notice";
 
         // when
-        ResponseEntity<ReturnDto> responseEntity
-                = restTemplate.postForEntity(url, requestDto, ReturnDto.class, lectureId);
+        ResponseEntity<ResponseDto> responseEntity
+                = restTemplate.postForEntity(url, requestDto, ResponseDto.class, lectureId);
 
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -123,8 +123,8 @@ public class NoticeApiControllerTest {
         String url = "http://localhost:" + port + "/lecture/{lectureId}/notice/{noticeId}";
 
         // when
-        ResponseEntity<ReturnDto> responseEntity
-                = restTemplate.getForEntity(url, ReturnDto.class, lectureId, noticeId);
+        ResponseEntity<ResponseDto> responseEntity
+                = restTemplate.getForEntity(url, ResponseDto.class, lectureId, noticeId);
 
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -182,8 +182,8 @@ public class NoticeApiControllerTest {
         HttpEntity<NoticeUpdateRequestDto> requestEntity = new HttpEntity<>(requestDto);
 
         // when
-        ResponseEntity<ReturnDto> responseEntity
-                = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, ReturnDto.class, lectureId, noticeId);
+        ResponseEntity<ResponseDto> responseEntity
+                = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, ResponseDto.class, lectureId, noticeId);
 
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);

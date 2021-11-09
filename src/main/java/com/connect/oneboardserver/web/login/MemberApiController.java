@@ -3,7 +3,7 @@ package com.connect.oneboardserver.web.login;
 import com.connect.oneboardserver.config.security.JwtTokenProvider;
 import com.connect.oneboardserver.domain.login.Member;
 import com.connect.oneboardserver.domain.login.MemberRepository;
-import com.connect.oneboardserver.web.dto.ReturnDto;
+import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.login.LoginRequestDto;
 import com.connect.oneboardserver.web.dto.login.MemberJoinDto;
 import com.connect.oneboardserver.web.dto.login.MemberResponseDto;
@@ -51,14 +51,14 @@ public class MemberApiController {
 
     // 로그인
     @PostMapping("/auth/login")
-    public ReturnDto login(@Valid @RequestBody LoginRequestDto user) {
+    public ResponseDto login(@Valid @RequestBody LoginRequestDto user) {
         Member member = memberRepository.findByEmail(user.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
         if (!passwordEncoder.matches(user.getPassword(), member.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
         }
         TokenDto tokenDto = new TokenDto(member, jwtTokenProvider.createToken(member.getUsername(), member.getRoles()));
-        return new ReturnDto("SUCCESS", tokenDto);
+        return new ResponseDto("SUCCESS", tokenDto);
     }
 
     @GetMapping("/member")
@@ -72,16 +72,16 @@ public class MemberApiController {
     }
 
     @GetMapping("/user")
-    public ReturnDto userInfo(ServletRequest request) {
+    public ResponseDto userInfo(ServletRequest request) {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
         Member member = (Member) userDetailsService.loadUserByUsername(jwtTokenProvider.getUserPk(token));
         MemberResponseDto memberResponseDto = new MemberResponseDto(member);
-        return new ReturnDto("SUCCESS", memberResponseDto);
+        return new ResponseDto("SUCCESS", memberResponseDto);
     }
 
     @GetMapping("/auth/check")
-    public ReturnDto authcheck(ServletRequest request) {
-        return new ReturnDto("SUCCESS");
+    public ResponseDto authcheck(ServletRequest request) {
+        return new ResponseDto("SUCCESS");
     }
 }
 

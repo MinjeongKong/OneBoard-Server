@@ -4,7 +4,7 @@ import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;
 import com.connect.oneboardserver.domain.lecture.notice.Notice;
 import com.connect.oneboardserver.domain.lecture.notice.NoticeRepository;
-import com.connect.oneboardserver.web.dto.ReturnDto;
+import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.notice.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,31 +19,31 @@ public class NoticeService {
     private final LectureRepository lectureRepository;
     private final NoticeRepository noticeRepository;
 
-    public ReturnDto findNoticeList(Long lectureId) {
+    public ResponseDto findNoticeList(Long lectureId) {
         Lecture lecture = null;
 
         try {
             lecture = lectureRepository.findById(lectureId).orElseThrow(Exception::new);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ReturnDto("FAIL");
+            return new ResponseDto("FAIL");
         }
         List<Notice> noticeList = noticeRepository.findAllByLectureId(lecture.getId());
         NoticeListFindResponseDto responseDto = NoticeListFindResponseDto.builder()
                 .noticeList(noticeList)
                 .build();
-        return new ReturnDto("SUCCESS", responseDto);
+        return new ResponseDto("SUCCESS", responseDto);
     }
 
     @Transactional
-    public ReturnDto createNotice(Long lectureId, NoticeCreateRequestDto requestDto) {
+    public ResponseDto createNotice(Long lectureId, NoticeCreateRequestDto requestDto) {
         Lecture lecture = null;
 
         try {
             lecture = lectureRepository.findById(lectureId).orElseThrow(Exception::new);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ReturnDto("FAIL");
+            return new ResponseDto("FAIL");
         }
 
         Notice notice = requestDto.toEntity();
@@ -52,31 +52,31 @@ public class NoticeService {
         NoticeCreateResponseDto responseDto = NoticeCreateResponseDto.builder()
                 .noticeId(noticeRepository.save(notice).getId())
                 .build();
-        return new ReturnDto("SUCCESS", responseDto);
+        return new ResponseDto("SUCCESS", responseDto);
     }
 
-    public ReturnDto findNotice(Long lectureId, Long noticeId) {
+    public ResponseDto findNotice(Long lectureId, Long noticeId) {
         Notice notice = null;
 
         try {
             notice = noticeRepository.findById(noticeId).orElseThrow(Exception::new);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ReturnDto("FAIL");
+            return new ResponseDto("FAIL");
         }
 
         if(!notice.getLecture().getId().equals(lectureId)) {
-            return new ReturnDto("FAIL");
+            return new ResponseDto("FAIL");
         } else {
             NoticeFindResponseDto responseDto = NoticeFindResponseDto.builder()
                     .notice(notice)
                     .build();
-            return new ReturnDto("SUCCESS", responseDto);
+            return new ResponseDto("SUCCESS", responseDto);
         }
     }
 
     @Transactional
-    public ReturnDto updateNotice(Long lectureId, long noticeId, NoticeUpdateRequestDto requestDto) {
+    public ResponseDto updateNotice(Long lectureId, long noticeId, NoticeUpdateRequestDto requestDto) {
         Notice notice = null;
 
         try {
@@ -84,36 +84,36 @@ public class NoticeService {
                     .orElseThrow(Exception::new);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ReturnDto("FAIL");
+            return new ResponseDto("FAIL");
         }
 
         if(!notice.getLecture().getId().equals(lectureId)) {
-            return new ReturnDto("FAIL");
+            return new ResponseDto("FAIL");
         } else {
             notice.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getExposeDt());
             NoticeUpdateResponseDto responseDto = NoticeUpdateResponseDto.builder()
                     .noticeId(notice.getId())
                     .build();
-            return new ReturnDto("SUCCESS", responseDto);
+            return new ResponseDto("SUCCESS", responseDto);
         }
     }
 
     @Transactional
-    public ReturnDto deleteNotice(Long lectureId, Long noticeId) {
+    public ResponseDto deleteNotice(Long lectureId, Long noticeId) {
         Notice notice = null;
 
         try {
             notice = noticeRepository.findById(noticeId).orElseThrow(Exception::new);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ReturnDto("FAIL");
+            return new ResponseDto("FAIL");
         }
 
         if(!notice.getLecture().getId().equals(lectureId)) {
-            return new ReturnDto("FAIL");
+            return new ResponseDto("FAIL");
         } else {
             noticeRepository.deleteById(noticeId);
-            return new ReturnDto("SUCCESS");
+            return new ResponseDto("SUCCESS");
         }
 
     }
