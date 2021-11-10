@@ -2,6 +2,7 @@ package com.connect.oneboardserver.service.storage;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 public interface StorageService {
@@ -12,5 +13,5 @@ public interface StorageService {
 
     void load();
 
-    void delete();
+    boolean delete(String filePath) throws IOException;
 }

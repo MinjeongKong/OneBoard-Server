@@ -19,7 +19,12 @@ public class PlanApiController {
         return planService.uploadLecturePlan(lectureId, file);
     }
 
+    // 과목 강의계획서 삭제
+    @DeleteMapping("/lecture/{lectureId}/plan")
+    public ResponseDto deleteLecturePlan(@PathVariable Long lectureId) {
+        return planService.deleteLecturePlan(lectureId);
+    }
+
     // 과목 강의계획서 조회
 
-    // 과목 강의계획서 수정
 }

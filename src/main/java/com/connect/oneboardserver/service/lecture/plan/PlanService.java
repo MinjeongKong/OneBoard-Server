@@ -45,4 +45,28 @@ public class PlanService {
 
         return new ResponseDto("SUCCESS", responseDto);
     }
+
+    @Transactional
+    public ResponseDto deleteLecturePlan(Long lectureId) {
+        Lecture lecture = null;
+
+        try {
+            lecture = lectureRepository.findById(lectureId).orElseThrow(Exception::new);
+
+            if(lecture.getLecturePlan() != null) {
+                System.out.println(lecture.getLecturePlan());
+                if(storageService.delete(lecture.getLecturePlan())) {
+                    lecture.updateLecturePlan(null);
+                    return new ResponseDto("SUCCESS");
+                } else {
+                    throw new Exception("No file to delete");
+                }
+            } else {
+                throw new Exception("No plan");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseDto("FAIL");
+        }
+    }
 }

@@ -61,7 +61,7 @@ public class FileStorageService implements StorageService {
     }
 
     @Override
-    public void delete() {
-
+    public boolean delete(String filePath) throws IOException {
+        return Files.deleteIfExists(Paths.get(filePath));
     }
 }
