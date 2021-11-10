@@ -13,7 +13,7 @@ public class PlanApiController {
 
     private final PlanService planService;
 
-    // 과목 강의계획서 등록
+    // 과목 강의계획서 등록 및 수정
     @PostMapping("/lecture/{lectureId}/plan")
     public ResponseDto uploadLecturePlan(@PathVariable Long lectureId, @RequestParam("file") MultipartFile file) {
         return planService.uploadLecturePlan(lectureId, file);

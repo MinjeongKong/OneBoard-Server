@@ -29,16 +29,25 @@ public class PlanService {
         Lecture lecture = null;
         String uploadedFile = null;
         try {
+            lecture = lectureRepository.findById(lectureId).orElseThrow(Exception::new);
+
+            // 강의계획서 파일이 있으면 파일 삭제
+            if(lecture.getLecturePlan() != null) {
+                if(storageService.delete(lecture.getLecturePlan())) {
+                    lecture.updateLecturePlan(null);
+                }
+            }
+
             String path = "/lecture_" + lectureId + "/plan";
             uploadedFile = storageService.store(path, file);
 
-            lecture = lectureRepository.findById(lectureId).orElseThrow(Exception::new);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseDto("FAIL");
         }
 
         lecture.updateLecturePlan(uploadedFile);
+
         PlanUploadResponseDto responseDto = PlanUploadResponseDto.builder()
                 .lectureId(lecture.getId())
                 .build();
