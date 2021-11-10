@@ -1,23 +1,23 @@
 package com.connect.oneboardserver.domain.assignment;
 
+import com.connect.oneboardserver.domain.BaseTimeEntity;
+import com.connect.oneboardserver.domain.lecture.Lecture;
 import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Entity
-public class Assignment {
+public class Assignment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long lectureId;
+    @ManyToOne
+    private Lecture lecture;
 
     @Column(length = 30, nullable = false)
     private String title;
@@ -29,20 +29,34 @@ public class Assignment {
     private String fileUrl;
 
     @Column(nullable = false)
-    private LocalDateTime startDt;
+    private String startDt;
 
     @Column(nullable = false)
-    private LocalDateTime endDt;
+    private String endDt;
 
     @Column
-    private LocalDateTime exposeDt;
+    private String exposeDt;
 
-    @Column(nullable = false)
-    private Timestamp createdDt;
+    @Builder
+    public Assignment(String title, String content, String fileUrl, String startDt, String endDt, String exposeDt) {
+        this.title = title;
+        this.content = content;
+        this.fileUrl = fileUrl;
+        this.startDt = startDt;
+        this.endDt = endDt;
+        this.exposeDt = exposeDt;
+    }
 
-    @Column
-    private Timestamp updatedDt;
+    public void setLecture(Lecture lecture) {
+        this.lecture = lecture;
+    }
 
-    
-
+    public void update(String title, String content, String fileUrl, String startDt, String endDt, String exposeDt) {
+        this.title = title;
+        this.content = content;
+        this.fileUrl = fileUrl;
+        this.startDt = startDt;
+        this.endDt = endDt;
+        this.exposeDt = exposeDt;
+    }
 }

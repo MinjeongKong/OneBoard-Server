@@ -1,28 +1,28 @@
 package com.connect.oneboardserver.domain.assignment;
 
-import lombok.AllArgsConstructor;
+import com.connect.oneboardserver.domain.BaseTimeEntity;
+import com.connect.oneboardserver.domain.login.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Entity
-public class Submit {
+public class Submit extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long assignmentId;
+    @ManyToOne
+    private Assignment assignment;
 
-    @Column(nullable = false)
-    private Long studentId;
+    @ManyToOne
+    private Member member;
 
     @Column(length = 300)
     private String content;
@@ -31,16 +31,25 @@ public class Submit {
     private String fileUrl;
 
     @Column
-    private int score;
+    private Long score;
 
     @Column(length = 300)
     private String feedback;
 
-    @Column(nullable = false)
-    private Timestamp createdDt;
+    @Builder
+    public Submit(String content, String fileUrl, Long score, String feedback) {
+        this.content = content;
+        this.fileUrl = fileUrl;
+        this.score = score;
+        this.feedback = feedback;
+    }
 
-    @Column
-    private Timestamp updatedDt;
+    public void setAssignment(Assignment assignment) {
+        this.assignment = assignment;
+    }
 
+    public void setMember(Member member) {
+        this.member = member;
+    }
 
 }
