@@ -2,11 +2,13 @@ package com.connect.oneboardserver.service.storage;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
+
 public interface StorageService {
 
-    void init();
+    void init(Path path);
 
-    void store(MultipartFile file) throws Exception;
+    String store(String uploadPath, MultipartFile file) throws Exception;
 
     void load();
 

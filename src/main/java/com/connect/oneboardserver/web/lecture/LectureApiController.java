@@ -17,7 +17,7 @@ public class LectureApiController {
 
     // 과목 강의계획서 등록
     @PostMapping("/lecture/{lectureId}/plan")
-    public String uploadLecturePlan(@PathVariable Long lectureId, @RequestParam("file") MultipartFile file) {
+    public ResponseDto uploadLecturePlan(@PathVariable Long lectureId, @RequestParam("file") MultipartFile file) {
         return lectureService.uploadLecturePlan(lectureId, file);
     }
 

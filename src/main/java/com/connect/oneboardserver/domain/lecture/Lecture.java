@@ -30,4 +30,8 @@ public class Lecture {
         this.lecturePlan = lecturePlan;
         this.semester = semester;
     }
+
+    public void updateLecturePlan(String lecturePlan) {
+        this.lecturePlan = lecturePlan;
+    }
 }

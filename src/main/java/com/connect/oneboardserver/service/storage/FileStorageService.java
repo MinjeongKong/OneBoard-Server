@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Service
@@ -19,34 +18,41 @@ public class FileStorageService implements StorageService {
     @Value("${spring.servlet.multipart.location}")
     private String basePath;
 
-    private String uploadPath = "/upload/";
-
     @Override
-    public void init() {
+    public void init(Path path) {
         try {
-            Files.createDirectories(Paths.get(basePath + uploadPath));
+            Files.createDirectories(path);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException("Fail to create directory : " + basePath + uploadPath);
+            throw new RuntimeException("Fail to create directory : " + path);
         }
     }
 
     @Override
-    public void store(MultipartFile file) throws Exception {
+    public String store(String uploadPath, MultipartFile file) throws Exception {
         try {
             if (file.isEmpty()) {
                 throw new Exception("File is empty");
             }
+
             Path dirPath = Paths.get(basePath + uploadPath);
             if (!Files.exists(dirPath)) {
-                init();
+                init(dirPath);
             }
-            String filePath = dirPath + "/" + file.getOriginalFilename() + "_" + LocalDateTime.now();
-            System.out.println(filePath);
+
+            String filePath = dirPath + "/" + getUploadFileName(file.getOriginalFilename());
             file.transferTo(new File(filePath));
+
+            return filePath;
         } catch (Exception e) {
             throw new Exception("Fail to upload file");
         }
+    }
+
+    private String getUploadFileName(String fileFullName) {
+        return fileFullName.substring(0, fileFullName.lastIndexOf("."))
+                + "_" + System.currentTimeMillis()
+                + fileFullName.substring(fileFullName.lastIndexOf("."));
     }
 
     @Override
