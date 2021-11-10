@@ -1,4 +1,4 @@
-package com.connect.oneboardserver.service.lecture;
+package com.connect.oneboardserver.service.lecture.plan;
 
 import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;
@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @Service
-public class LectureService {
+public class PlanService {
 
     @Qualifier("FileStorageService")
     private final StorageService storageService;
