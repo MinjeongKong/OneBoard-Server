@@ -1,5 +1,6 @@
 package com.connect.oneboardserver.web.dto.assignment;
 
+import com.connect.oneboardserver.domain.assignment.Assignment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,8 +11,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class AssignmentCreateRequestDto {
 
@@ -22,13 +21,30 @@ public class AssignmentCreateRequestDto {
     private String fileUrl;
 
     @NotEmpty
-    private LocalDateTime startDt;
+    private String startDt;
     @NotEmpty
-    private LocalDateTime endDt;
+    private String endDt;
 
-    private LocalDateTime exposeDt;
-    @NotEmpty
-    private Timestamp createdDt;
-    private Timestamp updatedDt;
+    private String exposeDt;
 
+    @Builder
+    public AssignmentCreateRequestDto(String title, String content, String fileUrl, String startDt, String endDt, String exposeDt) {
+        this.title = title;
+        this.content = content;
+        this.fileUrl = fileUrl;
+        this.startDt = startDt;
+        this.endDt = endDt;
+        this.exposeDt = exposeDt;
+    }
+
+    public Assignment toEntity() {
+        return Assignment.builder()
+                .title(title)
+                .content(content)
+                .fileUrl(fileUrl)
+                .startDt(startDt)
+                .endDt(endDt)
+                .exposeDt(exposeDt)
+                .build();
+    }
 }
