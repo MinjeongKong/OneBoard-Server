@@ -37,11 +37,9 @@ public class Submit extends BaseTimeEntity {
     private String feedback;
 
     @Builder
-    public Submit(String content, String fileUrl, Long score, String feedback) {
+    public Submit(String content, String fileUrl) {
         this.content = content;
         this.fileUrl = fileUrl;
-        this.score = score;
-        this.feedback = feedback;
     }
 
     public void setAssignment(Assignment assignment) {
@@ -50,6 +48,11 @@ public class Submit extends BaseTimeEntity {
 
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public void check(Long score, String feedback) {
+        this.score = score;
+        this.feedback = feedback;
     }
 
 }
