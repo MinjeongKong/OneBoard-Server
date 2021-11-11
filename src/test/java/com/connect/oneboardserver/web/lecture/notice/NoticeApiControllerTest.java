@@ -135,9 +135,9 @@ public class NoticeApiControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         NoticeFindResponseDto responseDto = mapper.convertValue(responseData, NoticeFindResponseDto.class);
 
-        assertThat(responseDto.getNotice().getId()).isEqualTo(noticeId);
-        assertThat(responseDto.getNotice().getExposeDt()).isEqualTo(now);
-        assertThat(responseDto.getNotice().getLecture().getId()).isEqualTo(lectureId);
+        assertThat(responseDto.getId()).isEqualTo(noticeId);
+        assertThat(responseDto.getExposeDt()).isEqualTo(now);
+        assertThat(responseDto.getLectureId()).isEqualTo(lectureId);
     }
 
     @Test
