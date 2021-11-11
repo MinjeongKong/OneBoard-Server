@@ -1,4 +1,4 @@
-package com.connect.oneboardserver.service.lecture.plan;
+package com.connect.oneboardserver.service.lecture;
 
 import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;

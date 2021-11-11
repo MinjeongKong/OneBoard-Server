@@ -1,6 +1,6 @@
-package com.connect.oneboardserver.web.lecture.plan;
+package com.connect.oneboardserver.web.lecture;
 
-import com.connect.oneboardserver.service.lecture.plan.PlanService;
+import com.connect.oneboardserver.service.lecture.PlanService;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;

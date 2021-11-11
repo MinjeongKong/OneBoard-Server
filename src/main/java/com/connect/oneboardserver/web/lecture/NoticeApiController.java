@@ -1,6 +1,6 @@
-package com.connect.oneboardserver.web.lecture.notice;
+package com.connect.oneboardserver.web.lecture;
 
-import com.connect.oneboardserver.service.lecture.notice.NoticeService;
+import com.connect.oneboardserver.service.lecture.NoticeService;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.notice.*;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,9 @@
-package com.connect.oneboardserver.domain.lecture.notice;
+package com.connect.oneboardserver.domain.lecture;
 
 import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;
+import com.connect.oneboardserver.domain.lecture.notice.Notice;
+import com.connect.oneboardserver.domain.lecture.notice.NoticeRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
