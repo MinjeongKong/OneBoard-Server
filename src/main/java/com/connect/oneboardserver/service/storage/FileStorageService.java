@@ -2,11 +2,14 @@ package com.connect.oneboardserver.service.storage;
 
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -56,8 +59,17 @@ public class FileStorageService implements StorageService {
     }
 
     @Override
-    public void load() {
-
+    public Resource load(String filePath) throws Exception {
+        Resource resource = null;
+        try {
+            resource = new UrlResource("file:" + filePath);
+            if(!resource.exists()) {
+                throw new Exception("Cannot read file : " + filePath);
+            }
+            return resource;
+        } catch (MalformedURLException e) {
+            throw new Exception("Cannot read file : " + filePath);
+        }
     }
 
     @Override

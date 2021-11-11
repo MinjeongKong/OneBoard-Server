@@ -1,5 +1,6 @@
 package com.connect.oneboardserver.service.storage;
 
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -11,7 +12,7 @@ public interface StorageService {
 
     String store(String uploadPath, MultipartFile file) throws Exception;
 
-    void load();
+    public Resource load(String filePath) throws Exception;
 
     boolean delete(String filePath) throws IOException;
 }

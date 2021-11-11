@@ -3,6 +3,8 @@ package com.connect.oneboardserver.web.lecture.plan;
 import com.connect.oneboardserver.service.lecture.plan.PlanService;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +27,10 @@ public class PlanApiController {
         return planService.deleteLecturePlan(lectureId);
     }
 
-    // 과목 강의계획서 조회
+    // 과목 강의계획서 로드
+    @GetMapping("/lecture/{lectureId}/plan")
+    public ResponseEntity<Resource> loadLecturePlan(@PathVariable Long lectureId) {
+        return planService.loadLecturePlan(lectureId);
+    }
 
 }

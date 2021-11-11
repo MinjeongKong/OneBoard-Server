@@ -7,6 +7,10 @@ import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.plan.PlanUploadResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -76,6 +80,24 @@ public class PlanService {
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseDto("FAIL");
+        }
+    }
+
+    public ResponseEntity<Resource> loadLecturePlan(Long lectureId) {
+        Lecture lecture = null;
+        Resource resource = null;
+        try {
+            lecture = lectureRepository.findById(lectureId).orElseThrow(Exception::new);
+            String filePath = lecture.getLecturePlan();
+            resource = storageService.load(filePath);
+            String contentDisposition = "attachment; filename=\"" +
+                    lecture.getTitle() + "_plan\"";
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                    .body(resource);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resource);
         }
     }
 }
