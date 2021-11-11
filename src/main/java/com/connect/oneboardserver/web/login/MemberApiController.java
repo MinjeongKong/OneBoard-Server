@@ -43,7 +43,7 @@ public class MemberApiController {
                 .userType(user.getUserType())
                 .university(user.getUniversity())
                 .major(user.getMajor())
-                .lecture_id(user.getLecture_id())
+//                .lecture_id(user.getLecture_id())
                 .roles(Collections.singletonList("ROLE_" + user.getUserType()))
                 .build()).getId();
 

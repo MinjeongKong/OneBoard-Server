@@ -34,7 +34,7 @@ public class MemberRepositoryTest {
         String user_type = "S";
         String university = "Ajou";
         String major = "Software";
-        String lecture_id = "F034";
+//        String lecture_id = "F034";
 
         memberRepository.save(Member.builder()
                 .studentNumber(studentNumber)
@@ -44,7 +44,7 @@ public class MemberRepositoryTest {
                 .userType(user_type)
                 .university(university)
                 .major(major)
-                .lecture_id(lecture_id)
+//                .lecture_id(lecture_id)
                 .roles(Collections.singletonList(user_type))
                 .build());
 

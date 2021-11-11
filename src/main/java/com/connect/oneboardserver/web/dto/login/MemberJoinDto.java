@@ -30,6 +30,6 @@ public class MemberJoinDto {
     @NotEmpty
     private String major;
 
-    private String lecture_id;
+//    private String lecture_id;
 
 }
