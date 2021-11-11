@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -29,10 +30,11 @@ public class NoticeService {
             return new ResponseDto("FAIL");
         }
         List<Notice> noticeList = noticeRepository.findAllByLectureId(lecture.getId());
-        NoticeListFindResponseDto responseDto = NoticeListFindResponseDto.builder()
-                .noticeList(noticeList)
-                .build();
-        return new ResponseDto("SUCCESS", responseDto);
+        List<NoticeFindResponseDto> noticeFindResponseDtoList = new ArrayList<>();
+        for (int i = 0; i < noticeList.size(); i++) {
+            noticeFindResponseDtoList.add(NoticeFindResponseDto.toResponseDto(noticeList.get(i)));
+        }
+        return new ResponseDto("SUCCESS", noticeFindResponseDtoList);
     }
 
     @Transactional
