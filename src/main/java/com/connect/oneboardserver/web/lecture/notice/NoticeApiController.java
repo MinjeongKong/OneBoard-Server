@@ -38,7 +38,6 @@ public class NoticeApiController {
         return noticeService.updateNotice(lectureId, noticeId, requestDto);
     }
 
-
     // 과목 공지사항 삭제
     @DeleteMapping("/lecture/{lectureId}/notice/{noticeId}")
     public ResponseDto deleteNotice(@PathVariable Long lectureId, @PathVariable Long noticeId) {

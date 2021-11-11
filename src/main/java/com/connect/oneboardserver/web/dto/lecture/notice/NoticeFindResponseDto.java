@@ -9,10 +9,31 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NoticeFindResponseDto {
 
-    private Notice notice;
+    private Long id;
+    private String title;
+    private String content;
+    private Long lectureId;
+    private String exposeDt;
+    private String updatedDt;
 
     @Builder
-    public NoticeFindResponseDto(Notice notice) {
-        this.notice = notice;
+    public NoticeFindResponseDto(Long id, String title, String content, Long lectureId, String exposeDt, String updatedDt) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.lectureId = lectureId;
+        this.exposeDt = exposeDt;
+        this.updatedDt = updatedDt;
+    }
+
+    public static NoticeFindResponseDto toResponseDto(Notice entity) {
+        return NoticeFindResponseDto.builder()
+                .id(entity.getId())
+                .title(entity.getTitle())
+                .content(entity.getContent())
+                .lectureId(entity.getLecture().getId())
+                .exposeDt(entity.getExposeDt())
+                .updatedDt(entity.getUpdatedDt())
+                .build();
     }
 }

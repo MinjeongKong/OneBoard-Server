@@ -68,9 +68,7 @@ public class NoticeService {
         if(!notice.getLecture().getId().equals(lectureId)) {
             return new ResponseDto("FAIL");
         } else {
-            NoticeFindResponseDto responseDto = NoticeFindResponseDto.builder()
-                    .notice(notice)
-                    .build();
+            NoticeFindResponseDto responseDto = NoticeFindResponseDto.toResponseDto(notice);
             return new ResponseDto("SUCCESS", responseDto);
         }
     }
