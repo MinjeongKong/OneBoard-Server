@@ -35,10 +35,13 @@ public class LectureApiController {
     }
 
     // 과목 목록 조회
-//    @GetMapping("/lectures")
-//    public ResponseDto findLectureList() {
-//        return lectureService.findLectureList();
-//    }
+    @GetMapping("/lectures")
+    public ResponseDto findLectureList(HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveToken(request);
+        String email = jwtTokenProvider.getUserPk(token);
+
+        return lectureService.findLectureList(email);
+    }
 
     // 과목 정보 조회
 }
