@@ -52,4 +52,12 @@ public class LectureService {
         }
         return new ResponseDto("SUCCESS", lectureFindResponseDtoList);
     }
+
+    public ResponseDto findLecture(Long lectureId) {
+        Lecture lecture = lectureRepository.findById(lectureId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 과목이 없습니다 : id = " + lectureId));
+
+        LectureFindResponseDto responseDto = LectureFindResponseDto.toResponseDto(lecture);
+        return new ResponseDto("SUCCESS", responseDto);
+    }
 }
