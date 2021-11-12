@@ -44,4 +44,8 @@ public class LectureApiController {
     }
 
     // 과목 정보 조회
+    @GetMapping("/lecture/{lectureId}")
+    public ResponseDto findLecture(@PathVariable Long lectureId) {
+        return lectureService.findLecture(lectureId);
+    }
 }
