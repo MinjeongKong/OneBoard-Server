@@ -16,7 +16,7 @@ public class LectureApiController {
     private final LectureService lectureService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    // 과목 등록
+    // 과목 생성 및 등록 -> 개발용
     @PostMapping("/lecture")
     public ResponseDto createLecture(HttpServletRequest request) {
         String token = jwtTokenProvider.resolveToken(request);
@@ -32,6 +32,12 @@ public class LectureApiController {
                 .build();
 
         return lectureService.createLecture(requestDto);
+    }
+
+    // 과목 등록 -> 개발용
+    @GetMapping("/lecture/register")
+    public ResponseDto registerMemberToLecture(@RequestParam Long memberId, @RequestParam Long lectureId) {
+        return lectureService.registerLecture(memberId, lectureId);
     }
 
     // 과목 목록 조회
