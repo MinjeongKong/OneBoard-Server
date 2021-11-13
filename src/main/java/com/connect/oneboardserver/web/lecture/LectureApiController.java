@@ -16,21 +16,9 @@ public class LectureApiController {
     private final LectureService lectureService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    // 과목 생성 및 등록 -> 개발용
+    // 과목 생성 -> 개발용
     @PostMapping("/lecture")
-    public ResponseDto createLecture(HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
-
-        String email = jwtTokenProvider.getUserPk(token);
-        String title = request.getParameter("title");
-        String semester = request.getParameter("semester");
-
-        LectureCreateRequestDto requestDto = LectureCreateRequestDto.builder()
-                .email(email)
-                .title(title)
-                .semester(semester)
-                .build();
-
+    public ResponseDto createLecture(@RequestBody LectureCreateRequestDto requestDto) {
         return lectureService.createLecture(requestDto);
     }
 
