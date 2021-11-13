@@ -19,10 +19,10 @@ public class UserRepositoryTest {
     @Autowired
     UserRepository userRepository;
 
-//    @AfterEach
-//    public void cleanUp() {
-//        userRepository.deleteAll();
-//    }
+    @AfterEach
+    public void cleanUp() {
+        userRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("학생 저장 및 불러오기")

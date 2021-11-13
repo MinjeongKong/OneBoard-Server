@@ -1,6 +1,5 @@
 package com.connect.oneboardserver.web.dto.lecture.notice;
 
-import com.connect.oneboardserver.domain.lecture.notice.Notice;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,10 +10,10 @@ import java.util.List;
 @NoArgsConstructor
 public class NoticeListFindResponseDto {
 
-    private List<Notice> noticeList;
+    private List<NoticeFindResponseDto> noticeFindResponseDtoList;
 
     @Builder
-    public NoticeListFindResponseDto(List<Notice> noticeList) {
-        this.noticeList = noticeList;
+    public NoticeListFindResponseDto(List<NoticeFindResponseDto> noticeFindResponseDtoList) {
+        this.noticeFindResponseDtoList = noticeFindResponseDtoList;
     }
 }

@@ -1,4 +1,4 @@
-package com.connect.oneboardserver.service.lecture.notice;
+package com.connect.oneboardserver.service.lecture;
 
 import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;
@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -29,10 +30,11 @@ public class NoticeService {
             return new ResponseDto("FAIL");
         }
         List<Notice> noticeList = noticeRepository.findAllByLectureId(lecture.getId());
-        NoticeListFindResponseDto responseDto = NoticeListFindResponseDto.builder()
-                .noticeList(noticeList)
-                .build();
-        return new ResponseDto("SUCCESS", responseDto);
+        List<NoticeFindResponseDto> noticeFindResponseDtoList = new ArrayList<>();
+        for (int i = 0; i < noticeList.size(); i++) {
+            noticeFindResponseDtoList.add(NoticeFindResponseDto.toResponseDto(noticeList.get(i)));
+        }
+        return new ResponseDto("SUCCESS", noticeFindResponseDtoList);
     }
 
     @Transactional
@@ -68,9 +70,7 @@ public class NoticeService {
         if(!notice.getLecture().getId().equals(lectureId)) {
             return new ResponseDto("FAIL");
         } else {
-            NoticeFindResponseDto responseDto = NoticeFindResponseDto.builder()
-                    .notice(notice)
-                    .build();
+            NoticeFindResponseDto responseDto = NoticeFindResponseDto.toResponseDto(notice);
             return new ResponseDto("SUCCESS", responseDto);
         }
     }
