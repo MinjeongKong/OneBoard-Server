@@ -5,6 +5,7 @@ import com.connect.oneboardserver.domain.lecture.LectureRepository;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.LectureCreateRequestDto;
 import com.connect.oneboardserver.web.dto.lecture.LectureCreateResponseDto;
+import com.connect.oneboardserver.web.dto.lecture.LectureFindResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -69,5 +70,39 @@ public class LectureApiControllerTest {
 
         assertThat(newLecture.getTitle()).isEqualTo(title);
         assertThat(newLecture.getSemester()).isEqualTo(semester);
+    }
+
+    // 과목 등록 테스트
+
+    // 과목 정보 조회 테스트
+    @Test
+    @DisplayName("과목 정보 조회 요청")
+    void requestFindLecture() {
+        // given
+        String title = "lecture" + (int)(Math.random() * 100);
+        String semester = "semester" + (int)(Math.random() * 100);
+
+        Lecture lecture = lectureRepository.save(Lecture.builder()
+                .title(title)
+                .semester(semester)
+                .build());
+
+        String url = "http://localhost:" + port + "/lecture/{lectureId}";
+
+        // when
+        ResponseEntity<ResponseDto> responseEntity
+                = restTemplate.getForEntity(url, ResponseDto.class, lecture.getId());
+
+        // then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        // responseData: LinkedHashMap
+        Object responseData = responseEntity.getBody().getData();
+
+        ObjectMapper mapper = new ObjectMapper();
+        LectureFindResponseDto responseDto = mapper.convertValue(responseData, LectureFindResponseDto.class);
+
+        assertThat(responseDto.getTitle()).isEqualTo(title);
+        assertThat(responseDto.getSemester()).isEqualTo(semester);
     }
 }
