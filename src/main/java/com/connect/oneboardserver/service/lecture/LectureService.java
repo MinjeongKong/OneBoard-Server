@@ -58,6 +58,16 @@ public class LectureService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 과목이 없습니다 : id = " + lectureId));
 
         LectureFindResponseDto responseDto = LectureFindResponseDto.toResponseDto(lecture);
+
+        List<MemberLecture> memberList = memberLectureRepository.findAllByLectureId(lectureId);
+        for(int i = 0; i < memberList.size(); i++) {
+            Member member = memberList.get(i).getMember();
+            if(member.getRoles().get(0).equals("ROLE_T")) {
+                responseDto.setProfessor(member.getName());
+                break;
+            }
+        }
+
         return new ResponseDto("SUCCESS", responseDto);
     }
 }
