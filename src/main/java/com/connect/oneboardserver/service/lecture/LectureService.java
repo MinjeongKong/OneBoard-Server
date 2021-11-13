@@ -41,16 +41,25 @@ public class LectureService {
 
     public ResponseDto findLectureList(String email) {
         Member member = (Member) userDetailsService.loadUserByUsername(email);
-        List<MemberLecture> memberLectureList = memberLectureRepository.findAllByMemberId(member.getId());
+        List<MemberLecture> lectureOfMemberList = memberLectureRepository.findAllByMemberId(member.getId());
 
-        List<LectureFindResponseDto> lectureFindResponseDtoList = new ArrayList<>();
-        for (int i = 0; i < memberLectureList.size(); i++) {
-            LectureFindResponseDto lectureFindResponseDto
-                    = LectureFindResponseDto.toResponseDto(memberLectureList.get(i).getLecture());
-//            lectureFindResponseDto.setProfessor();
-            lectureFindResponseDtoList.add(lectureFindResponseDto);
+        List<LectureFindResponseDto> responseDtoList = new ArrayList<>();
+
+        for (int i = 0; i < lectureOfMemberList.size(); i++) {
+            Lecture lectureOfMember = lectureOfMemberList.get(i).getLecture();
+            LectureFindResponseDto responseDto = LectureFindResponseDto.toResponseDto(lectureOfMember);
+
+            List<MemberLecture> memberOfLectureList = memberLectureRepository.findAllByLectureId(lectureOfMember.getId());
+            for(int j = 0; j < memberOfLectureList.size(); j++) {
+                Member memberOfLecture = memberOfLectureList.get(j).getMember();
+                if(memberOfLecture.getRoles().get(0).equals("ROLE_T")) {
+                    responseDto.setProfessor(memberOfLecture.getName());
+                    break;
+                }
+            }
+            responseDtoList.add(responseDto);
         }
-        return new ResponseDto("SUCCESS", lectureFindResponseDtoList);
+        return new ResponseDto("SUCCESS", responseDtoList);
     }
 
     public ResponseDto findLecture(Long lectureId) {
@@ -59,11 +68,11 @@ public class LectureService {
 
         LectureFindResponseDto responseDto = LectureFindResponseDto.toResponseDto(lecture);
 
-        List<MemberLecture> memberList = memberLectureRepository.findAllByLectureId(lectureId);
-        for(int i = 0; i < memberList.size(); i++) {
-            Member member = memberList.get(i).getMember();
-            if(member.getRoles().get(0).equals("ROLE_T")) {
-                responseDto.setProfessor(member.getName());
+        List<MemberLecture> memberOfLectureList = memberLectureRepository.findAllByLectureId(lectureId);
+        for(int i = 0; i < memberOfLectureList.size(); i++) {
+            Member memberOfLecture = memberOfLectureList.get(i).getMember();
+            if(memberOfLecture.getRoles().get(0).equals("ROLE_T")) {
+                responseDto.setProfessor(memberOfLecture.getName());
                 break;
             }
         }
