@@ -27,17 +27,8 @@ public class LectureService {
     private final MemberLectureRepository memberLectureRepository;
 
     public ResponseDto createLecture(LectureCreateRequestDto requestDto) {
-        Member member = (Member) userDetailsService.loadUserByUsername(requestDto.getEmail());
         Lecture lecture = lectureRepository.save(requestDto.toEntity());
-
-        memberLectureRepository.save(MemberLecture.builder()
-                .member(member)
-                .lecture(lecture)
-                .build());
-
-        LectureCreateResponseDto responseDto = LectureCreateResponseDto.builder()
-                .lectureId(lecture.getId())
-                .build();
+        LectureCreateResponseDto responseDto = new LectureCreateResponseDto(lecture.getId());
         return new ResponseDto("SUCCESS", responseDto);
     }
 

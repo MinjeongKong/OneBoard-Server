@@ -9,13 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LectureCreateRequestDto {
 
-    private String email;
     private String title;
     private String semester;
 
     @Builder
-    public LectureCreateRequestDto(String email, String title, String semester) {
-        this.email = email;
+    public LectureCreateRequestDto(String title, String semester) {
         this.title = title;
         this.semester = semester;
     }
