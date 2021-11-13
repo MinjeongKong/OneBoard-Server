@@ -47,16 +47,10 @@ public class LectureService {
 
         for (int i = 0; i < lectureOfMemberList.size(); i++) {
             Lecture lectureOfMember = lectureOfMemberList.get(i).getLecture();
-            LectureFindResponseDto responseDto = LectureFindResponseDto.toResponseDto(lectureOfMember);
 
-            List<MemberLecture> memberOfLectureList = memberLectureRepository.findAllByLectureId(lectureOfMember.getId());
-            for(int j = 0; j < memberOfLectureList.size(); j++) {
-                Member memberOfLecture = memberOfLectureList.get(j).getMember();
-                if(memberOfLecture.getRoles().get(0).equals("ROLE_T")) {
-                    responseDto.setProfessor(memberOfLecture.getName());
-                    break;
-                }
-            }
+            LectureFindResponseDto responseDto = LectureFindResponseDto.toResponseDto(lectureOfMember);
+            responseDto.setProfessor(findProfessor(lectureOfMember.getId()));
+
             responseDtoList.add(responseDto);
         }
         return new ResponseDto("SUCCESS", responseDtoList);
@@ -67,16 +61,21 @@ public class LectureService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 과목이 없습니다 : id = " + lectureId));
 
         LectureFindResponseDto responseDto = LectureFindResponseDto.toResponseDto(lecture);
+        responseDto.setProfessor(findProfessor(lectureId));
 
+        return new ResponseDto("SUCCESS", responseDto);
+    }
+
+    private String findProfessor(Long lectureId) {
+        String professorName = null;
         List<MemberLecture> memberOfLectureList = memberLectureRepository.findAllByLectureId(lectureId);
         for(int i = 0; i < memberOfLectureList.size(); i++) {
             Member memberOfLecture = memberOfLectureList.get(i).getMember();
             if(memberOfLecture.getRoles().get(0).equals("ROLE_T")) {
-                responseDto.setProfessor(memberOfLecture.getName());
+                professorName = memberOfLecture.getName();
                 break;
             }
         }
-
-        return new ResponseDto("SUCCESS", responseDto);
+        return professorName;
     }
 }
