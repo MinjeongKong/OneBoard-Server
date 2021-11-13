@@ -40,11 +40,11 @@ public class LectureApiControllerTest {
     }
 
     @Test
-    @DisplayName("과목 등록 요청")
+    @DisplayName("과목 생성 요청")
     void requestCreateLecture() {
         // given
-        String title = "test lecture";
-        String semester = "2021-2";
+        String title = "lecture" + createRandomNumber();
+        String semester = "semester" + createRandomNumber();
 
         LectureCreateRequestDto requestDto = LectureCreateRequestDto.builder()
                 .title(title)
@@ -74,13 +74,12 @@ public class LectureApiControllerTest {
 
     // 과목 등록 테스트
 
-    // 과목 정보 조회 테스트
     @Test
     @DisplayName("과목 정보 조회 요청")
     void requestFindLecture() {
         // given
-        String title = "lecture" + (int)(Math.random() * 100);
-        String semester = "semester" + (int)(Math.random() * 100);
+        String title = "lecture" + createRandomNumber();
+        String semester = "semester" + createRandomNumber();
 
         Lecture lecture = lectureRepository.save(Lecture.builder()
                 .title(title)
@@ -104,5 +103,9 @@ public class LectureApiControllerTest {
 
         assertThat(responseDto.getTitle()).isEqualTo(title);
         assertThat(responseDto.getSemester()).isEqualTo(semester);
+    }
+
+    private int createRandomNumber() {
+        return (int)(Math.random() * 100);
     }
 }
