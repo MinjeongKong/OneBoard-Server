@@ -2,6 +2,7 @@ package com.connect.oneboardserver.service.lecture;
 
 import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;
+import com.connect.oneboardserver.domain.lecture.notice.Notice;
 import com.connect.oneboardserver.domain.login.Member;
 import com.connect.oneboardserver.domain.login.MemberRepository;
 import com.connect.oneboardserver.domain.relation.MemberLecture;
@@ -9,7 +10,9 @@ import com.connect.oneboardserver.domain.relation.MemberLectureRepository;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.LectureCreateRequestDto;
 import com.connect.oneboardserver.web.dto.lecture.LectureCreateResponseDto;
+import com.connect.oneboardserver.web.dto.lecture.LectureFindAllResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.LectureFindResponseDto;
+import com.connect.oneboardserver.web.dto.lecture.notice.NoticeFindResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -97,6 +100,10 @@ public class LectureService {
     public ResponseDto findAllLecture() {
         List<Lecture> lectureList = lectureRepository.findAll();
 
-        return new ResponseDto("SUCCESS", lectureList);
+        List<LectureFindAllResponseDto> lectureFindAllResponseDtoList = new ArrayList<>();
+        for(Lecture lecture : lectureList) {
+            lectureFindAllResponseDtoList.add(LectureFindAllResponseDto.toResponseDto(lecture));
+        }
+        return new ResponseDto("SUCCESS", lectureFindAllResponseDtoList);
     }
 }
