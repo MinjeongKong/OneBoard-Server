@@ -30,7 +30,7 @@ public class LessonRepositoryTest {
     public void createLesson() {
         // given
         String title = "Test Title";
-        LocalDateTime date = LocalDateTime.now();
+        String date = LocalDateTime.now().toString();
         String note = "lesson note file url";
         int type = 1;
         String room = "Paldal 410";
@@ -39,7 +39,8 @@ public class LessonRepositoryTest {
 
         lessonRepository.save(Lesson.builder()
                 .title(title)
-                .date(date).note(note)
+                .date(date)
+                .note(note)
                 .type(type)
                 .room(room)
                 .meeting_id(meeting_id)
