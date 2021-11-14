@@ -28,6 +28,12 @@ public class LectureApiController {
         return lectureService.registerLecture(memberId, lectureId);
     }
 
+    // 전체 과목 조회 -> 개발용
+    @GetMapping("/lectures/all")
+    public ResponseDto findAllLecture() {
+        return lectureService.findAllLecture();
+    }
+
     // 과목 목록 조회
     @GetMapping("/lectures")
     public ResponseDto findLectureList(HttpServletRequest request) {

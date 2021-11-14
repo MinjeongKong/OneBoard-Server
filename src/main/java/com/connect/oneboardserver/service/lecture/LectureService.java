@@ -93,4 +93,10 @@ public class LectureService {
         }
         return professorName;
     }
+
+    public ResponseDto findAllLecture() {
+        List<Lecture> lectureList = lectureRepository.findAll();
+
+        return new ResponseDto("SUCCESS", lectureList);
+    }
 }
