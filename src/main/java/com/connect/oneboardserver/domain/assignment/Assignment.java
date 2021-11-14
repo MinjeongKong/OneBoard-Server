@@ -59,4 +59,8 @@ public class Assignment extends BaseTimeEntity {
         this.endDt = endDt;
         this.exposeDt = exposeDt;
     }
+
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
+    }
 }
