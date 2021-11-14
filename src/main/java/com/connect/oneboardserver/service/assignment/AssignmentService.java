@@ -81,8 +81,8 @@ public class AssignmentService {
                 .orElseThrow(()->new IllegalArgumentException("해당 과목이 없습니다. id="+lectureId));
 
         List<Assignment> assignmentList = assignmentRepository.findAllByLectureId(lectureId);
-        AssignmentListFindResponseDto responseDto = new AssignmentListFindResponseDto(assignmentList);
+//        AssignmentListFindResponseDto responseDto = new AssignmentListFindResponseDto(assignmentList);
 
-        return new ResponseDto("SUCCESS", responseDto);
+        return new ResponseDto("SUCCESS", assignmentList);
     }
 }
