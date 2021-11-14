@@ -1,21 +1,22 @@
 package com.connect.oneboardserver.service.assignment;
 
+import com.connect.oneboardserver.config.security.JwtTokenProvider;
 import com.connect.oneboardserver.domain.assignment.Assignment;
 import com.connect.oneboardserver.domain.assignment.AssignmentRepository;
 import com.connect.oneboardserver.domain.assignment.Submit;
 import com.connect.oneboardserver.domain.assignment.SubmitRepository;
-import com.connect.oneboardserver.domain.lecture.Lecture;
-import com.connect.oneboardserver.domain.lecture.LectureRepository;
 import com.connect.oneboardserver.domain.login.Member;
-import com.connect.oneboardserver.domain.login.MemberRepository;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.assignment.SubmitCheckRequestDto;
 import com.connect.oneboardserver.web.dto.assignment.SubmitCreateRequestDto;
 import com.connect.oneboardserver.web.dto.assignment.SubmitFindResponseDto;
 import com.connect.oneboardserver.web.dto.assignment.SubmitResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 @RequiredArgsConstructor
@@ -23,14 +24,16 @@ import javax.transaction.Transactional;
 public class SubmitService {
 
     private final AssignmentRepository assignmentRepository;
-    private final MemberRepository memberRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UserDetailsService userDetailsService;
     private final SubmitRepository submitRepository;
 
     @Transactional
-    public ResponseDto createSubmit(Long lectureId, Long assignmentId, Long userId, SubmitCreateRequestDto requestDto) {
+    public ResponseDto createSubmit(Long lectureId, Long assignmentId, ServletRequest request, SubmitCreateRequestDto requestDto) {
 
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(()->new IllegalArgumentException("잘못된 접근 입니다"));
+        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+        Member member = (Member) userDetailsService.loadUserByUsername(jwtTokenProvider.getUserPk(token));
+
 
         Assignment assignment = assignmentRepository.findById(assignmentId)
                 .orElseThrow(()->new IllegalArgumentException("해당 과제가 없습니다. id="+assignmentId));
