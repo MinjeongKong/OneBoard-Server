@@ -9,6 +9,7 @@ import com.connect.oneboardserver.domain.relation.MemberLectureRepository;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.LectureCreateRequestDto;
 import com.connect.oneboardserver.web.dto.lecture.LectureCreateResponseDto;
+import com.connect.oneboardserver.web.dto.lecture.LectureFindAllResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.LectureFindResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -97,6 +98,10 @@ public class LectureService {
     public ResponseDto findAllLecture() {
         List<Lecture> lectureList = lectureRepository.findAll();
 
-        return new ResponseDto("SUCCESS", lectureList);
+        List<LectureFindAllResponseDto> lectureFindAllResponseDtoList = new ArrayList<>();
+        for(Lecture lecture : lectureList) {
+            lectureFindAllResponseDtoList.add(LectureFindAllResponseDto.toResponseDto(lecture));
+        }
+        return new ResponseDto("SUCCESS", lectureFindAllResponseDtoList);
     }
 }
