@@ -30,4 +30,5 @@ public class Lecture {
         this.lecturePlan = lecturePlan;
         this.semester = semester;
     }
+
 }

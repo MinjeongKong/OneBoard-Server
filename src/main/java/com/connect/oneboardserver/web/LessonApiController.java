@@ -1,22 +1,37 @@
 package com.connect.oneboardserver.web;
 
-import com.connect.oneboardserver.service.lesson.LessonService;
-import com.connect.oneboardserver.web.dto.LessonCreateRequestDto;
+import com.connect.oneboardserver.service.lecture.lesson.LessonService;
+import com.connect.oneboardserver.web.dto.ResponseDto;
+import com.connect.oneboardserver.web.dto.lecture.lesson.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @RestController
 public class LessonApiController {
 
-    private final LessonService postsService;
+    private final LessonService lessonService;
 
-    @PostMapping("/lecture/lesson")
-    public Long createLesson(@RequestBody LessonCreateRequestDto requestDto) {
-        return postsService.createLesson(requestDto);
+//    @PostMapping("/lecture/lesson")
+//    public Long createLesson(@RequestBody LessonCreateRequestDto requestDto) {
+//        return postsService.createLesson(requestDto);
+//    }
+
+    // 수업 목록 조회
+    @PostMapping("/lecture/{lectureId}/lessons")
+    public ResponseDto findLessonList(@PathVariable Long lectureId) {
+        return lessonService.findLessonList(lectureId);
+    }
+
+    // 수업 생성
+    @PostMapping("/lecture/{lectureId}/lesson")
+    public ResponseDto createLesson(@PathVariable Long lectureId, @RequestBody LessonCreateRequestDto requestDto) {
+        return lessonService.createLesson(lectureId, requestDto);
+    }
+    // 수업 조회
+    @GetMapping("/lecture/{lectureId}/lesson/{lessonId}")
+    public ResponseDto findNotice(@PathVariable Long lectureId, @PathVariable Long lessonId) {
+        return lessonService.findLesson(lectureId, lessonId);
     }
 }

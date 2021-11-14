@@ -1,5 +1,7 @@
 package com.connect.oneboardserver.domain.lesson;
 
+import com.connect.oneboardserver.domain.lecture.lesson.Lesson;
+import com.connect.oneboardserver.domain.lecture.lesson.LessonRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,7 +41,8 @@ public class LessonRepositoryTest {
 
         lessonRepository.save(Lesson.builder()
                 .title(title)
-                .date(date).note(note)
+                .date(date)
+                .note(note)
                 .type(type)
                 .room(room)
                 .meeting_id(meeting_id)

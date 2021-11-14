@@ -1,6 +1,6 @@
-package com.connect.oneboardserver.web.dto;
+package com.connect.oneboardserver.web.dto.lecture.lesson;
 
-import com.connect.oneboardserver.domain.lesson.Lesson;
+import com.connect.oneboardserver.domain.lecture.lesson.Lesson;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
