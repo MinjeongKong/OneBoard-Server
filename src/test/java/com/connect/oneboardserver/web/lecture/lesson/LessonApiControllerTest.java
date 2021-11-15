@@ -4,8 +4,12 @@ import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;
 import com.connect.oneboardserver.domain.lecture.lesson.Lesson;
 import com.connect.oneboardserver.domain.lecture.lesson.LessonRepository;
+import com.connect.oneboardserver.domain.lecture.notice.Notice;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.lesson.*;
+import com.connect.oneboardserver.web.dto.lecture.notice.NoticeCreateRequestDto;
+import com.connect.oneboardserver.web.dto.lecture.notice.NoticeCreateResponseDto;
+import com.connect.oneboardserver.web.dto.lecture.notice.NoticeFindResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,6 +23,7 @@ import org.springframework.http.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,7 +51,7 @@ public class LessonApiControllerTest {
 
     @Test
     @DisplayName("수업 생성하기")
-    public void requestCreateLesson() throws Exception {
+    public void requestCreateLesson() {
         // given
         String lectureTitle = "lecture";
         String lecturePlan = "url";
@@ -80,7 +85,7 @@ public class LessonApiControllerTest {
 
         // when
         ResponseEntity<ResponseDto> responseEntity
-                = restTemplate.postForEntity(url, requestDto, ResponseDto.class, lecture.getI);
+                = restTemplate.postForEntity(url, requestDto, ResponseDto.class, lectureId);
 
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -89,13 +94,15 @@ public class LessonApiControllerTest {
         Object responseData = responseEntity.getBody().getData();
 
         ObjectMapper mapper = new ObjectMapper();
+
         LessonCreateResponseDto responseDto = mapper.convertValue(responseData, LessonCreateResponseDto.class);
 
+        System.out.println("responseDto " + responseDto);
         Lesson newLesson = lessonRepository.findById(responseDto.getLessonId()).orElseThrow();
+
 
         assertThat(newLesson.getLecture().getTitle()).isEqualTo(lectureTitle);
         assertThat(newLesson.getLecture().getId()).isEqualTo(lectureId);
-        assertThat(newLesson.getDate()).isEqualTo(date);
         assertThat(newLesson.getNote()).isEqualTo(note);
         assertThat(newLesson.getType()).isEqualTo(type);
         assertThat(newLesson.getRoom()).isEqualTo(room);
@@ -105,7 +112,7 @@ public class LessonApiControllerTest {
 
     @Test
     @DisplayName("과목 공지사항 조회 요청")
-    void requestFindNotice() {
+    void requestFindLesson() {
         // given
         String lectureTitle = "test lecture";
         String lecturePlan = "test url";

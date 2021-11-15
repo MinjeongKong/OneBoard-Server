@@ -13,11 +13,6 @@ public class LessonApiController {
 
     private final LessonService lessonService;
 
-//    @PostMapping("/lecture/lesson")
-//    public Long createLesson(@RequestBody LessonCreateRequestDto requestDto) {
-//        return postsService.createLesson(requestDto);
-//    }
-
     // 수업 목록 조회
     @PostMapping("/lecture/{lectureId}/lessons")
     public ResponseDto findLessonList(@PathVariable Long lectureId) {
@@ -31,7 +26,8 @@ public class LessonApiController {
     }
     // 수업 조회
     @GetMapping("/lecture/{lectureId}/lesson/{lessonId}")
-    public ResponseDto findNotice(@PathVariable Long lectureId, @PathVariable Long lessonId) {
+    public ResponseDto findLesson(@PathVariable Long lectureId, @PathVariable Long lessonId) {
         return lessonService.findLesson(lectureId, lessonId);
     }
+
 }

@@ -77,7 +77,6 @@ public class NoticeApiControllerTest {
 
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-
         // responseData: LinkedHashMap
         Object responseData = responseEntity.getBody().getData();
 

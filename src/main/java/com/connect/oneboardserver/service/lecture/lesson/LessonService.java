@@ -4,11 +4,13 @@ import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;
 import com.connect.oneboardserver.domain.lecture.lesson.Lesson;
 import com.connect.oneboardserver.domain.lecture.lesson.LessonRepository;
+import com.connect.oneboardserver.domain.lecture.notice.Notice;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.lesson.LessonCreateRequestDto;
 import com.connect.oneboardserver.web.dto.lecture.lesson.LessonCreateResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.lesson.LessonFindResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.lesson.LessonListFindResponseDto;
+import com.connect.oneboardserver.web.dto.lecture.notice.NoticeFindResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +55,7 @@ public class LessonService {
         LessonCreateResponseDto responseDto = LessonCreateResponseDto.builder()
                 .lessonId(lessonRepository.save(lesson).getId())
                 .build();
-        return new ResponseDto("SUCCESS");
+        return new ResponseDto("SUCCESS" ,responseDto);
     }
 
     public ResponseDto findLesson(Long lectureId, Long lessonId) {

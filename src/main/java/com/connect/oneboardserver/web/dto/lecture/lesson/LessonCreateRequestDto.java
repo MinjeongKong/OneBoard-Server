@@ -33,7 +33,8 @@ public class LessonCreateRequestDto {
     public Lesson toEntity() {
         return Lesson.builder()
                 .title(title)
-                .date(date).note(note)
+                .date(date)
+                .note(note)
                 .type(type)
                 .room(room)
                 .meeting_id(meeting_id)
