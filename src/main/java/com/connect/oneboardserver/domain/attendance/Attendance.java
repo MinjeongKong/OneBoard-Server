@@ -27,12 +27,12 @@ public class Attendance extends BaseTimeEntity {
     private Member member;
 
     @Column(length = 30)
-    private String check;
+    private String result;
 
     @Builder
-    public Attendance(Lesson lesson, Member member, String check) {
+    public Attendance(Lesson lesson, Member member, String result) {
         this.lesson = lesson;
         this.member = member;
-        this.check = check;
+        this.result = result;
     }
 }
