@@ -1,4 +1,4 @@
-package com.connect.oneboardserver.web;
+package com.connect.oneboardserver.web.lecture.lesson;
 
 import com.connect.oneboardserver.service.lecture.lesson.LessonService;
 import com.connect.oneboardserver.web.dto.ResponseDto;
@@ -14,7 +14,7 @@ public class LessonApiController {
     private final LessonService lessonService;
 
     // 수업 목록 조회
-    @PostMapping("/lecture/{lectureId}/lessons")
+    @GetMapping("/lecture/{lectureId}/lessons")
     public ResponseDto findLessonList(@PathVariable Long lectureId) {
         return lessonService.findLessonList(lectureId);
     }

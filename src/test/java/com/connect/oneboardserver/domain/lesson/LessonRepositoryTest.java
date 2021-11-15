@@ -32,9 +32,9 @@ public class LessonRepositoryTest {
     public void createLesson() {
         // given
         String title = "Test Title";
-        LocalDateTime date = LocalDateTime.now();
+        String date = LocalDateTime.now().toString();
         String note = "lesson note file url";
-        int type = 1;
+        Integer type = 1;
         String room = "Paldal 410";
         String meeting_id = "zoom meeting url";
         String video_url = "lesson video url";

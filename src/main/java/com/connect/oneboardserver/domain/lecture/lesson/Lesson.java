@@ -5,15 +5,17 @@ import com.connect.oneboardserver.domain.lecture.Lecture;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@ToString
 @EntityListeners(AuditingEntityListener.class)
-@Getter
 @NoArgsConstructor
 @Entity
+@Getter
 public class Lesson {
 
     @Id
@@ -27,13 +29,13 @@ public class Lesson {
     private String title;
 
     @Column(nullable = false)
-    private LocalDateTime date;
+    private String date;
 
     @Column(length = 128, nullable = false)
     private String note;
 
     @Column(nullable = false)
-    private int type;
+    private Integer type;
 
     @Column(length = 30)
     private String room;
@@ -45,7 +47,7 @@ public class Lesson {
     private String video_url;
 
     @Builder
-    public Lesson(Lecture lecture, String title, LocalDateTime date, String note, int type, String room, String meeting_id, String video_url) {
+    public Lesson(Lecture lecture, String title, String date, String note, Integer type, String room, String meeting_id, String video_url) {
         this.lecture = lecture;
         this.title = title;
         this.date = date;
