@@ -4,6 +4,7 @@ import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;
 import com.connect.oneboardserver.domain.lecture.lesson.Lesson;
 import com.connect.oneboardserver.domain.lecture.lesson.LessonRepository;
+import com.connect.oneboardserver.domain.lecture.notice.Notice;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.lesson.*;
 import lombok.RequiredArgsConstructor;
@@ -71,5 +72,24 @@ public class LessonService {
             e.printStackTrace();
             return new ResponseDto("FAIL");
         }
+    }
+    @Transactional
+    public ResponseDto deleteLesson(Long lectureId, Long lessonId) {
+        Lesson lesson = null;
+
+        try {
+            lesson = lessonRepository.findById(lessonId).orElseThrow(Exception::new);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseDto("FAIL");
+        }
+
+        if(!lesson.getLecture().getId().equals(lectureId)) {
+            return new ResponseDto("FAIL");
+        } else {
+            lessonRepository.deleteById(lessonId);
+            return new ResponseDto("SUCCESS");
+        }
+
     }
 }

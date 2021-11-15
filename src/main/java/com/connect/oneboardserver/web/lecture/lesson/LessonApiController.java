@@ -29,5 +29,10 @@ public class LessonApiController {
     public ResponseDto findLesson(@PathVariable Long lectureId, @PathVariable Long lessonId) {
         return lessonService.findLesson(lectureId, lessonId);
     }
+    // 수업 삭제
+    @DeleteMapping("/lecture/{lectureId}/lesson/{lessonId}")
+    public ResponseDto deleteNotice(@PathVariable Long lectureId, @PathVariable Long lessonId) {
+        return lessonService.deleteLesson(lectureId, lessonId);
+    }
 
 }

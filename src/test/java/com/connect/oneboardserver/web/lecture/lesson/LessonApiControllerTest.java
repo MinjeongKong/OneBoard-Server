@@ -4,6 +4,7 @@ import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;
 import com.connect.oneboardserver.domain.lecture.lesson.Lesson;
 import com.connect.oneboardserver.domain.lecture.lesson.LessonRepository;
+import com.connect.oneboardserver.domain.lecture.notice.Notice;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.lesson.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,6 +20,7 @@ import org.springframework.http.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -155,4 +157,46 @@ public class LessonApiControllerTest {
         assertThat(responseDto.getLesson().getLecture().getId()).isEqualTo(lecture.getId());
     }
 
+    @Test
+    @DisplayName("과목 공지사항 삭제 요청")
+    void requestDeleteNotice() {
+        // given
+        String lectureTitle = "test lecture";
+        String lecturePlan = "test url";
+        String semester = "2021-2";
+
+        Lecture lecture = Lecture.builder()
+                .title(lectureTitle)
+                .lecturePlan(lecturePlan)
+                .semester(semester)
+                .build();
+
+        Long lectureId = lectureRepository.save(lecture).getId();
+
+        String title = "Test Title";
+        String date = LocalDateTime.now().toString();
+        String note = "lesson note file url";
+        Integer type = 1;
+        String room = "Paldal 410";
+        String meeting_id = "zoom meeting url";
+        String video_url = "lesson video url";
+
+        Long lessonId = lessonRepository.save(Lesson.builder()
+                .lecture(lecture)
+                .title(title)
+                .date(date).note(note)
+                .type(type)
+                .room(room)
+                .meeting_id(meeting_id)
+                .video_url(video_url)
+                .build()).getId();
+
+        String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson/{lessonId}";
+
+        // when
+        restTemplate.delete(url, lectureId, lessonId);
+
+        // then
+        assertThat(lessonRepository.findById(lessonId)).isEmpty();
+    }
 }
