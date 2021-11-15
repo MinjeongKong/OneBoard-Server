@@ -2,6 +2,8 @@ package com.connect.oneboardserver.service.attendance;
 
 import com.connect.oneboardserver.domain.attendance.Attendance;
 import com.connect.oneboardserver.domain.attendance.AttendanceRepository;
+import com.connect.oneboardserver.domain.lecture.Lecture;
+import com.connect.oneboardserver.domain.lecture.LectureRepository;
 import com.connect.oneboardserver.domain.lesson.Lesson;
 import com.connect.oneboardserver.domain.lesson.LessonRepository;
 import com.connect.oneboardserver.domain.login.Member;
@@ -20,13 +22,17 @@ import java.util.List;
 @Service
 public class AttendanceService {
 
+    private final LectureRepository lectureRepository;
     private final MemberLectureRepository memberLectureRepository;
     private final LessonRepository lessonRepository;
     private final AttendanceRepository attendanceRepository;
 
     public ResponseDto findAllAttendance(Long lectureId) {
+        Lecture lecture = lectureRepository.findById(lectureId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 과목이 없습니다 : id = " + lectureId));
+
         // lectureId로 MemberLecture에서 해당 과목을 수강하는 학생 리스트 조회
-        List<MemberLecture> memberLectureList = memberLectureRepository.findAllByLectureId(lectureId);
+        List<MemberLecture> memberLectureList = memberLectureRepository.findAllByLectureId(lecture.getId());
 
         List<Member> studentList = new ArrayList<>();
         for(MemberLecture ml : memberLectureList) {
@@ -36,7 +42,7 @@ public class AttendanceService {
         }
 
         // lectureId로 Lesson에서 해당 과목의 모든 수업 조회
-        List<Lesson> lessonList = lessonRepository.findAllByLectureId(lectureId);
+        List<Lesson> lessonList = lessonRepository.findAllByLectureId(lecture.getId());
 
         List<AttendanceFindAllLessonForStudentResponseDto> responseDtoList = new ArrayList<>();
         // 학생을 기준으로 Attendance에서 학생과 모든 수업에 대해서 조회
