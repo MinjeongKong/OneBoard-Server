@@ -32,6 +32,7 @@ public class AttendanceRepositoryTest {
     @Autowired
     LessonRepository lessonRepository;
 
+    Random random = new Random();
 
     @AfterEach
     void cleanUp() {
@@ -43,9 +44,60 @@ public class AttendanceRepositoryTest {
     @Test
     @DisplayName("출석 생성 및 조회")
     void createAttendance() {
-        Random random = new Random();
-
         // given
+        Lesson expectedLesson = createLesson();
+        Member expectedMember = createMember();
+        String expectedResult = "출석";
+
+        attendanceRepository.save(Attendance.builder()
+                .lesson(expectedLesson)
+                .member(expectedMember)
+                .result(expectedResult)
+                .build());
+
+        // when
+        Attendance actualAttendance = attendanceRepository.findAll().get(0);
+
+        // then
+        assertThat(actualAttendance.getLesson().getTitle()).isEqualTo(expectedLesson.getTitle());
+        assertThat(actualAttendance.getMember().getEmail()).isEqualTo(expectedMember.getEmail());
+        assertThat(actualAttendance.getResult()).isEqualTo(expectedResult);
+    }
+
+    @Test
+    @DisplayName("특정 수업의 학생 출석 조회")
+    void findAttendanceByMemberAndLesson() {
+        // given
+        Lesson expectedLesson1 = createLesson();
+        Lesson expectedLesson2 = createLesson();
+        Member expectedMember = createMember();
+        String expectedResult1 = "출석";
+        String expectedResult2 = "결석";
+
+        attendanceRepository.save(Attendance.builder()
+                .lesson(expectedLesson1)
+                .member(expectedMember)
+                .result(expectedResult1)
+                .build());
+
+        attendanceRepository.save(Attendance.builder()
+                .lesson(expectedLesson2)
+                .member(expectedMember)
+                .result(expectedResult2)
+                .build());
+
+        // when
+        List<Attendance> actualAttendanceList
+                = attendanceRepository.findAllByLessonIdAndMemberId(expectedLesson1.getId(), expectedMember.getId());
+
+        // then
+        assertThat(actualAttendanceList.size()).isEqualTo(1);
+        assertThat(actualAttendanceList.get(0).getLesson().getTitle()).isEqualTo(expectedLesson1.getTitle());
+        assertThat(actualAttendanceList.get(0).getMember().getEmail()).isEqualTo(expectedMember.getEmail());
+        assertThat(actualAttendanceList.get(0).getResult()).isEqualTo(expectedResult1);
+    }
+
+    private Member createMember() {
         String studentNumber = "number" + random.nextInt(100);
         String name = "name" + random.nextInt(100);
         String password = "0000";
@@ -65,6 +117,10 @@ public class AttendanceRepositoryTest {
                 .roles(Collections.singletonList(userType))
                 .build());
 
+        return member;
+    }
+
+    private Lesson createLesson() {
         String title = "title" + random.nextInt(100);
         String date = LocalDateTime.now().toString();
         String note = "url" + random.nextInt(100);
@@ -77,90 +133,6 @@ public class AttendanceRepositoryTest {
                 .type(type)
                 .build());
 
-        attendanceRepository.save(Attendance.builder()
-                .lesson(lesson)
-                .member(member)
-                .result("출석")
-                .build());
-
-        // when
-        Attendance attendance = attendanceRepository.findAll().get(0);
-
-        // then
-        assertThat(attendance.getMember().getEmail()).isEqualTo(email);
-        assertThat(attendance.getLesson().getTitle()).isEqualTo(title);
-        assertThat(attendance.getResult()).isEqualTo("출석");
-    }
-
-    @Test
-    @DisplayName("특정 수업의 학생 출석 조회")
-    void findAttendanceByMemberAndLesson() {
-        Random random = new Random();
-
-        // given
-        String studentNumber = "number" + random.nextInt(100);
-        String name = "name" + random.nextInt(100);
-        String password = "0000";
-        String email = random.nextInt(100) + "@test.com";
-        String userType = "S";
-        String university = "univ" + random.nextInt(100);
-        String major = "major" + random.nextInt(100);
-
-        Member member = memberRepository.save(Member.builder()
-                .studentNumber(studentNumber)
-                .name(name)
-                .password(password)
-                .email(email)
-                .userType(userType)
-                .university(university)
-                .major(major)
-                .roles(Collections.singletonList(userType))
-                .build());
-
-        String title1 = "title" + random.nextInt(100);
-        String date1 = LocalDateTime.now().toString();
-        String note1 = "url" + random.nextInt(100);
-        int type1 = 0;
-
-        Lesson lesson1 = lessonRepository.save(Lesson.builder()
-                .title(title1)
-                .date(date1)
-                .note(note1)
-                .type(type1)
-                .build());
-
-        String title2 = "title" + random.nextInt(100);
-        String date2 = LocalDateTime.now().toString();
-        String note2 = "url" + random.nextInt(100);
-        int type2 = 0;
-
-        Lesson lesson2 = lessonRepository.save(Lesson.builder()
-                .title(title2)
-                .date(date2)
-                .note(note2)
-                .type(type2)
-                .build());
-
-        attendanceRepository.save(Attendance.builder()
-                .lesson(lesson1)
-                .member(member)
-                .result("출석")
-                .build());
-
-        attendanceRepository.save(Attendance.builder()
-                .lesson(lesson2)
-                .member(member)
-                .result("결석")
-                .build());
-
-        // when
-        List<Attendance> actualAttendanceList
-                = attendanceRepository.findAllByMemberIdAndLessonId(member.getId(), lesson1.getId());
-
-        // then
-        assertThat(actualAttendanceList.size()).isEqualTo(1);
-        assertThat(actualAttendanceList.get(0).getMember().getEmail()).isEqualTo(email);
-        assertThat(actualAttendanceList.get(0).getLesson().getTitle()).isEqualTo(title1);
-        assertThat(actualAttendanceList.get(0).getResult()).isEqualTo("출석");
+        return lesson;
     }
 }
