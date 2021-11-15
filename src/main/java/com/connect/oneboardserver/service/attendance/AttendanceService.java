@@ -58,11 +58,16 @@ public class AttendanceService {
                     .build();
             List<AttendanceFindForLesson> attendanceList = new ArrayList<>();
             for(Lesson lesson : lessonList) {
-                Attendance attendance = attendanceRepository.findAllByLessonIdAndMemberId(lesson.getId(), student.getId()).get(0);
+                List<Attendance> attendances = attendanceRepository.findAllByLessonIdAndMemberId(lesson.getId(), student.getId());
+                if(attendances.size() != 1) {
+                    // 동일한 학생 & 수업에 대해 출석 데이터가 없거나 2개 이상인 경우
+//                    throw new Exception("출석 오류");
+                    return new ResponseDto("FAIL");
+                }
                 AttendanceFindForLesson result = AttendanceFindForLesson.builder()
                         .lessonId(lesson.getId())
                         .lessonDate(lesson.getDate())
-                        .status(attendance.getStatus())
+                        .status(attendances.get(0).getStatus())
                         .build();
                 attendanceList.add(result);
             }
