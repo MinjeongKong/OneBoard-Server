@@ -47,12 +47,12 @@ public class AttendanceRepositoryTest {
         // given
         Lesson expectedLesson = createLesson();
         Member expectedMember = createMember();
-        String expectedResult = "출석";
+        Integer expectedStatus = 2;
 
         attendanceRepository.save(Attendance.builder()
                 .lesson(expectedLesson)
                 .member(expectedMember)
-                .result(expectedResult)
+                .status(expectedStatus)
                 .build());
 
         // when
@@ -61,7 +61,7 @@ public class AttendanceRepositoryTest {
         // then
         assertThat(actualAttendance.getLesson().getTitle()).isEqualTo(expectedLesson.getTitle());
         assertThat(actualAttendance.getMember().getEmail()).isEqualTo(expectedMember.getEmail());
-        assertThat(actualAttendance.getResult()).isEqualTo(expectedResult);
+        assertThat(actualAttendance.getStatus()).isEqualTo(expectedStatus);
     }
 
     @Test
@@ -71,19 +71,19 @@ public class AttendanceRepositoryTest {
         Lesson expectedLesson1 = createLesson();
         Lesson expectedLesson2 = createLesson();
         Member expectedMember = createMember();
-        String expectedResult1 = "출석";
-        String expectedResult2 = "결석";
+        Integer expectedStatus1 = 1;
+        Integer expectedStatus2 = 0;
 
         attendanceRepository.save(Attendance.builder()
                 .lesson(expectedLesson1)
                 .member(expectedMember)
-                .result(expectedResult1)
+                .status(expectedStatus1)
                 .build());
 
         attendanceRepository.save(Attendance.builder()
                 .lesson(expectedLesson2)
                 .member(expectedMember)
-                .result(expectedResult2)
+                .status(expectedStatus2)
                 .build());
 
         // when
@@ -94,7 +94,7 @@ public class AttendanceRepositoryTest {
         assertThat(actualAttendanceList.size()).isEqualTo(1);
         assertThat(actualAttendanceList.get(0).getLesson().getTitle()).isEqualTo(expectedLesson1.getTitle());
         assertThat(actualAttendanceList.get(0).getMember().getEmail()).isEqualTo(expectedMember.getEmail());
-        assertThat(actualAttendanceList.get(0).getResult()).isEqualTo(expectedResult1);
+        assertThat(actualAttendanceList.get(0).getStatus()).isEqualTo(expectedStatus1);
     }
 
     private Member createMember() {
