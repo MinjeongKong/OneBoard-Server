@@ -29,7 +29,4 @@ public class MemberJoinDto {
     private String university;
     @NotEmpty
     private String major;
-
-    private String lecture_id;
-
 }

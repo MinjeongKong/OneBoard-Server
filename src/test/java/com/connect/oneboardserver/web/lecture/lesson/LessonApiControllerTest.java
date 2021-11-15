@@ -4,10 +4,10 @@ import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;
 import com.connect.oneboardserver.domain.lecture.lesson.Lesson;
 import com.connect.oneboardserver.domain.lecture.lesson.LessonRepository;
-import com.connect.oneboardserver.domain.lecture.notice.Notice;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.lesson.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.ToString;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,10 +20,10 @@ import org.springframework.http.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ToString
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class LessonApiControllerTest {
@@ -158,7 +158,7 @@ public class LessonApiControllerTest {
     }
 
     @Test
-    @DisplayName("과목 공지사항 삭제 요청")
+    @DisplayName("수업 공지사항 삭제 요청")
     void requestDeleteNotice() {
         // given
         String lectureTitle = "test lecture";

@@ -1,6 +1,6 @@
-package com.connect.oneboardserver.web.lecture.notice;
+package com.connect.oneboardserver.web.lecture;
 
-import com.connect.oneboardserver.service.lecture.notice.NoticeService;
+import com.connect.oneboardserver.service.lecture.NoticeService;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.notice.*;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,6 @@ public class NoticeApiController {
                                     @RequestBody NoticeUpdateRequestDto requestDto) {
         return noticeService.updateNotice(lectureId, noticeId, requestDto);
     }
-
 
     // 과목 공지사항 삭제
     @DeleteMapping("/lecture/{lectureId}/notice/{noticeId}")

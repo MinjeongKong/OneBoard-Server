@@ -46,10 +46,6 @@ public class Member implements UserDetails {
     @Column(length = 30, nullable = false)
     private String major;
 
-    @Column(length = 128)
-    private String lecture_id;
-
-
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();

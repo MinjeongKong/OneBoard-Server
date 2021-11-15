@@ -33,17 +33,15 @@ public class MemberApiController {
 
     // 회원가입
     @PostMapping("/join")
-    public Long join(@RequestBody MemberJoinDto user) {
+    public Long join(@Valid @RequestBody MemberJoinDto user) {
         return memberRepository.save(Member.builder()
                 .studentNumber(user.getStudentNumber())
                 .name(user.getName())
                 .password(passwordEncoder.encode(user.getPassword()))
-//                .password(user.getPassword())
                 .email(user.getEmail())
                 .userType(user.getUserType())
                 .university(user.getUniversity())
                 .major(user.getMajor())
-                .lecture_id(user.getLecture_id())
                 .roles(Collections.singletonList("ROLE_" + user.getUserType()))
                 .build()).getId();
 

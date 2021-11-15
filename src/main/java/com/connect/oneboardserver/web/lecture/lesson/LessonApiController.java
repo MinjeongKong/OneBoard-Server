@@ -18,7 +18,6 @@ public class LessonApiController {
     public ResponseDto findLessonList(@PathVariable Long lectureId) {
         return lessonService.findLessonList(lectureId);
     }
-
     // 수업 생성
     @PostMapping("/lecture/{lectureId}/lesson")
     public ResponseDto createLesson(@PathVariable Long lectureId, @RequestBody LessonCreateRequestDto requestDto) {
