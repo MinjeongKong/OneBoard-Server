@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -81,8 +82,11 @@ public class AssignmentService {
                 .orElseThrow(()->new IllegalArgumentException("해당 과목이 없습니다. id="+lectureId));
 
         List<Assignment> assignmentList = assignmentRepository.findAllByLectureId(lectureId);
-//        AssignmentListFindResponseDto responseDto = new AssignmentListFindResponseDto(assignmentList);
+        List<AssignmentFindResponseDto> assignmentFindResponseDtoList = new ArrayList<>();
+        for (int i = 0; i < assignmentList.size(); i++) {
+            assignmentFindResponseDtoList.add(AssignmentFindResponseDto.toResponseDto(assignmentList.get(i)));
+        }
 
-        return new ResponseDto("SUCCESS", assignmentList);
+        return new ResponseDto("SUCCESS", assignmentFindResponseDtoList);
     }
 }
