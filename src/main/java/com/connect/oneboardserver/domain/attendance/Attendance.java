@@ -35,4 +35,8 @@ public class Attendance extends BaseTimeEntity {
         this.member = member;
         this.status = status;
     }
+
+    public void updateStatus(Integer status) {
+        this.status = status;
+    }
 }

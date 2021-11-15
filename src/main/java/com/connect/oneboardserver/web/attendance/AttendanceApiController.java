@@ -2,11 +2,9 @@ package com.connect.oneboardserver.web.attendance;
 
 import com.connect.oneboardserver.service.attendance.AttendanceService;
 import com.connect.oneboardserver.web.dto.ResponseDto;
+import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateAllRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
@@ -22,6 +20,10 @@ public class AttendanceApiController {
     }
 
     // 과목 전체 출석 수정 - 강의자
+    @PostMapping("lecture/{lectureId}/attendance")
+    public ResponseDto updateAllAttendance(@PathVariable Long lectureId, @RequestBody AttendanceUpdateAllRequestDto requestDto) {
+        return attendanceService.updateAllAttendance(lectureId, requestDto);
+    }
 
     // 학생 본인 과목 전체 수업 출석 확인 - 학생
 

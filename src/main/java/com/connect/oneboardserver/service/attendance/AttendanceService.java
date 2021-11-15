@@ -12,8 +12,11 @@ import com.connect.oneboardserver.domain.relation.MemberLectureRepository;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceFindAllLessonForStudentResponseDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceFindForLesson;
+import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateAllRequestDto;
+import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,5 +71,20 @@ public class AttendanceService {
         }
 
         return new ResponseDto("SUCCESS", responseDtoList);
+    }
+
+    @Transactional
+    public ResponseDto updateAllAttendance(Long lectureId, AttendanceUpdateAllRequestDto requestDto) {
+        for(AttendanceUpdateRequestDto updateData : requestDto.getUpdateDataList()) {
+            List<Attendance> attendances
+                    = attendanceRepository.findAllByLessonIdAndMemberId(updateData.getLessonId(), updateData.getStudentId());
+            if(attendances.size() != 1) {
+                // 동일한 학생 & 수업에 대해 출석 데이터가 없거나 2개 이상인 경우
+                return new ResponseDto("FAIL");
+            }
+            attendances.get(0).updateStatus(updateData.getStatus());
+        }
+
+        return new ResponseDto("SUCCESS");
     }
 }
