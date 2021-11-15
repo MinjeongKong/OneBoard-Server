@@ -14,6 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -76,9 +77,6 @@ public class AttendanceRepositoryTest {
                 .type(type)
                 .build());
 
-        System.out.println("member : " + member);
-        System.out.println("lesson : " + lesson);
-
         attendanceRepository.save(Attendance.builder()
                 .lesson(lesson)
                 .member(member)
@@ -94,9 +92,75 @@ public class AttendanceRepositoryTest {
         assertThat(attendance.getResult()).isEqualTo("출석");
     }
 
-//    @Test
-//    @DisplayName("특정 수업의 학생 출석 조회")
-//    void findAttendanceByMemberAndLesson() {
-//
-//    }
+    @Test
+    @DisplayName("특정 수업의 학생 출석 조회")
+    void findAttendanceByMemberAndLesson() {
+        Random random = new Random();
+
+        // given
+        String studentNumber = "number" + random.nextInt(100);
+        String name = "name" + random.nextInt(100);
+        String password = "0000";
+        String email = random.nextInt(100) + "@test.com";
+        String userType = "S";
+        String university = "univ" + random.nextInt(100);
+        String major = "major" + random.nextInt(100);
+
+        Member member = memberRepository.save(Member.builder()
+                .studentNumber(studentNumber)
+                .name(name)
+                .password(password)
+                .email(email)
+                .userType(userType)
+                .university(university)
+                .major(major)
+                .roles(Collections.singletonList(userType))
+                .build());
+
+        String title1 = "title" + random.nextInt(100);
+        String date1 = LocalDateTime.now().toString();
+        String note1 = "url" + random.nextInt(100);
+        int type1 = 0;
+
+        Lesson lesson1 = lessonRepository.save(Lesson.builder()
+                .title(title1)
+                .date(date1)
+                .note(note1)
+                .type(type1)
+                .build());
+
+        String title2 = "title" + random.nextInt(100);
+        String date2 = LocalDateTime.now().toString();
+        String note2 = "url" + random.nextInt(100);
+        int type2 = 0;
+
+        Lesson lesson2 = lessonRepository.save(Lesson.builder()
+                .title(title2)
+                .date(date2)
+                .note(note2)
+                .type(type2)
+                .build());
+
+        attendanceRepository.save(Attendance.builder()
+                .lesson(lesson1)
+                .member(member)
+                .result("출석")
+                .build());
+
+        attendanceRepository.save(Attendance.builder()
+                .lesson(lesson2)
+                .member(member)
+                .result("결석")
+                .build());
+
+        // when
+        List<Attendance> actualAttendanceList
+                = attendanceRepository.findAllByMemberIdAndLessonId(member.getId(), lesson1.getId());
+
+        // then
+        assertThat(actualAttendanceList.size()).isEqualTo(1);
+        assertThat(actualAttendanceList.get(0).getMember().getEmail()).isEqualTo(email);
+        assertThat(actualAttendanceList.get(0).getLesson().getTitle()).isEqualTo(title1);
+        assertThat(actualAttendanceList.get(0).getResult()).isEqualTo("출석");
+    }
 }
