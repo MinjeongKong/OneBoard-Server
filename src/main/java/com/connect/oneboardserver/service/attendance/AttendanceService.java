@@ -15,6 +15,7 @@ import com.connect.oneboardserver.web.dto.attendance.AttendanceFindForLesson;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateAllRequestDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ import java.util.List;
 @Service
 public class AttendanceService {
 
+    private final UserDetailsService userDetailsService;
     private final LectureRepository lectureRepository;
     private final MemberLectureRepository memberLectureRepository;
     private final LessonRepository lessonRepository;
@@ -91,5 +93,34 @@ public class AttendanceService {
         }
 
         return new ResponseDto("SUCCESS");
+    }
+
+    public ResponseDto findAllMyAttendance(Long lectureId, String email) {
+        Member member = (Member) userDetailsService.loadUserByUsername(email);
+
+        List<Lesson> lessonList = lessonRepository.findAllByLectureId(lectureId);
+
+        AttendanceFindAllLessonForStudentResponseDto responseDto
+                = AttendanceFindAllLessonForStudentResponseDto.builder()
+                .studentId(member.getId())
+                .studentNumber(member.getStudentNumber())
+                .studentName(member.getName())
+                .build();
+        List<AttendanceFindForLesson> attendanceList = new ArrayList<>();
+        for(Lesson lesson : lessonList) {
+            List<Attendance> attendances = attendanceRepository.findAllByLessonIdAndMemberId(lesson.getId(), member.getId());
+            if(attendances.size() != 1) {
+                return new ResponseDto("FAIL");
+            }
+            AttendanceFindForLesson result = AttendanceFindForLesson.builder()
+                    .lessonId(lesson.getId())
+                    .lessonDate(lesson.getDate())
+                    .status(attendances.get(0).getStatus())
+                    .build();
+            attendanceList.add(result);
+        }
+        responseDto.setAttendanceList(attendanceList);
+
+        return new ResponseDto("SUCCESS", responseDto);
     }
 }
