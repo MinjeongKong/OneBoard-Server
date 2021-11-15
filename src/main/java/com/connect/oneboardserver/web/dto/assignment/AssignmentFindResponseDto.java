@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 public class AssignmentFindResponseDto {
 
     private Long id;
+    private Long lectureId;
     private String title;
     private String content;
     private String fileUrl;
@@ -20,6 +21,7 @@ public class AssignmentFindResponseDto {
 
     public AssignmentFindResponseDto(Assignment entity) {
         this.id = entity.getId();
+        this.lectureId = entity.getLecture().getId();
         this.title = entity.getTitle();
         this.content = entity.getContent();
         this.fileUrl = entity.getFileUrl();
@@ -28,6 +30,10 @@ public class AssignmentFindResponseDto {
         this.exposeDt = entity.getExposeDt();
         this.createdDt = entity.getCreatedDt();
         this.updatedDt = entity.getUpdatedDt();
+    }
+
+    public static AssignmentFindResponseDto toResponseDto(Assignment entity) {
+        return new AssignmentFindResponseDto(entity);
     }
 
 }
