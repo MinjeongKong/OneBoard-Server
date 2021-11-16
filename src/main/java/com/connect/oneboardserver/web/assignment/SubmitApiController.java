@@ -36,4 +36,10 @@ public class SubmitApiController {
                                   @PathVariable Long submitId) {
         return submitService.findSubmit(lectureId, assignmentId, submitId);
     }
+
+    //과제 제출 리스트 조회
+    @GetMapping("/lecture/{lectureId}/assignment/{assignmentId}/submits")
+    public ResponseDto findSubmitList(@PathVariable Long lectureId, @PathVariable Long assignmentId) {
+        return submitService.findSubmitList(lectureId, assignmentId);
+    }
 }

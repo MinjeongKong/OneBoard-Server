@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SubmitCheckRequestDto {
 
-    private Long score;
+    private Float score;
     private String feedback;
 
-    public SubmitCheckRequestDto(Long score, String feedback) {
+    public SubmitCheckRequestDto(Float score, String feedback) {
         this.score = score;
         this.feedback = feedback;
     }

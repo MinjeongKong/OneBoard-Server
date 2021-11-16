@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -62,6 +64,9 @@ public class SubmitService {
         if (!(submit.getAssignment().getId().equals(assignmentId)&&submit.getAssignment().getLecture().getId().equals(lectureId))) {
             return new ResponseDto("FAIL");
         } else {
+            if(!(submit.getAssignment().getScore()>=requestDto.getScore()))
+                return new ResponseDto("FAIL");
+
             submit.check(requestDto.getScore(), requestDto.getFeedback());
             SubmitResponseDto responseDto = new SubmitResponseDto(submit);
 
@@ -81,5 +86,23 @@ public class SubmitService {
             return new ResponseDto("SUCCESS", responseDto);
         }
     }
+
+    public ResponseDto findSubmitList(Long lectureId, Long assignmentId) {
+        Assignment assignment = assignmentRepository.findById(assignmentId)
+                .orElseThrow(()->new IllegalArgumentException("해당 과제가 없습니다. id="+assignmentId));
+
+        if (!assignment.getLecture().getId().equals(lectureId)) {
+            return new ResponseDto("FAIL");
+        } else {
+            List<Submit> submitList = submitRepository.findAllByAssignmentId(assignmentId);
+            List<SubmitFindResponseDto> submitFindResponseDtoList = new ArrayList<>();
+            for (int i = 0; i < submitList.size(); i++) {
+                submitFindResponseDtoList.add(SubmitFindResponseDto.toResponseDto(submitList.get(i)));
+            }
+
+            return new ResponseDto("SUCCESS", submitFindResponseDtoList);
+        }
+    }
+
 
 }
