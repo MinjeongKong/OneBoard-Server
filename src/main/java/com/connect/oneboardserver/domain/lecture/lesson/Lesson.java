@@ -9,9 +9,7 @@ import lombok.ToString;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
-@ToString
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
 @Entity
@@ -59,5 +57,15 @@ public class Lesson {
     }
     public void setLecture(Lecture lecture) {
         this.lecture = lecture;
+    }
+
+    public void update(String title, String date, String note, Integer type, String room, String meeting_id, String video_url) {
+        this.title = title;
+        this.date = date;
+        this.note = note;
+        this.type = type;
+        this.room = room;
+        this.meeting_id = meeting_id;
+        this.video_url = video_url;
     }
 }

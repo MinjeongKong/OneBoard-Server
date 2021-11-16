@@ -6,13 +6,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class LessonCreateResponseDto {
+public class LessonUpdateResponseDto {
 
     private Long lessonId;
 
-
     @Builder
-    public LessonCreateResponseDto(Long lessonId) {
+    public LessonUpdateResponseDto(Long lessonId) {
         this.lessonId = lessonId;
     }
 }

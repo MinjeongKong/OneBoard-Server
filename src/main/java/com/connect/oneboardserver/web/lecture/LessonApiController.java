@@ -1,6 +1,6 @@
-package com.connect.oneboardserver.web.lecture.lesson;
+package com.connect.oneboardserver.web.lecture;
 
-import com.connect.oneboardserver.service.lecture.lesson.LessonService;
+import com.connect.oneboardserver.service.lecture.LessonService;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.lesson.*;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +18,7 @@ public class LessonApiController {
     public ResponseDto findLessonList(@PathVariable Long lectureId) {
         return lessonService.findLessonList(lectureId);
     }
+
     // 수업 생성
     @PostMapping("/lecture/{lectureId}/lesson")
     public ResponseDto createLesson(@PathVariable Long lectureId, @RequestBody LessonCreateRequestDto requestDto) {
@@ -32,6 +33,12 @@ public class LessonApiController {
     @DeleteMapping("/lecture/{lectureId}/lesson/{lessonId}")
     public ResponseDto deleteNotice(@PathVariable Long lectureId, @PathVariable Long lessonId) {
         return lessonService.deleteLesson(lectureId, lessonId);
+    }
+    // 수업 수정
+    @PutMapping("/lecture/{lectureId}/lesson/{lessonId}")
+    public ResponseDto updateLesson(@PathVariable Long lectureId, @PathVariable Long lessonId,
+                                    @RequestBody LessonUpdateRequestDto requestDto) {
+        return lessonService.updateLesson(lectureId, lessonId, requestDto);
     }
 
 }

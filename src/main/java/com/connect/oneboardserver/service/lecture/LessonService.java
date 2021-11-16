@@ -1,16 +1,16 @@
-package com.connect.oneboardserver.service.lecture.lesson;
+package com.connect.oneboardserver.service.lecture;
 
 import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;
 import com.connect.oneboardserver.domain.lecture.lesson.Lesson;
 import com.connect.oneboardserver.domain.lecture.lesson.LessonRepository;
-import com.connect.oneboardserver.domain.lecture.notice.Notice;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.lesson.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -30,10 +30,10 @@ public class LessonService {
             return new ResponseDto("FAIL");
         }
         List<Lesson> lessonList = lessonRepository.findAllByLectureId(lecture.getId());
-        LessonListFindResponseDto responseDto = LessonListFindResponseDto.builder()
-                .lessonList(lessonList)
-                .build();
-        return new ResponseDto("SUCCESS", responseDto);
+        List<LessonListFindResponseDto> lessonListFindResponseDtoList = new ArrayList<>();
+        for (int i = 0; i < lessonList.size(); i++) {
+            lessonListFindResponseDtoList.add(LessonListFindResponseDto.toResponseDto(lessonList.get(i)));
+        }return new ResponseDto("SUCCESS", lessonListFindResponseDtoList);
     }
     @Transactional
     public ResponseDto createLesson(Long lectureId, LessonCreateRequestDto requestDto) {
@@ -56,21 +56,17 @@ public class LessonService {
 
     public ResponseDto findLesson(Long lectureId, Long lessonId) {
         Lesson lesson = null;
-
         try {
             lesson = lessonRepository.findById(lessonId).orElseThrow(Exception::new);
-            System.out.println("lesson" + lesson.toString());
-            if(!lesson.getLecture().getId().equals(lectureId)) {
-                return new ResponseDto("FAIL");
-            } else {
-                LessonFindResponseDto responseDto = LessonFindResponseDto.builder()
-                        .lesson(lesson)
-                        .build();
-                return new ResponseDto("SUCCESS", responseDto);
-            }
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseDto("FAIL");
+        }
+        if (!lesson.getLecture().getId().equals(lectureId)) {
+            return new ResponseDto("FAIL");
+        } else {
+            LessonFindResponseDto responseDto = LessonFindResponseDto.toResponseDto(lesson);
+            return new ResponseDto("SUCCESS", responseDto);
         }
     }
     @Transactional
@@ -91,5 +87,28 @@ public class LessonService {
             return new ResponseDto("SUCCESS");
         }
 
+    }
+
+    @Transactional
+    public ResponseDto updateLesson(Long lectureId, long lessonId, LessonUpdateRequestDto requestDto) {
+        Lesson lesson = null;
+
+        try {
+            lesson = lessonRepository.findById(lessonId)
+                    .orElseThrow(Exception::new);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseDto("FAIL");
+        }
+
+        if(!lesson.getLecture().getId().equals(lectureId)) {
+            return new ResponseDto("FAIL");
+        } else {
+            lesson.update(requestDto.getTitle(), requestDto.getDate(), requestDto.getNote(), requestDto.getType(), requestDto.getRoom(), requestDto.getMeeting_id(), requestDto.getVideo_url());
+            LessonUpdateResponseDto responseDto = LessonUpdateResponseDto.builder()
+                    .lessonId(lesson.getId())
+                    .build();
+            return new ResponseDto("SUCCESS", responseDto);
+        }
     }
 }
