@@ -14,6 +14,7 @@ import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendFindAllForStuResponseDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateAllRequestDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateRequestDto;
+import com.connect.oneboardserver.web.dto.lecture.notice.NoticeUpdateRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -139,9 +142,11 @@ public class AttendanceApiControllerTest {
 
         String url = "http://localhost:" + port + "/lecture/{lectureId}/attendance";
 
+        HttpEntity<AttendanceUpdateAllRequestDto> requestEntity = new HttpEntity<>(requestDto);
+
         // when
         ResponseEntity<ResponseDto> responseEntity
-                = restTemplate.postForEntity(url, requestDto, ResponseDto.class, lecture.getId());
+                = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, ResponseDto.class, lecture.getId());
 
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);

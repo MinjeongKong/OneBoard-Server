@@ -24,7 +24,7 @@ public class AttendanceApiController {
     }
 
     // 과목 전체 출석 수정 - 강의자
-    @PostMapping("/lecture/{lectureId}/attendance")
+    @PutMapping("/lecture/{lectureId}/attendance")
     public ResponseDto updateAllAttendance(@PathVariable Long lectureId, @RequestBody AttendanceUpdateAllRequestDto requestDto) {
         return attendanceService.updateAllAttendance(lectureId, requestDto);
     }
