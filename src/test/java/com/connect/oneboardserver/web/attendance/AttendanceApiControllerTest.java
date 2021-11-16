@@ -12,6 +12,8 @@ import com.connect.oneboardserver.domain.relation.MemberLecture;
 import com.connect.oneboardserver.domain.relation.MemberLectureRepository;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceFindAllLessonForStudentResponseDto;
+import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateAllRequestDto;
+import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -114,6 +116,42 @@ public class AttendanceApiControllerTest {
         }
     }
 
+    @Test
+    @DisplayName("과목 전체 출석 수정 요청")
+    void requestUpdateAllAttendance() {
+        // given
+        Member expectedMember = createMember("S");
+        Lecture lecture = createLecture();
+        registerMemberLecture(expectedMember, lecture);
+        Lesson expectedLesson = createLesson(lecture);
+        initAttendance(expectedMember, expectedLesson);
+
+        Integer expectedStatus = 2; // 출석
+
+        List<AttendanceUpdateRequestDto> updateList = new ArrayList<>();
+        updateList.add(AttendanceUpdateRequestDto.builder()
+                .studentId(expectedMember.getId())
+                .lessonId(expectedLesson.getId())
+                .status(expectedStatus)
+                .build());
+        AttendanceUpdateAllRequestDto requestDto = new AttendanceUpdateAllRequestDto(updateList);
+
+
+        String url = "http://localhost:" + port + "/lecture/{lectureId}/attendance";
+
+        // when
+        ResponseEntity<ResponseDto> responseEntity
+                = restTemplate.postForEntity(url, requestDto, ResponseDto.class, lecture.getId());
+
+        // then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        List<Attendance> actualAttendances
+                = attendanceRepository.findAllByMemberIdAndLessonId(expectedMember.getId(), expectedLesson.getId());
+        assertThat(actualAttendances.size()).isEqualTo(1);
+        assertThat(actualAttendances.get(0).getStatus()).isEqualTo(expectedStatus);
+    }
+
     private Member createMember(String type) {
         String studentNumber = "number" + random.nextInt(100);
         String name = "name" + random.nextInt(100);
@@ -175,7 +213,7 @@ public class AttendanceApiControllerTest {
         attendanceRepository.save(Attendance.builder()
                 .member(member)
                 .lesson(lesson)
-                .status(0)
+                .status(0)  // 결석
                 .build());
     }
 }
