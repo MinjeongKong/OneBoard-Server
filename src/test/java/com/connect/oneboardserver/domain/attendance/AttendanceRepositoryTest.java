@@ -45,13 +45,13 @@ public class AttendanceRepositoryTest {
     @DisplayName("출석 생성 및 조회")
     void createAttendance() {
         // given
-        Lesson expectedLesson = createLesson();
         Member expectedMember = createMember();
+        Lesson expectedLesson = createLesson();
         Integer expectedStatus = 2;
 
         attendanceRepository.save(Attendance.builder()
-                .lesson(expectedLesson)
                 .member(expectedMember)
+                .lesson(expectedLesson)
                 .status(expectedStatus)
                 .build());
 
@@ -59,8 +59,8 @@ public class AttendanceRepositoryTest {
         Attendance actualAttendance = attendanceRepository.findAll().get(0);
 
         // then
-        assertThat(actualAttendance.getLesson().getTitle()).isEqualTo(expectedLesson.getTitle());
         assertThat(actualAttendance.getMember().getEmail()).isEqualTo(expectedMember.getEmail());
+        assertThat(actualAttendance.getLesson().getTitle()).isEqualTo(expectedLesson.getTitle());
         assertThat(actualAttendance.getStatus()).isEqualTo(expectedStatus);
     }
 
@@ -68,32 +68,32 @@ public class AttendanceRepositoryTest {
     @DisplayName("특정 수업의 학생 출석 조회")
     void findAttendanceByMemberAndLesson() {
         // given
+        Member expectedMember = createMember();
         Lesson expectedLesson1 = createLesson();
         Lesson expectedLesson2 = createLesson();
-        Member expectedMember = createMember();
         Integer expectedStatus1 = 1;
         Integer expectedStatus2 = 0;
 
         attendanceRepository.save(Attendance.builder()
-                .lesson(expectedLesson1)
                 .member(expectedMember)
+                .lesson(expectedLesson1)
                 .status(expectedStatus1)
                 .build());
 
         attendanceRepository.save(Attendance.builder()
-                .lesson(expectedLesson2)
                 .member(expectedMember)
+                .lesson(expectedLesson2)
                 .status(expectedStatus2)
                 .build());
 
         // when
         List<Attendance> actualAttendanceList
-                = attendanceRepository.findAllByLessonIdAndMemberId(expectedLesson1.getId(), expectedMember.getId());
+                = attendanceRepository.findAllByMemberIdAndLessonId(expectedMember.getId(), expectedLesson1.getId());
 
         // then
         assertThat(actualAttendanceList.size()).isEqualTo(1);
-        assertThat(actualAttendanceList.get(0).getLesson().getTitle()).isEqualTo(expectedLesson1.getTitle());
         assertThat(actualAttendanceList.get(0).getMember().getEmail()).isEqualTo(expectedMember.getEmail());
+        assertThat(actualAttendanceList.get(0).getLesson().getTitle()).isEqualTo(expectedLesson1.getTitle());
         assertThat(actualAttendanceList.get(0).getStatus()).isEqualTo(expectedStatus1);
     }
 

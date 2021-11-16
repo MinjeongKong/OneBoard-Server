@@ -21,18 +21,18 @@ public class Attendance extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne
-    private Lesson lesson;
+    private Member member;
 
     @ManyToOne
-    private Member member;
+    private Lesson lesson;
 
     @Column
     private Integer status;     // 0 : 결석, 1 : 지각, 2 : 출석
 
     @Builder
-    public Attendance(Lesson lesson, Member member, Integer status) {
-        this.lesson = lesson;
+    public Attendance(Member member, Lesson lesson, Integer status) {
         this.member = member;
+        this.lesson = lesson;
         this.status = status;
     }
 

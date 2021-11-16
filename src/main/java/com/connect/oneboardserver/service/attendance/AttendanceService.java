@@ -60,7 +60,7 @@ public class AttendanceService {
                     .build();
             List<AttendanceFindForLesson> attendanceList = new ArrayList<>();
             for(Lesson lesson : lessonList) {
-                List<Attendance> attendances = attendanceRepository.findAllByLessonIdAndMemberId(lesson.getId(), student.getId());
+                List<Attendance> attendances = attendanceRepository.findAllByMemberIdAndLessonId(student.getId(), lesson.getId());
                 if(attendances.size() != 1) {
                     // 동일한 학생 & 수업에 대해 출석 데이터가 없거나 2개 이상인 경우
 //                    throw new Exception("출석 오류");
@@ -84,7 +84,7 @@ public class AttendanceService {
     public ResponseDto updateAllAttendance(Long lectureId, AttendanceUpdateAllRequestDto requestDto) {
         for(AttendanceUpdateRequestDto updateData : requestDto.getUpdateDataList()) {
             List<Attendance> attendances
-                    = attendanceRepository.findAllByLessonIdAndMemberId(updateData.getLessonId(), updateData.getStudentId());
+                    = attendanceRepository.findAllByMemberIdAndLessonId(updateData.getStudentId(), updateData.getLessonId());
             if(attendances.size() != 1) {
                 // 동일한 학생 & 수업에 대해 출석 데이터가 없거나 2개 이상인 경우
                 return new ResponseDto("FAIL");
@@ -95,7 +95,7 @@ public class AttendanceService {
         return new ResponseDto("SUCCESS");
     }
 
-    public ResponseDto findAllMyAttendance(Long lectureId, String email) {
+    public ResponseDto findAllMyAttendance(String email, Long lectureId) {
         Member member = (Member) userDetailsService.loadUserByUsername(email);
 
         List<Lesson> lessonList = lessonRepository.findAllByLectureId(lectureId);
@@ -108,7 +108,7 @@ public class AttendanceService {
                 .build();
         List<AttendanceFindForLesson> attendanceList = new ArrayList<>();
         for(Lesson lesson : lessonList) {
-            List<Attendance> attendances = attendanceRepository.findAllByLessonIdAndMemberId(lesson.getId(), member.getId());
+            List<Attendance> attendances = attendanceRepository.findAllByMemberIdAndLessonId(member.getId(), lesson.getId());
             if(attendances.size() != 1) {
                 return new ResponseDto("FAIL");
             }

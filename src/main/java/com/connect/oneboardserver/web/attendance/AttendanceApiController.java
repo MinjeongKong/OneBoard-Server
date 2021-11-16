@@ -35,7 +35,7 @@ public class AttendanceApiController {
         String token = jwtTokenProvider.resolveToken(request);
         String email = jwtTokenProvider.getUserPk(token);
 
-        return attendanceService.findAllMyAttendance(lectureId, email);
+        return attendanceService.findAllMyAttendance(email, lectureId);
     }
 
     // 모든 학생 수업 출석 확인 - 강의자
