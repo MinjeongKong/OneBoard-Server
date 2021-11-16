@@ -28,6 +28,10 @@ public class LessonCreateRequestDto {
         this.video_url = video_url;
     }
 
+
+
+
+
     public Lesson toEntity() {
         return Lesson.builder()
                 .title(title)

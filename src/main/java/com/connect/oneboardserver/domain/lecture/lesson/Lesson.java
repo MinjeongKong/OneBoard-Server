@@ -1,16 +1,12 @@
 package com.connect.oneboardserver.domain.lecture.lesson;
 
-import com.connect.oneboardserver.domain.BaseTimeEntity;
 import com.connect.oneboardserver.domain.lecture.Lecture;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
-@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
 @Entity
 @Getter

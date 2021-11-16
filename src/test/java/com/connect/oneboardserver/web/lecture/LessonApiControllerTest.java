@@ -163,7 +163,7 @@ public class LessonApiControllerTest {
 
     @Test
     @DisplayName("수업 삭제 요청")
-    void requestDeleteNotice() {
+    void requestDeleteLesson() {
         // given
         String lectureTitle = "test lecture";
         String lecturePlan = "test url";

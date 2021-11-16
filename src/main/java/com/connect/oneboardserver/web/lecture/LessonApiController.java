@@ -31,7 +31,7 @@ public class LessonApiController {
     }
     // 수업 삭제
     @DeleteMapping("/lecture/{lectureId}/lesson/{lessonId}")
-    public ResponseDto deleteNotice(@PathVariable Long lectureId, @PathVariable Long lessonId) {
+    public ResponseDto deleteLesson(@PathVariable Long lectureId, @PathVariable Long lessonId) {
         return lessonService.deleteLesson(lectureId, lessonId);
     }
     // 수업 수정
