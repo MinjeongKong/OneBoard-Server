@@ -10,8 +10,8 @@ import com.connect.oneboardserver.domain.login.Member;
 import com.connect.oneboardserver.domain.relation.MemberLecture;
 import com.connect.oneboardserver.domain.relation.MemberLectureRepository;
 import com.connect.oneboardserver.web.dto.ResponseDto;
-import com.connect.oneboardserver.web.dto.attendance.AttendanceFindAllLessonForStudentResponseDto;
-import com.connect.oneboardserver.web.dto.attendance.AttendanceFindForLesson;
+import com.connect.oneboardserver.web.dto.attendance.AttendFindAllForStuResponseDto;
+import com.connect.oneboardserver.web.dto.attendance.AttendFindForStuDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateAllRequestDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -49,16 +49,16 @@ public class AttendanceService {
         // lectureId로 Lesson에서 해당 과목의 모든 수업 조회
         List<Lesson> lessonList = lessonRepository.findAllByLectureId(lecture.getId());
 
-        List<AttendanceFindAllLessonForStudentResponseDto> responseDtoList = new ArrayList<>();
+        List<AttendFindAllForStuResponseDto> responseDtoList = new ArrayList<>();
         // 학생을 기준으로 Attendance에서 학생과 모든 수업에 대해서 조회
         for(Member student : studentList) {
-            AttendanceFindAllLessonForStudentResponseDto responseDto
-                    = AttendanceFindAllLessonForStudentResponseDto.builder()
+            AttendFindAllForStuResponseDto responseDto
+                    = AttendFindAllForStuResponseDto.builder()
                     .studentId(student.getId())
                     .studentNumber(student.getStudentNumber())
                     .studentName(student.getName())
                     .build();
-            List<AttendanceFindForLesson> attendanceList = new ArrayList<>();
+            List<AttendFindForStuDto> attendanceList = new ArrayList<>();
             for(Lesson lesson : lessonList) {
                 List<Attendance> attendances = attendanceRepository.findAllByMemberIdAndLessonId(student.getId(), lesson.getId());
                 if(attendances.size() != 1) {
@@ -66,7 +66,7 @@ public class AttendanceService {
 //                    throw new Exception("출석 오류");
                     return new ResponseDto("FAIL");
                 }
-                AttendanceFindForLesson result = AttendanceFindForLesson.builder()
+                AttendFindForStuDto result = AttendFindForStuDto.builder()
                         .lessonId(lesson.getId())
                         .lessonDate(lesson.getDate())
                         .status(attendances.get(0).getStatus())
@@ -100,19 +100,19 @@ public class AttendanceService {
 
         List<Lesson> lessonList = lessonRepository.findAllByLectureId(lectureId);
 
-        AttendanceFindAllLessonForStudentResponseDto responseDto
-                = AttendanceFindAllLessonForStudentResponseDto.builder()
+        AttendFindAllForStuResponseDto responseDto
+                = AttendFindAllForStuResponseDto.builder()
                 .studentId(member.getId())
                 .studentNumber(member.getStudentNumber())
                 .studentName(member.getName())
                 .build();
-        List<AttendanceFindForLesson> attendanceList = new ArrayList<>();
+        List<AttendFindForStuDto> attendanceList = new ArrayList<>();
         for(Lesson lesson : lessonList) {
             List<Attendance> attendances = attendanceRepository.findAllByMemberIdAndLessonId(member.getId(), lesson.getId());
             if(attendances.size() != 1) {
                 return new ResponseDto("FAIL");
             }
-            AttendanceFindForLesson result = AttendanceFindForLesson.builder()
+            AttendFindForStuDto result = AttendFindForStuDto.builder()
                     .lessonId(lesson.getId())
                     .lessonDate(lesson.getDate())
                     .status(attendances.get(0).getStatus())

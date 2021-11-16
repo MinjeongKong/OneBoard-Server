@@ -6,13 +6,13 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class AttendanceFindForLesson {
+public class AttendFindForStuDto {
     private Long lessonId;
     private String lessonDate;
     private Integer status;
 
     @Builder
-    public AttendanceFindForLesson(Long lessonId, String lessonDate, Integer status) {
+    public AttendFindForStuDto(Long lessonId, String lessonDate, Integer status) {
         this.lessonId = lessonId;
         this.lessonDate = lessonDate;
         this.status = status;
