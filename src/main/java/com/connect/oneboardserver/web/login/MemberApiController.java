@@ -33,7 +33,7 @@ public class MemberApiController {
 
     // 회원가입
     @PostMapping("/join")
-    public Long join(@RequestBody MemberJoinDto user) {
+    public Long join(@Valid @RequestBody MemberJoinDto user) {
         return memberRepository.save(Member.builder()
                 .studentNumber(user.getStudentNumber())
                 .name(user.getName())
