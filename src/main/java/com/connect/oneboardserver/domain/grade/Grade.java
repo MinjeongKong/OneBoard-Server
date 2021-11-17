@@ -25,10 +25,14 @@ public class Grade {
     @Column
     private Float score;
 
+    @Column
+    private String grade;
+
     @Builder
-    public Grade(Lecture lecture, Member student, Float score) {
+    public Grade(Lecture lecture, Member student, Float score, String grade) {
         this.lecture = lecture;
         this.student = student;
         this.score = score;
+        this.grade = grade;
     }
 }
