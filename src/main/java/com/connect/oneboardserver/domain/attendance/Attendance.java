@@ -1,7 +1,7 @@
 package com.connect.oneboardserver.domain.attendance;
 
 import com.connect.oneboardserver.domain.BaseTimeEntity;
-import com.connect.oneboardserver.domain.lesson.Lesson;
+import com.connect.oneboardserver.domain.lecture.lesson.Lesson;
 import com.connect.oneboardserver.domain.login.Member;
 import lombok.Builder;
 import lombok.Getter;
