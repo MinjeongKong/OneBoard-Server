@@ -83,7 +83,7 @@ public class PlanService {
         }
     }
 
-    public ResponseEntity<Resource> loadLecturePlan(Long lectureId) {
+    public ResponseEntity<Resource> loadLecturePlan(Long lectureId) throws Exception {
         Lecture lecture = null;
         Resource resource = null;
         try {
@@ -97,7 +97,8 @@ public class PlanService {
                     .body(resource);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resource);
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resource);
+            throw new Exception("Fail to load lecture plan : lectureId = " + lectureId);
         }
     }
 }
