@@ -15,26 +15,26 @@ public class GradeRatio {
     private Long id;
 
     @Column(nullable = false)
-    private Integer aRatio;
+    private Integer aratio;
 
     @Column(nullable = false)
-    private Integer bRatio;
+    private Integer bratio;
 
 
     @Builder
-    public GradeRatio(Integer aRatio, Integer bRatio) {
-        this.aRatio = aRatio;
-        this.bRatio = bRatio;
+    public GradeRatio(Integer aratio, Integer bratio) {
+        this.aratio = aratio;
+        this.bratio = bratio;
     }
 
     public void update(GradeRatio entity) {
-        this.aRatio = entity.getARatio();
-        this.bRatio = entity.getBRatio();
+        this.aratio = entity.getAratio();
+        this.bratio = entity.getBratio();
     }
 
 
     public boolean isValid() {
-        if (this.getARatio() + this.getBRatio() <= 100) {
+        if (this.getAratio() + this.getBratio() <= 100) {
             return true;
         } else {
             return false;

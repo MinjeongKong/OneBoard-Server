@@ -55,8 +55,8 @@ public class GradeRatioRepositoryTest {
         Integer bRatio = 50;
 
         GradeRatio gradeRatio = gradeRatioRepository.save(GradeRatio.builder()
-                .aRatio(aRatio)
-                .bRatio(bRatio)
+                .aratio(aRatio)
+                .bratio(bRatio)
                 .build());
 
         gradeRatioLectureRepository.save(GradeRatioLecture.builder()
@@ -72,8 +72,8 @@ public class GradeRatioRepositoryTest {
         GradeRatioLecture gradeRatioLecture = gradeRatioLectureList.get(0);
         GradeRatio gradeRatio1 = gradeRatioList.get(0);
         GradeRatio gradeRatio2 = gradeRatioLecture.getGradeRatio();
-        assertThat(gradeRatio1.getARatio()).isEqualTo(aRatio);
-        assertThat(gradeRatio1.getBRatio()).isEqualTo(gradeRatio2.getBRatio());
+        assertThat(gradeRatio1.getAratio()).isEqualTo(aRatio);
+        assertThat(gradeRatio1.getBratio()).isEqualTo(gradeRatio2.getBratio());
 
     }
 }
