@@ -1,5 +1,7 @@
 package com.connect.oneboardserver.domain.lesson;
 
+import com.connect.oneboardserver.domain.lecture.lesson.Lesson;
+import com.connect.oneboardserver.domain.lecture.lesson.LessonRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +34,7 @@ public class LessonRepositoryTest {
         String title = "Test Title";
         String date = LocalDateTime.now().toString();
         String note = "lesson note file url";
-        int type = 1;
+        Integer type = 1;
         String room = "Paldal 410";
         String meeting_id = "zoom meeting url";
         String video_url = "lesson video url";

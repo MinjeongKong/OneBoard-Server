@@ -1,6 +1,5 @@
 package com.connect.oneboardserver.web.dto.lecture.notice;
 
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

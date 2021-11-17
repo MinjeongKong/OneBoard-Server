@@ -1,4 +1,4 @@
-package com.connect.oneboardserver.domain.lesson;
+package com.connect.oneboardserver.domain.lecture.lesson;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
