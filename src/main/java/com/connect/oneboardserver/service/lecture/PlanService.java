@@ -31,26 +31,26 @@ public class PlanService {
         }
 
         Lecture lecture = null;
-        String uploadedFile = null;
+        String uploadedFilePath = null;
         try {
             lecture = lectureRepository.findById(lectureId).orElseThrow(Exception::new);
 
             // 강의계획서 파일이 있으면 파일 삭제
-            if(lecture.getLecturePlan() != null) {
-                if(storageService.delete(lecture.getLecturePlan())) {
-                    lecture.updateLecturePlan(null);
+            if(lecture.getLecturePlanUrl() != null) {
+                if(storageService.delete(lecture.getLecturePlanUrl())) {
+                    lecture.updateLecturePlanUrl(null);
                 }
             }
 
             String path = "/lecture_" + lectureId + "/plan";
-            uploadedFile = storageService.store(path, file);
+            uploadedFilePath = storageService.store(path, file);
 
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseDto("FAIL");
         }
 
-        lecture.updateLecturePlan(uploadedFile);
+        lecture.updateLecturePlanUrl(uploadedFilePath);
 
         PlanUploadResponseDto responseDto = PlanUploadResponseDto.builder()
                 .lectureId(lecture.getId())
@@ -66,10 +66,10 @@ public class PlanService {
         try {
             lecture = lectureRepository.findById(lectureId).orElseThrow(Exception::new);
 
-            if(lecture.getLecturePlan() != null) {
-                System.out.println(lecture.getLecturePlan());
-                if(storageService.delete(lecture.getLecturePlan())) {
-                    lecture.updateLecturePlan(null);
+            if(lecture.getLecturePlanUrl() != null) {
+                System.out.println(lecture.getLecturePlanUrl());
+                if(storageService.delete(lecture.getLecturePlanUrl())) {
+                    lecture.updateLecturePlanUrl(null);
                     return new ResponseDto("SUCCESS");
                 } else {
                     throw new Exception("No file to delete");
@@ -88,7 +88,7 @@ public class PlanService {
         Resource resource = null;
         try {
             lecture = lectureRepository.findById(lectureId).orElseThrow(Exception::new);
-            String filePath = lecture.getLecturePlan();
+            String filePath = lecture.getLecturePlanUrl();
             resource = storageService.load(filePath);
             String contentDisposition = "attachment; filename=\"" +
                     lecture.getTitle() + "_plan" + filePath.substring(filePath.lastIndexOf(".")) + "\"";

@@ -12,14 +12,14 @@ public class LectureFindAllResponseDto {
     private Long id;
     private String title;
     private String semester;
-    private String lecturePlan;
+    private String lecturePlanUrl;
 
     @Builder
-    public LectureFindAllResponseDto(Long id, String title, String semester, String lecturePlan) {
+    public LectureFindAllResponseDto(Long id, String title, String semester, String lecturePlanUrl) {
         this.id = id;
         this.title = title;
         this.semester = semester;
-        this.lecturePlan = lecturePlan;
+        this.lecturePlanUrl = lecturePlanUrl;
     }
 
     public static LectureFindAllResponseDto toResponseDto(Lecture entity) {
@@ -27,7 +27,7 @@ public class LectureFindAllResponseDto {
                 .id(entity.getId())
                 .title(entity.getTitle())
                 .semester(entity.getSemester())
-                .lecturePlan(entity.getLecturePlan())
+                .lecturePlanUrl(entity.getLecturePlanUrl())
                 .build();
     }
 }

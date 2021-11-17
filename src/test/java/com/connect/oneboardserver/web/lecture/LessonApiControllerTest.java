@@ -49,12 +49,12 @@ public class LessonApiControllerTest {
     public void requestCreateLesson() {
         // given
         String lectureTitle = "lecture";
-        String lecturePlan = "url";
+        String lecturePlanUrl = "url";
         String semester = "2021-2";
 
         Long lectureId = lectureRepository.save(Lecture.builder()
                 .title(lectureTitle)
-                .lecturePlan(lecturePlan)
+                .lecturePlanUrl(lecturePlanUrl)
                 .semester(semester)
                 .build()).getId();
 
@@ -109,12 +109,12 @@ public class LessonApiControllerTest {
     void requestFindLesson() {
         // given
         String lectureTitle = "test lecture";
-        String lecturePlan = "test url";
+        String lecturePlanUrl = "test url";
         String semester = "2021-2";
 
         Lecture lecture = lectureRepository.save(Lecture.builder()
                 .title(lectureTitle)
-                .lecturePlan(lecturePlan)
+                .lecturePlanUrl(lecturePlanUrl)
                 .semester(semester)
                 .build());
 
@@ -165,12 +165,12 @@ public class LessonApiControllerTest {
     void requestDeleteLesson() {
         // given
         String lectureTitle = "test lecture";
-        String lecturePlan = "test url";
+        String lecturePlanUrl = "test url";
         String semester = "2021-2";
 
         Lecture lecture = Lecture.builder()
                 .title(lectureTitle)
-                .lecturePlan(lecturePlan)
+                .lecturePlanUrl(lecturePlanUrl)
                 .semester(semester)
                 .build();
 
@@ -207,12 +207,12 @@ public class LessonApiControllerTest {
     void requestUpdateLesson() {
         // given
         String lectureTitle = "test lecture";
-        String lecturePlan = "test url";
+        String lecturePlanUrl = "test url";
         String semester = "2021-2";
 
         Lecture lecture = Lecture.builder()
                 .title(lectureTitle)
-                .lecturePlan(lecturePlan)
+                .lecturePlanUrl(lecturePlanUrl)
                 .semester(semester)
                 .build();
 

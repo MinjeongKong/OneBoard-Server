@@ -25,20 +25,20 @@ public class Lecture {
     private String semester;
 
     @Column(length = 128)
-    private String lecturePlan;
+    private String lecturePlanUrl;
 
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.REMOVE)
     private List<Notice> notices = new ArrayList<>();
 
     @Builder
-    public Lecture(String title, String semester, String lecturePlan, List<Notice> notices) {
+    public Lecture(String title, String semester, String lecturePlanUrl, List<Notice> notices) {
         this.title = title;
         this.semester = semester;
-        this.lecturePlan = lecturePlan;
+        this.lecturePlanUrl = lecturePlanUrl;
         this.notices = notices;
     }
 
-    public void updateLecturePlan(String lecturePlan) {
-        this.lecturePlan = lecturePlan;
+    public void updateLecturePlanUrl(String lecturePlanUrl) {
+        this.lecturePlanUrl = lecturePlanUrl;
     }
 }
