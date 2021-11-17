@@ -23,9 +23,9 @@ public class SubmitFindResponseDto {
     public SubmitFindResponseDto(Submit entity) {
         this.id = entity.getId();
         this.assignmentId = entity.getAssignment().getId();
-        this.userId = entity.getMember().getId();
-        this.userName = entity.getMember().getName();
-        this.studentNumber = entity.getMember().getStudentNumber();
+        this.userId = entity.getStudent().getId();
+        this.userName = entity.getStudent().getName();
+        this.studentNumber = entity.getStudent().getStudentNumber();
         this.content = entity.getContent();
         this.fileUrl = entity.getFileUrl();
         this.score = entity.getScore();

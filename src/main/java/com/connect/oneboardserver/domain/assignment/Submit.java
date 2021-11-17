@@ -22,7 +22,7 @@ public class Submit extends BaseTimeEntity {
     private Assignment assignment;
 
     @ManyToOne
-    private Member member;
+    private Member student;
 
     @Column(length = 300)
     private String content;
@@ -46,8 +46,8 @@ public class Submit extends BaseTimeEntity {
         this.assignment = assignment;
     }
 
-    public void setMember(Member member) {
-        this.member = member;
+    public void setStudent(Member student) {
+        this.student = student;
     }
 
     public void check(Float score, String feedback) {
