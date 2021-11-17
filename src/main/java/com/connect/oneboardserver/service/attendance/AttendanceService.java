@@ -53,9 +53,9 @@ public class AttendanceService {
         }
     }
 
-//    public void deleteLessonAttendance(Long lectureId, Long lessonId) {
-//
-//    }
+    public void deleteLessonAttendance(Long lessonId) {
+        attendanceRepository.deleteAllByLessonId(lessonId);
+    }
 
     public ResponseDto findAllAttendance(Long lectureId) {
         Lecture lecture = lectureRepository.findById(lectureId)

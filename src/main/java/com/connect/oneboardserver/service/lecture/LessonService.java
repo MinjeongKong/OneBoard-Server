@@ -93,6 +93,7 @@ public class LessonService {
         if(!lesson.getLecture().getId().equals(lectureId)) {
             return new ResponseDto("FAIL");
         } else {
+            attendanceService.deleteLessonAttendance(lesson.getId());
             lessonRepository.deleteById(lessonId);
             return new ResponseDto("SUCCESS");
         }
