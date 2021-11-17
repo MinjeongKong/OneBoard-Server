@@ -53,6 +53,7 @@ public class AssignmentRepositoryTest {
         String fileUrl = "test fileUrl";
         String startDt = "test startDt";
         String endDt = "test endDt";
+        Float score = 60.8F;
 
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
@@ -64,6 +65,7 @@ public class AssignmentRepositoryTest {
                 .startDt(startDt)
                 .endDt(endDt)
                 .exposeDt(now)
+                .score(score)
                 .build();
 
         assignment.setLecture(lecture);
