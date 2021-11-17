@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -35,7 +36,7 @@ public class AttendanceRepositoryTest {
     Random random = new Random();
 
     @AfterEach
-    void cleanUp() {
+    void tearDown() {
         attendanceRepository.deleteAll();
         lessonRepository.deleteAll();
         memberRepository.deleteAll();
@@ -95,6 +96,41 @@ public class AttendanceRepositoryTest {
         assertThat(actualAttendanceList.get(0).getMember().getEmail()).isEqualTo(expectedMember.getEmail());
         assertThat(actualAttendanceList.get(0).getLesson().getTitle()).isEqualTo(expectedLesson1.getTitle());
         assertThat(actualAttendanceList.get(0).getStatus()).isEqualTo(expectedStatus1);
+    }
+
+    @Test
+    @DisplayName("수업 출석 삭제")
+    @Transactional
+    void deleteAttendanceByLesson() {
+        // given
+        Member expectedMember = createMember();
+        Lesson expectedLesson1 = createLesson();
+        Lesson expectedLesson2 = createLesson();
+        Integer expectedStatus = 0;
+
+        attendanceRepository.save(Attendance.builder()
+                .member(expectedMember)
+                .lesson(expectedLesson1)
+                .status(expectedStatus)
+                .build());
+
+        attendanceRepository.save(Attendance.builder()
+                .member(expectedMember)
+                .lesson(expectedLesson2)
+                .status(expectedStatus)
+                .build());
+
+        // when
+        attendanceRepository.deleteAllByLessonId(expectedLesson1.getId());
+
+        // then
+        List<Attendance> actualAttendances1
+                = attendanceRepository.findAllByMemberIdAndLessonId(expectedMember.getId(), expectedLesson1.getId());
+        assertThat(actualAttendances1.size()).isEqualTo(0);
+
+        List<Attendance> actualAttendances2
+                = attendanceRepository.findAllByMemberIdAndLessonId(expectedMember.getId(), expectedLesson2.getId());
+        assertThat(actualAttendances2.size()).isEqualTo(1);
     }
 
     private Member createMember() {
