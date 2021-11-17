@@ -14,14 +14,16 @@ public class AssignmentUpdateRequestDto {
     private String startDt;
     private String endDt;
     private String exposeDt;
+    private Float score;
 
     @Builder
-    public AssignmentUpdateRequestDto(String title, String content, String fileUrl, String startDt, String endDt, String exposeDt) {
+    public AssignmentUpdateRequestDto(String title, String content, String fileUrl, String startDt, String endDt, String exposeDt, Float score) {
         this.title = title;
         this.content = content;
         this.fileUrl = fileUrl;
         this.startDt = startDt;
         this.endDt = endDt;
         this.exposeDt = exposeDt;
+        this.score = score;
     }
 }

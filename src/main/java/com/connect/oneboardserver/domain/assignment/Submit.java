@@ -31,7 +31,7 @@ public class Submit extends BaseTimeEntity {
     private String fileUrl;
 
     @Column
-    private Long score;
+    private Float score;
 
     @Column(length = 300)
     private String feedback;
@@ -50,7 +50,7 @@ public class Submit extends BaseTimeEntity {
         this.member = member;
     }
 
-    public void check(Long score, String feedback) {
+    public void check(Float score, String feedback) {
         this.score = score;
         this.feedback = feedback;
     }

@@ -37,27 +37,32 @@ public class Assignment extends BaseTimeEntity {
     @Column
     private String exposeDt;
 
+    @Column(nullable = false)
+    private Float score;
+
     @Builder
-    public Assignment(String title, String content, String fileUrl, String startDt, String endDt, String exposeDt) {
+    public Assignment(String title, String content, String fileUrl, String startDt, String endDt, String exposeDt, Float score) {
         this.title = title;
         this.content = content;
         this.fileUrl = fileUrl;
         this.startDt = startDt;
         this.endDt = endDt;
         this.exposeDt = exposeDt;
+        this.score = score;
     }
 
     public void setLecture(Lecture lecture) {
         this.lecture = lecture;
     }
 
-    public void update(String title, String content, String fileUrl, String startDt, String endDt, String exposeDt) {
+    public void update(String title, String content, String fileUrl, String startDt, String endDt, String exposeDt, Float score) {
         this.title = title;
         this.content = content;
         this.fileUrl = fileUrl;
         this.startDt = startDt;
         this.endDt = endDt;
         this.exposeDt = exposeDt;
+        this.score = score;
     }
 
     public void setFileUrl(String fileUrl) {
