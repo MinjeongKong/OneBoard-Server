@@ -9,9 +9,9 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 @NoArgsConstructor
 @Entity
-@Getter
 public class Lecture {
 
     @Id
@@ -41,5 +41,4 @@ public class Lecture {
     public void updateLecturePlan(String lecturePlan) {
         this.lecturePlan = lecturePlan;
     }
-
 }

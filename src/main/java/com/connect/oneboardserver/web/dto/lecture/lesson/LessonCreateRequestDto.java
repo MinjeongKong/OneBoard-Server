@@ -14,23 +14,19 @@ public class LessonCreateRequestDto {
     private String note;
     private Integer type;
     private String room;
-    private String meeting_id;
-    private String video_url;
+    private String meetingId;
+    private String videoUrl;
 
     @Builder
-    public LessonCreateRequestDto(String title, String date, String note, Integer type, String room, String meeting_id, String video_url) {
+    public LessonCreateRequestDto(String title, String date, String note, Integer type, String room, String meetingId, String videoUrl) {
         this.title = title;
         this.date = date;
         this.note = note;
         this.type = type;
         this.room = room;
-        this.meeting_id = meeting_id;
-        this.video_url = video_url;
+        this.meetingId = meetingId;
+        this.videoUrl = videoUrl;
     }
-
-
-
-
 
     public Lesson toEntity() {
         return Lesson.builder()
@@ -39,8 +35,8 @@ public class LessonCreateRequestDto {
                 .note(note)
                 .type(type)
                 .room(room)
-                .meeting_id(meeting_id)
-                .video_url(video_url)
+                .meetingId(meetingId)
+                .videoUrl(videoUrl)
                 .build();
     }
 }
