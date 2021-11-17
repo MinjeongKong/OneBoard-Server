@@ -44,7 +44,7 @@ public class AssignmentService {
             return new ResponseDto("FAIL");
         } else {
             assignment.update(requestDto.getTitle(),requestDto.getContent(),requestDto.getFileUrl(),
-                    requestDto.getStartDt(),requestDto.getEndDt(), requestDto.getExposeDt());
+                    requestDto.getStartDt(),requestDto.getEndDt(), requestDto.getExposeDt(), requestDto.getScore());
             AssignmentResponseDto responseDto = new AssignmentResponseDto(assignment);
 
             return new ResponseDto("SUCCESS", responseDto);

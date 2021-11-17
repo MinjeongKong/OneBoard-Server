@@ -2,6 +2,8 @@ package com.connect.oneboardserver.domain.assignment;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SubmitRepository extends JpaRepository<Submit, Long> {
+import java.util.List;
 
+public interface SubmitRepository extends JpaRepository<Submit, Long> {
+    List<Submit> findAllByAssignmentId(Long assignmentId);
 }

@@ -18,6 +18,7 @@ public class AssignmentFindResponseDto {
     private String exposeDt;
     private String createdDt;
     private String updatedDt;
+    private Float score;
 
     public AssignmentFindResponseDto(Assignment entity) {
         this.id = entity.getId();
@@ -30,6 +31,7 @@ public class AssignmentFindResponseDto {
         this.exposeDt = entity.getExposeDt();
         this.createdDt = entity.getCreatedDt();
         this.updatedDt = entity.getUpdatedDt();
+        this.score = entity.getScore();
     }
 
     public static AssignmentFindResponseDto toResponseDto(Assignment entity) {

@@ -27,14 +27,18 @@ public class AssignmentCreateRequestDto {
 
     private String exposeDt;
 
+    @NotEmpty
+    private Float score;
+
     @Builder
-    public AssignmentCreateRequestDto(String title, String content, String fileUrl, String startDt, String endDt, String exposeDt) {
+    public AssignmentCreateRequestDto(String title, String content, String fileUrl, String startDt, String endDt, String exposeDt, Float score) {
         this.title = title;
         this.content = content;
         this.fileUrl = fileUrl;
         this.startDt = startDt;
         this.endDt = endDt;
         this.exposeDt = exposeDt;
+        this.score = score;
     }
 
     public Assignment toEntity() {
@@ -45,6 +49,7 @@ public class AssignmentCreateRequestDto {
                 .startDt(startDt)
                 .endDt(endDt)
                 .exposeDt(exposeDt)
+                .score(score)
                 .build();
     }
 }
