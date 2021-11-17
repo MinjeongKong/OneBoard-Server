@@ -8,13 +8,16 @@ import com.connect.oneboardserver.domain.relation.GradeRatioLecture;
 import com.connect.oneboardserver.domain.relation.GradeRatioLectureRepository;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.grade.GradeRatioCreateRequestDto;
+import com.connect.oneboardserver.web.dto.grade.GradeRatioFindResponseDto;
 import com.connect.oneboardserver.web.dto.grade.GradeRatioResponseDto;
 import com.connect.oneboardserver.web.dto.grade.GradeRatioUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class GradeRatioService {
@@ -28,9 +31,7 @@ public class GradeRatioService {
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(()->new IllegalArgumentException("해당 과목이 없습니다. id="+lectureId));
 
-        GradeRatioLecture gradeRatioLecture = gradeRatioLectureRepository.findByLectureId(lectureId);
         GradeRatio gradeRatio = requestDto.toEntity();
-
         if (!gradeRatio.isValid()) {
             return new ResponseDto("FAIL");
         } else {
@@ -61,6 +62,17 @@ public class GradeRatioService {
 
             return new ResponseDto("SUCCESS", responseDto);
         }
+    }
+
+    public ResponseDto findGradeRatio(Long lectureId) {
+        Lecture lecture = lectureRepository.findById(lectureId)
+                .orElseThrow(()->new IllegalArgumentException("해당 과목이 없습니다. id="+lectureId));
+
+        GradeRatioLecture gradeRatioLecture = gradeRatioLectureRepository.findByLectureId(lectureId);
+        GradeRatio gradeRatio = gradeRatioLecture.getGradeRatio();
+
+        GradeRatioFindResponseDto responseDto = new GradeRatioFindResponseDto(gradeRatio);
+        return new ResponseDto("SUCCESS", responseDto);
     }
 
 
