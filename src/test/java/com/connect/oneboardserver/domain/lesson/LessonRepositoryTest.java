@@ -36,8 +36,8 @@ public class LessonRepositoryTest {
         String note = "lesson note file url";
         Integer type = 1;
         String room = "Paldal 410";
-        String meeting_id = "zoom meeting url";
-        String video_url = "lesson video url";
+        String meetingId = "zoom meeting url";
+        String videoUrl = "lesson video url";
 
         lessonRepository.save(Lesson.builder()
                 .title(title)
@@ -45,8 +45,8 @@ public class LessonRepositoryTest {
                 .note(note)
                 .type(type)
                 .room(room)
-                .meeting_id(meeting_id)
-                .video_url(video_url)
+                .meetingId(meetingId)
+                .videoUrl(videoUrl)
                 .build());
 
         // when

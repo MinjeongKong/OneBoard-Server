@@ -17,11 +17,11 @@ public class LessonFindResponseDto {
     private String note;
     private Integer type;
     private String room;
-    private String meeting_id;
-    private String video_url;
+    private String meetingId;
+    private String videoUrl;
 
     @Builder
-    public LessonFindResponseDto(Long id, Long lectureId, String title, String date, String note, Integer type, String room, String meeting_id, String video_url) {
+    public LessonFindResponseDto(Long id, Long lectureId, String title, String date, String note, Integer type, String room, String meetingId, String videoUrl) {
         this.id = id;
         this.lectureId = lectureId;
         this.title = title;
@@ -29,8 +29,8 @@ public class LessonFindResponseDto {
         this.note = note;
         this.type = type;
         this.room = room;
-        this.meeting_id = meeting_id;
-        this.video_url = video_url;
+        this.meetingId = meetingId;
+        this.videoUrl = videoUrl;
     }
 
     public static LessonFindResponseDto toResponseDto(Lesson entity) {
@@ -42,8 +42,8 @@ public class LessonFindResponseDto {
                 .note(entity.getNote())
                 .type(entity.getType())
                 .room(entity.getRoom())
-                .meeting_id(entity.getMeeting_id())
-                .video_url(entity.getVideo_url())
+                .meetingId(entity.getMeetingId())
+                .videoUrl(entity.getVideoUrl())
                 .build();
     }
 }

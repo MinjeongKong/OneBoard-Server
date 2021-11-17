@@ -104,7 +104,8 @@ public class LessonService {
         if(!lesson.getLecture().getId().equals(lectureId)) {
             return new ResponseDto("FAIL");
         } else {
-            lesson.update(requestDto.getTitle(), requestDto.getDate(), requestDto.getNote(), requestDto.getType(), requestDto.getRoom(), requestDto.getMeeting_id(), requestDto.getVideo_url());
+            lesson.update(requestDto.getTitle(), requestDto.getDate(), requestDto.getNote(), requestDto.getType(),
+                    requestDto.getRoom(), requestDto.getMeetingId(), requestDto.getVideoUrl());
             LessonUpdateResponseDto responseDto = LessonUpdateResponseDto.builder()
                     .lessonId(lesson.getId())
                     .build();

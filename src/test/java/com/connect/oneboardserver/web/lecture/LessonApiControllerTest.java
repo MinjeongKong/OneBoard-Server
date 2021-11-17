@@ -63,8 +63,8 @@ public class LessonApiControllerTest {
         String note = "lesson note file url";
         Integer type = 1;
         String room = "Paldal 410";
-        String meeting_id = "zoom meeting url";
-        String video_url = "lesson video url";
+        String meetingId = "zoom meeting url";
+        String videoUrl = "lesson video url";
 
         LessonCreateRequestDto requestDto = LessonCreateRequestDto.builder()
                 .title(title)
@@ -72,8 +72,8 @@ public class LessonApiControllerTest {
                 .note(note)
                 .type(type)
                 .room(room)
-                .meeting_id(meeting_id)
-                .video_url(video_url)
+                .meetingId(meetingId)
+                .videoUrl(videoUrl)
                 .build();
 
         String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson";
@@ -100,8 +100,8 @@ public class LessonApiControllerTest {
         assertThat(newLesson.getNote()).isEqualTo(note);
         assertThat(newLesson.getType()).isEqualTo(type);
         assertThat(newLesson.getRoom()).isEqualTo(room);
-        assertThat(newLesson.getMeeting_id()).isEqualTo(meeting_id);
-        assertThat(newLesson.getVideo_url()).isEqualTo(video_url);
+        assertThat(newLesson.getMeetingId()).isEqualTo(meetingId);
+        assertThat(newLesson.getVideoUrl()).isEqualTo(videoUrl);
     }
 
     @Test
@@ -123,8 +123,8 @@ public class LessonApiControllerTest {
         String note = "lesson note file url";
         Integer type = 1;
         String room = "Paldal 410";
-        String meeting_id = "zoom meeting url";
-        String video_url = "lesson video url";
+        String meetingId = "zoom meeting url";
+        String videoUrl = "lesson video url";
 
         Long lessonId = lessonRepository.save(Lesson.builder()
                 .lecture(lecture)
@@ -132,8 +132,8 @@ public class LessonApiControllerTest {
                 .date(date).note(note)
                 .type(type)
                 .room(room)
-                .meeting_id(meeting_id)
-                .video_url(video_url)
+                .meetingId(meetingId)
+                .videoUrl(videoUrl)
                 .build()).getId();
 
         String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson/{lessonId}";
@@ -154,8 +154,8 @@ public class LessonApiControllerTest {
         assertThat(responseDto.getTitle()).isEqualTo(title);
         assertThat(responseDto.getLectureId()).isEqualTo(lecture.getId());
         assertThat(responseDto.getNote()).isEqualTo(note);
-        assertThat(responseDto.getMeeting_id()).isEqualTo(meeting_id);
-        assertThat(responseDto.getVideo_url()).isEqualTo(video_url);
+        assertThat(responseDto.getMeetingId()).isEqualTo(meetingId);
+        assertThat(responseDto.getVideoUrl()).isEqualTo(videoUrl);
         assertThat(responseDto.getRoom()).isEqualTo(room);
         assertThat(responseDto.getType()).isEqualTo(type);
     }
@@ -181,8 +181,8 @@ public class LessonApiControllerTest {
         String note = "lesson note file url";
         Integer type = 1;
         String room = "Paldal 410";
-        String meeting_id = "zoom meeting url";
-        String video_url = "lesson video url";
+        String meetingId = "zoom meeting url";
+        String videoUrl = "lesson video url";
 
         Long lessonId = lessonRepository.save(Lesson.builder()
                 .lecture(lecture)
@@ -190,8 +190,8 @@ public class LessonApiControllerTest {
                 .date(date).note(note)
                 .type(type)
                 .room(room)
-                .meeting_id(meeting_id)
-                .video_url(video_url)
+                .meetingId(meetingId)
+                .videoUrl(videoUrl)
                 .build()).getId();
 
         String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson/{lessonId}";
@@ -223,8 +223,8 @@ public class LessonApiControllerTest {
         String note = "lesson note file url";
         Integer type = 1;
         String room = "Paldal 410";
-        String meeting_id = "zoom meeting url";
-        String video_url = "lesson video url";
+        String meetingId = "zoom meeting url";
+        String videoUrl = "lesson video url";
 
 
         Lesson lesson = Lesson.builder()
@@ -233,28 +233,28 @@ public class LessonApiControllerTest {
                 .date(date).note(note)
                 .type(type)
                 .room(room)
-                .meeting_id(meeting_id)
-                .video_url(video_url)
+                .meetingId(meetingId)
+                .videoUrl(videoUrl)
                 .build();
 
         Long lessonId = lessonRepository.save(lesson).getId();
 
-        String update_title = "Test Title2";
-        String update_date = LocalDateTime.now().toString();
-        String update_note = "lesson note file url2";
-        Integer update_type = 2;
-        String update_room = "Paldal 411";
-        String update_meeting_id = "zoom meeting url2";
-        String update_video_url = "lesson video url2";
+        String updateTitle = "Test Title2";
+        String updateDate = LocalDateTime.now().toString();
+        String updateNote = "lesson note file url2";
+        Integer updateType = 2;
+        String updateRoom = "Paldal 411";
+        String updateMeetingId = "zoom meeting url2";
+        String updateVideoUrl = "lesson video url2";
 
         LessonUpdateRequestDto requestDto = LessonUpdateRequestDto.builder()
-                .title(update_title)
-                .date(update_date)
-                .note(update_note)
-                .type(update_type)
-                .room(update_room)
-                .meeting_id(update_meeting_id)
-                .video_url(update_video_url)
+                .title(updateTitle)
+                .date(updateDate)
+                .note(updateNote)
+                .type(updateType)
+                .room(updateRoom)
+                .meetingId(updateMeetingId)
+                .videoUrl(updateVideoUrl)
                 .build();
 
         String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson/{lessonId}";
@@ -276,12 +276,12 @@ public class LessonApiControllerTest {
 
         Lesson updatedLesson = lessonRepository.findById(responseDto.getLessonId()).orElseThrow();
 
-        assertThat(updatedLesson.getTitle()).isEqualTo(update_title);
-        assertThat(updatedLesson.getType()).isEqualTo(update_type);
-        assertThat(updatedLesson.getNote()).isEqualTo(update_note);
-        assertThat(updatedLesson.getRoom()).isEqualTo(update_room);
-        assertThat(updatedLesson.getMeeting_id()).isEqualTo(update_meeting_id);
-        assertThat(updatedLesson.getVideo_url()).isEqualTo(update_video_url);
+        assertThat(updatedLesson.getTitle()).isEqualTo(updateTitle);
+        assertThat(updatedLesson.getType()).isEqualTo(updateType);
+        assertThat(updatedLesson.getNote()).isEqualTo(updateNote);
+        assertThat(updatedLesson.getRoom()).isEqualTo(updateRoom);
+        assertThat(updatedLesson.getMeetingId()).isEqualTo(updateMeetingId);
+        assertThat(updatedLesson.getVideoUrl()).isEqualTo(updateVideoUrl);
     }
 
 }

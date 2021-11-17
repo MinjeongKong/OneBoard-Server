@@ -35,34 +35,34 @@ public class Lesson {
     private String room;
 
     @Column(length = 128)
-    private String meeting_id;
+    private String meetingId;
 
     @Column(length = 128)
-    private String video_url;
+    private String videoUrl;
 
     @Builder
-    public Lesson(Lecture lecture, String title, String date, String note, Integer type, String room, String meeting_id, String video_url) {
+    public Lesson(Lecture lecture, String title, String date, String note, Integer type, String room, String meetingId, String videoUrl) {
         this.lecture = lecture;
         this.title = title;
         this.date = date;
         this.note = note;
         this.type = type;
         this.room = room;
-        this.meeting_id = meeting_id;
-        this.video_url = video_url;
+        this.meetingId = meetingId;
+        this.videoUrl = videoUrl;
     }
 
     public void setLecture(Lecture lecture) {
         this.lecture = lecture;
     }
 
-    public void update(String title, String date, String note, Integer type, String room, String meeting_id, String video_url) {
+    public void update(String title, String date, String note, Integer type, String room, String meetingId, String videoUrl) {
         this.title = title;
         this.date = date;
         this.note = note;
         this.type = type;
         this.room = room;
-        this.meeting_id = meeting_id;
-        this.video_url = video_url;
+        this.meetingId = meetingId;
+        this.videoUrl = videoUrl;
     }
 }
