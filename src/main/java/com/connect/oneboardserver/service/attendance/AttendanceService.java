@@ -32,6 +32,31 @@ public class AttendanceService {
     private final LessonRepository lessonRepository;
     private final AttendanceRepository attendanceRepository;
 
+
+    public void initLessonAttendance(Long lectureId, Lesson lesson) {
+        List<MemberLecture> memberLectureList = memberLectureRepository.findAllByLectureId(lectureId);
+
+        List<Member> studentList = new ArrayList<>();
+        for(MemberLecture ml : memberLectureList) {
+            if(ml.getMember().getRoles().get(0).equals("ROLE_S")) {
+                studentList.add(ml.getMember());
+            }
+        }
+
+        // 수업 출석 초기화 : 결석
+        for(Member member : studentList) {
+            attendanceRepository.save(Attendance.builder()
+                    .member(member)
+                    .lesson(lesson)
+                    .status(0)
+                    .build());
+        }
+    }
+
+//    public void deleteLessonAttendance(Long lectureId, Long lessonId) {
+//
+//    }
+
     public ResponseDto findAllAttendance(Long lectureId) {
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 과목이 없습니다 : id = " + lectureId));
