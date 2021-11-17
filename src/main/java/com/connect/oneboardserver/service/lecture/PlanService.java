@@ -91,7 +91,7 @@ public class PlanService {
             String filePath = lecture.getLecturePlan();
             resource = storageService.load(filePath);
             String contentDisposition = "attachment; filename=\"" +
-                    lecture.getTitle() + "_plan\"";
+                    lecture.getTitle() + "_plan" + filePath.substring(filePath.lastIndexOf(".")) + "\"";
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
                     .body(resource);
