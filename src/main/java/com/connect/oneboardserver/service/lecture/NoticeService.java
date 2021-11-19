@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ public class NoticeService {
             e.printStackTrace();
             return new ResponseDto("FAIL");
         }
-        List<Notice> noticeList = noticeRepository.findAllByLectureId(lecture.getId());
+        List<Notice> noticeList = noticeRepository.findAllByLectureIdOrderByExposeDtDesc(lecture.getId());
         List<NoticeFindResponseDto> noticeFindResponseDtoList = new ArrayList<>();
         for (int i = 0; i < noticeList.size(); i++) {
             noticeFindResponseDtoList.add(NoticeFindResponseDto.toResponseDto(noticeList.get(i)));

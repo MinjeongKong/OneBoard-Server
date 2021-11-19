@@ -108,7 +108,7 @@ public class NoticeRepositoryTest {
                 .build());
 
         // when
-        List<Notice> noticeList = noticeRepository.findAllByLectureId(lecture1.getId());
+        List<Notice> noticeList = noticeRepository.findAllByLectureIdOrderByExposeDtDesc(lecture1.getId());
 
         // then
         System.out.println(noticeList);
