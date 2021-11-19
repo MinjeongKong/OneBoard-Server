@@ -8,8 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SubmitFindResponseDto {
 
-    private Long id;
+    private Long submitId;
     private Long assignmentId;
+    private String assignmentTitle;
     private Long userId;
     private String userName;
     private String studentNumber;
@@ -21,8 +22,9 @@ public class SubmitFindResponseDto {
     private String updatedDt;
 
     public SubmitFindResponseDto(Submit entity) {
-        this.id = entity.getId();
+        this.submitId = entity.getId();
         this.assignmentId = entity.getAssignment().getId();
+        this.assignmentTitle = entity.getAssignment().getTitle();
         this.userId = entity.getMember().getId();
         this.userName = entity.getMember().getName();
         this.studentNumber = entity.getMember().getStudentNumber();

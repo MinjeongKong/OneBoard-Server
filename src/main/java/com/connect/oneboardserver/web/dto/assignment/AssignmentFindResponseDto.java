@@ -8,8 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AssignmentFindResponseDto {
 
-    private Long id;
+    private Long assignmentId;
     private Long lectureId;
+    private String lectureTitle;
     private String title;
     private String content;
     private String fileUrl;
@@ -21,8 +22,9 @@ public class AssignmentFindResponseDto {
     private Float score;
 
     public AssignmentFindResponseDto(Assignment entity) {
-        this.id = entity.getId();
+        this.assignmentId = entity.getId();
         this.lectureId = entity.getLecture().getId();
+        this.lectureTitle = entity.getLecture().getTitle();
         this.title = entity.getTitle();
         this.content = entity.getContent();
         this.fileUrl = entity.getFileUrl();
