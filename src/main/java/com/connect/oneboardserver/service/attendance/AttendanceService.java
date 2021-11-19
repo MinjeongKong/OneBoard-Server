@@ -72,7 +72,7 @@ public class AttendanceService {
         }
 
         // lectureId로 Lesson에서 해당 과목의 모든 수업 조회
-        List<Lesson> lessonList = lessonRepository.findAllByLectureId(lecture.getId());
+        List<Lesson> lessonList = lessonRepository.findAllByLectureIdOrderByDate(lecture.getId());
 
         List<AttendFindAllForStuResponseDto> responseDtoList = new ArrayList<>();
         // 학생을 기준으로 Attendance에서 학생과 모든 수업에 대해서 조회
@@ -123,7 +123,7 @@ public class AttendanceService {
     public ResponseDto findAllMyAttendance(String email, Long lectureId) {
         Member member = (Member) userDetailsService.loadUserByUsername(email);
 
-        List<Lesson> lessonList = lessonRepository.findAllByLectureId(lectureId);
+        List<Lesson> lessonList = lessonRepository.findAllByLectureIdOrderByDate(lectureId);
 
         AttendFindAllForStuResponseDto responseDto
                 = AttendFindAllForStuResponseDto.builder()
