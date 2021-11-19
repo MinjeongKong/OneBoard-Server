@@ -55,4 +55,9 @@ public class Submit extends BaseTimeEntity {
         this.feedback = feedback;
     }
 
+    public void update(String content, String fileUrl) {
+        this.content = content;
+        this.fileUrl = fileUrl;
+    }
+
 }
