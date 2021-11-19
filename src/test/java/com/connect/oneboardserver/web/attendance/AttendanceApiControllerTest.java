@@ -93,7 +93,7 @@ public class AttendanceApiControllerTest {
             }
         }
 
-        String url = "http://localhost:" + port + "/lecture/{lectureId}/attendance";
+        String url = "http://localhost:" + port + "/lecture/{lectureId}/attendances";
 
         // when
         ResponseEntity<ResponseDto> responseEntity
@@ -139,7 +139,7 @@ public class AttendanceApiControllerTest {
         AttendanceUpdateAllRequestDto requestDto = new AttendanceUpdateAllRequestDto(updateList);
 
 
-        String url = "http://localhost:" + port + "/lecture/{lectureId}/attendance";
+        String url = "http://localhost:" + port + "/lecture/{lectureId}/attendances";
 
         HttpEntity<AttendanceUpdateAllRequestDto> requestEntity = new HttpEntity<>(requestDto);
 
