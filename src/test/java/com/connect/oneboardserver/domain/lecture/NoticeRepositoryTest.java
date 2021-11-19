@@ -39,12 +39,12 @@ public class NoticeRepositoryTest {
     public void createNotice() {
         // given
         String lectureTitle = "test lecture";
-        String lecturePlan = "test url";
+        String lecturePlanUrl = "test url";
         String semester = "2021-2";
 
         Lecture lecture = lectureRepository.save(Lecture.builder()
                 .title(lectureTitle)
-                .lecturePlan(lecturePlan)
+                .lecturePlanUrl(lecturePlanUrl)
                 .semester(semester)
                 .build());
 
@@ -76,13 +76,13 @@ public class NoticeRepositoryTest {
         // given
         Lecture lecture1 = lectureRepository.save(Lecture.builder()
                 .title("title1")
-                .lecturePlan("plan1")
+                .lecturePlanUrl("plan1")
                 .semester("semester1")
                 .build());
 
         Lecture lecture2 = lectureRepository.save(Lecture.builder()
                 .title("title2")
-                .lecturePlan("plan2")
+                .lecturePlanUrl("plan2")
                 .semester("semester2")
                 .build());
 

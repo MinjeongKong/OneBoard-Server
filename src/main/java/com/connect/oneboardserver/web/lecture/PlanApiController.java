@@ -29,7 +29,7 @@ public class PlanApiController {
 
     // 과목 강의계획서 로드
     @GetMapping("/lecture/{lectureId}/plan")
-    public ResponseEntity<Resource> loadLecturePlan(@PathVariable Long lectureId) {
+    public ResponseEntity<Resource> loadLecturePlan(@PathVariable Long lectureId) throws Exception {
         return planService.loadLecturePlan(lectureId);
     }
 

@@ -4,6 +4,7 @@ import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;
 import com.connect.oneboardserver.domain.lecture.lesson.Lesson;
 import com.connect.oneboardserver.domain.lecture.lesson.LessonRepository;
+import com.connect.oneboardserver.service.attendance.AttendanceService;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.lesson.*;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class LessonService {
 
     private final LessonRepository lessonRepository;
     private final LectureRepository lectureRepository;
+    private final AttendanceService attendanceService;
 
     public ResponseDto findLessonList(Long lectureId) {
         Lecture lecture = null;
@@ -33,8 +35,10 @@ public class LessonService {
         List<LessonListFindResponseDto> lessonListFindResponseDtoList = new ArrayList<>();
         for (int i = 0; i < lessonList.size(); i++) {
             lessonListFindResponseDtoList.add(LessonListFindResponseDto.toResponseDto(lessonList.get(i)));
-        }return new ResponseDto("SUCCESS", lessonListFindResponseDtoList);
+        }
+        return new ResponseDto("SUCCESS", lessonListFindResponseDtoList);
     }
+
     @Transactional
     public ResponseDto createLesson(Long lectureId, LessonCreateRequestDto requestDto) {
         Lecture lecture = null;
@@ -48,9 +52,14 @@ public class LessonService {
         Lesson lesson = requestDto.toEntity();
         lesson.setLecture(lecture);
 
+        Lesson savedLesson = lessonRepository.save(lesson);
+
+        attendanceService.initLessonAttendance(lecture.getId(), savedLesson);
+
         LessonCreateResponseDto responseDto = LessonCreateResponseDto.builder()
-                .lessonId(lessonRepository.save(lesson).getId())
+                .lessonId(savedLesson.getId())
                 .build();
+
         return new ResponseDto("SUCCESS" ,responseDto);
     }
 
@@ -69,6 +78,7 @@ public class LessonService {
             return new ResponseDto("SUCCESS", responseDto);
         }
     }
+
     @Transactional
     public ResponseDto deleteLesson(Long lectureId, Long lessonId) {
         Lesson lesson = null;
@@ -83,10 +93,10 @@ public class LessonService {
         if(!lesson.getLecture().getId().equals(lectureId)) {
             return new ResponseDto("FAIL");
         } else {
+            attendanceService.deleteLessonAttendance(lesson.getId());
             lessonRepository.deleteById(lessonId);
             return new ResponseDto("SUCCESS");
         }
-
     }
 
     @Transactional
@@ -104,7 +114,8 @@ public class LessonService {
         if(!lesson.getLecture().getId().equals(lectureId)) {
             return new ResponseDto("FAIL");
         } else {
-            lesson.update(requestDto.getTitle(), requestDto.getDate(), requestDto.getNote(), requestDto.getType(), requestDto.getRoom(), requestDto.getMeeting_id(), requestDto.getVideo_url());
+            lesson.update(requestDto.getTitle(), requestDto.getDate(), requestDto.getNote(), requestDto.getType(),
+                    requestDto.getRoom(), requestDto.getMeetingId(), requestDto.getVideoUrl());
             LessonUpdateResponseDto responseDto = LessonUpdateResponseDto.builder()
                     .lessonId(lesson.getId())
                     .build();

@@ -29,12 +29,12 @@ public class LectureRepositoryTest {
     public void createLecture() {
         // given
         String title = "test_lecture_1";
-        String lecturePlan = "test_url";
+        String lecturePlanUrl = "test_url";
         String semester = "2021-2";
 
         lectureRepository.save(Lecture.builder()
                 .title(title)
-                .lecturePlan(lecturePlan)
+                .lecturePlanUrl(lecturePlanUrl)
                 .semester(semester)
                 .build());
 
