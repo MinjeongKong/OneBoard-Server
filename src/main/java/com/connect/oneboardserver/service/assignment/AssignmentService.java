@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,8 +83,18 @@ public class AssignmentService {
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(()->new IllegalArgumentException("해당 과목이 없습니다. id="+lectureId));
 
-        List<Assignment> assignmentList = assignmentRepository.findAllByLectureId(lectureId);
+        List<Assignment> assignmentList = assignmentRepository.findAllByLectureIdOrderByEndDt(lectureId);
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         List<AssignmentFindResponseDto> assignmentFindResponseDtoList = new ArrayList<>();
+
+        for(int i = assignmentList.size()-1; i >= 0 ; i--) {
+            Assignment assignment = assignmentList.get(i);
+            if(assignment.getEndDt().compareTo(now) < 0) {
+                break;
+            }
+            assignmentFindResponseDtoList.add(0, AssignmentFindResponseDto.toResponseDto(assignment));
+            assignmentList.remove(i);
+        }
         for (int i = 0; i < assignmentList.size(); i++) {
             assignmentFindResponseDtoList.add(AssignmentFindResponseDto.toResponseDto(assignmentList.get(i)));
         }
