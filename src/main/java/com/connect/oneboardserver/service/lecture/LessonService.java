@@ -31,7 +31,7 @@ public class LessonService {
             e.printStackTrace();
             return new ResponseDto("FAIL");
         }
-        List<Lesson> lessonList = lessonRepository.findAllByLectureId(lecture.getId());
+        List<Lesson> lessonList = lessonRepository.findAllByLectureIdOrderByDateDesc(lecture.getId());
         List<LessonListFindResponseDto> lessonListFindResponseDtoList = new ArrayList<>();
         for (int i = 0; i < lessonList.size(); i++) {
             lessonListFindResponseDtoList.add(LessonListFindResponseDto.toResponseDto(lessonList.get(i)));
