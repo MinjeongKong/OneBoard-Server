@@ -12,13 +12,17 @@ public class LectureFindAllResponseDto {
     private Long id;
     private String title;
     private String semester;
+    private String defaultDatetime;
+    private String defaultRoom;
     private String lecturePlanUrl;
 
     @Builder
-    public LectureFindAllResponseDto(Long id, String title, String semester, String lecturePlanUrl) {
+    public LectureFindAllResponseDto(Long id, String title, String semester, String defaultDatetime, String defaultRoom, String lecturePlanUrl) {
         this.id = id;
         this.title = title;
         this.semester = semester;
+        this.defaultDatetime = defaultDatetime;
+        this.defaultRoom = defaultRoom;
         this.lecturePlanUrl = lecturePlanUrl;
     }
 
@@ -27,6 +31,8 @@ public class LectureFindAllResponseDto {
                 .id(entity.getId())
                 .title(entity.getTitle())
                 .semester(entity.getSemester())
+                .defaultDatetime(entity.getDefaultDateTime())
+                .defaultRoom(entity.getDefaultRoom())
                 .lecturePlanUrl(entity.getLecturePlanUrl())
                 .build();
     }

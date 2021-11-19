@@ -24,6 +24,12 @@ public class Lecture {
     @Column(length = 30)
     private String semester;
 
+    @Column(length = 30)
+    private String defaultDateTime;
+
+    @Column(length = 30)
+    private String defaultRoom;
+
     @Column(length = 128)
     private String lecturePlanUrl;
 
@@ -31,9 +37,11 @@ public class Lecture {
     private List<Notice> notices = new ArrayList<>();
 
     @Builder
-    public Lecture(String title, String semester, String lecturePlanUrl, List<Notice> notices) {
+    public Lecture(String title, String semester, String defaultDateTime, String defaultRoom, String lecturePlanUrl, List<Notice> notices) {
         this.title = title;
         this.semester = semester;
+        this.defaultDateTime = defaultDateTime;
+        this.defaultRoom = defaultRoom;
         this.lecturePlanUrl = lecturePlanUrl;
         this.notices = notices;
     }

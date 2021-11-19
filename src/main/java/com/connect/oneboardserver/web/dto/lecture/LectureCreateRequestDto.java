@@ -11,17 +11,23 @@ public class LectureCreateRequestDto {
 
     private String title;
     private String semester;
+    private String defaultDateTime;
+    private String defaultRoom;
 
     @Builder
-    public LectureCreateRequestDto(String title, String semester) {
+    public LectureCreateRequestDto(String title, String semester, String defaultDateTime, String defaultRoom) {
         this.title = title;
         this.semester = semester;
+        this.defaultDateTime = defaultDateTime;
+        this.defaultRoom = defaultRoom;
     }
 
     public Lecture toEntity() {
         return Lecture.builder()
                 .title(title)
                 .semester(semester)
+                .defaultDateTime(defaultDateTime)
+                .defaultRoom(defaultRoom)
                 .build();
     }
 }
