@@ -57,7 +57,7 @@ public class AttendanceService {
         attendanceRepository.deleteAllByLessonId(lessonId);
     }
 
-    public ResponseDto findAllAttendance(Long lectureId) {
+    public ResponseDto findAllAttendanceList(Long lectureId) {
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 과목이 없습니다 : id = " + lectureId));
 
@@ -106,7 +106,7 @@ public class AttendanceService {
     }
 
     @Transactional
-    public ResponseDto updateAllAttendance(Long lectureId, AttendanceUpdateAllRequestDto requestDto) {
+    public ResponseDto updateAllAttendanceList(Long lectureId, AttendanceUpdateAllRequestDto requestDto) {
         for(AttendanceUpdateRequestDto updateData : requestDto.getUpdateDataList()) {
             List<Attendance> attendances
                     = attendanceRepository.findAllByMemberIdAndLessonId(updateData.getStudentId(), updateData.getLessonId());
@@ -120,7 +120,7 @@ public class AttendanceService {
         return new ResponseDto("SUCCESS");
     }
 
-    public ResponseDto findAllMyAttendance(String email, Long lectureId) {
+    public ResponseDto findAllMyAttendanceList(String email, Long lectureId) {
         Member member = (Member) userDetailsService.loadUserByUsername(email);
 
         List<Lesson> lessonList = lessonRepository.findAllByLectureIdOrderByDate(lectureId);

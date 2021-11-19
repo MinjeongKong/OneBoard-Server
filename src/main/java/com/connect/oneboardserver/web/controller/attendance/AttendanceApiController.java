@@ -18,24 +18,24 @@ public class AttendanceApiController {
     private final JwtTokenProvider jwtTokenProvider;
 
     // 과목 전체 출석 조회 - 강의자
-    @GetMapping("/lecture/{lectureId}/attendance")
-    public ResponseDto findAllAttendance(@PathVariable Long lectureId) {
-        return attendanceService.findAllAttendance(lectureId);
+    @GetMapping("/lecture/{lectureId}/attendances")
+    public ResponseDto findAllAttendanceList(@PathVariable Long lectureId) {
+        return attendanceService.findAllAttendanceList(lectureId);
     }
 
     // 과목 전체 출석 수정 - 강의자
-    @PutMapping("/lecture/{lectureId}/attendance")
-    public ResponseDto updateAllAttendance(@PathVariable Long lectureId, @RequestBody AttendanceUpdateAllRequestDto requestDto) {
-        return attendanceService.updateAllAttendance(lectureId, requestDto);
+    @PutMapping("/lecture/{lectureId}/attendances")
+    public ResponseDto updateAllAttendanceList(@PathVariable Long lectureId, @RequestBody AttendanceUpdateAllRequestDto requestDto) {
+        return attendanceService.updateAllAttendanceList(lectureId, requestDto);
     }
 
     // 본인 과목 전체 출석 조회 - 학생
-    @GetMapping("/lecture/{lectureId}/attendance/my")
-    public ResponseDto findAllMyAttendance(@PathVariable Long lectureId, HttpServletRequest request) {
+    @GetMapping("/lecture/{lectureId}/attendances/my")
+    public ResponseDto findAllMyAttendanceList(@PathVariable Long lectureId, HttpServletRequest request) {
         String token = jwtTokenProvider.resolveToken(request);
         String email = jwtTokenProvider.getUserPk(token);
 
-        return attendanceService.findAllMyAttendance(email, lectureId);
+        return attendanceService.findAllMyAttendanceList(email, lectureId);
     }
 
     // 모든 학생 수업 출석 확인 - 강의자
