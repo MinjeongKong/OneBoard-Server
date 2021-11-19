@@ -4,6 +4,8 @@ import com.connect.oneboardserver.domain.assignment.Assignment;
 import com.connect.oneboardserver.domain.assignment.AssignmentRepository;
 import com.connect.oneboardserver.domain.assignment.Submit;
 import com.connect.oneboardserver.domain.assignment.SubmitRepository;
+import com.connect.oneboardserver.domain.attendance.Attendance;
+import com.connect.oneboardserver.domain.attendance.AttendanceRepository;
 import com.connect.oneboardserver.domain.grade.Grade;
 import com.connect.oneboardserver.domain.grade.GradeRatioRepository;
 import com.connect.oneboardserver.domain.grade.GradeRepository;
@@ -18,10 +20,12 @@ import com.connect.oneboardserver.domain.relation.MemberLecture;
 import com.connect.oneboardserver.domain.relation.MemberLectureRepository;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class GradeService {
@@ -34,6 +38,7 @@ public class GradeService {
     private final GradeRepository gradeRepository;
     private final MemberLectureRepository memberLectureRepository;
     private final LessonRepository lessonRepository;
+    private final AttendanceRepository attendanceRepository;
 
     public void createGrade(Long lectureId) {
         Lecture lecture = lectureRepository.findById(lectureId)
@@ -48,14 +53,24 @@ public class GradeService {
         List<Lesson> lessonList = lessonRepository.findAllByLectureId(lectureId);
 
         for (int s = 0; s < studentList.size(); s++) {
+//            Float totalscore = 0f;
+//            Float attendscore = 0f;
             Float score = 0f;
             Member student = studentList.get(s).getMember();
             Long studentId = student.getId();
             for (int a = 0; a < assignmentList.size(); a++) {
                 Long assignmentId = assignmentList.get(a).getId();
+                log.info(assignmentId.toString());
                 Submit submit = submitRepository.findByStudentIdAndAssignmentId(studentId, assignmentId);
-                score+=submit.getScore();
+//                score+=submit.getScore();
             }
+
+//            for (int t = 0; t < lessonList.size(); t++) {
+//                Long lessonId = lessonList.get(t).getId();
+//                Attendance attendance = attendanceRepository.findByMemberIdAndLessonId(studentId, lessonId);
+//                attendscore+=attendance.getStatus();
+//            }
+
 
             gradeRepository.save(Grade.builder()
                     .lecture(lecture)
@@ -63,6 +78,9 @@ public class GradeService {
                     .score(score)
                     .build());
         }
+
+        List<Grade> gradeList = gradeRepository.findAllByLectureId(lectureId);
+
 
     }
 
