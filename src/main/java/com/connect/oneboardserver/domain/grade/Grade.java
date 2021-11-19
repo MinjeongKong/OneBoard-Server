@@ -19,20 +19,32 @@ public class Grade {
     @ManyToOne
     private Lecture lecture;
 
-    @OneToOne
+    @ManyToOne
     private Member student;
 
     @Column
-    private Float score;
+    private Float totalScore;
 
     @Column
-    private String grade;
+    private Float submitScore;
+
+    @Column
+    private Float attendScore;
+
+    @Column
+    private String result;
 
     @Builder
-    public Grade(Lecture lecture, Member student, Float score, String grade) {
+    public Grade(Lecture lecture, Member student, Float totalScore, Float submitScore, Float attendScore, String result) {
         this.lecture = lecture;
         this.student = student;
-        this.score = score;
-        this.grade = grade;
+        this.totalScore = totalScore;
+        this.submitScore = submitScore;
+        this.attendScore = attendScore;
+        this.result = result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
     }
 }
