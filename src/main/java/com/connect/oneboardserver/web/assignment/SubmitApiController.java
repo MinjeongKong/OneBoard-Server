@@ -4,6 +4,7 @@ import com.connect.oneboardserver.service.assignment.SubmitService;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.assignment.SubmitCheckRequestDto;
 import com.connect.oneboardserver.web.dto.assignment.SubmitCreateRequestDto;
+import com.connect.oneboardserver.web.dto.assignment.SubmitUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,11 +31,24 @@ public class SubmitApiController {
         return submitService.checkSubmit(lectureId, assignmentId, submitId, requestDto);
     }
 
-    //과제 피드백 확인
+    //과제 결과물 확인 (강의자)
     @GetMapping("/lecture/{lectureId}/assignment/{assignmentId}/submit/{submitId}")
     public ResponseDto findSubmit(@PathVariable Long lectureId, @PathVariable Long assignmentId,
                                   @PathVariable Long submitId) {
         return submitService.findSubmit(lectureId, assignmentId, submitId);
+    }
+
+    //과제 결과물 확인 (학생)
+    @GetMapping("/lecture/{lectureId}/assignment/{assignmentId}/submit")
+    public ResponseDto findSubmitStu(@PathVariable Long lectureId, @PathVariable Long assignmentId, ServletRequest request) {
+        return submitService.findSubmitStu(lectureId, assignmentId, request);
+    }
+
+    //과제 결과물 수정
+    @PutMapping("/lecture/{lectureId}/assignment/{assignmentId}/submit")
+    public ResponseDto updateSubmit(@PathVariable Long lectureId, @PathVariable Long assignmentId,
+                                    ServletRequest request, @RequestBody SubmitUpdateRequestDto requestDto) {
+        return submitService.updateSubmit(lectureId, assignmentId, request, requestDto);
     }
 
     //과제 제출 리스트 조회
@@ -42,4 +56,5 @@ public class SubmitApiController {
     public ResponseDto findSubmitList(@PathVariable Long lectureId, @PathVariable Long assignmentId) {
         return submitService.findSubmitList(lectureId, assignmentId);
     }
+
 }
