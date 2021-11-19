@@ -44,7 +44,7 @@ public class SubmitService {
             return new ResponseDto("FAIL");
         } else {
             Submit submit = requestDto.toEntity();
-            submit.setMember(member);
+            submit.setStudent(member);
             submit.setAssignment(assignment);
 
             submitRepository.save(submit);

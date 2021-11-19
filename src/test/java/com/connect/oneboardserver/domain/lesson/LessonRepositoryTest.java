@@ -1,5 +1,8 @@
 package com.connect.oneboardserver.domain.lesson;
 
+import com.connect.oneboardserver.domain.lecture.lesson.Lesson;
+import com.connect.oneboardserver.domain.lecture.lesson.LessonRepository;
+import lombok.ToString;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +15,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class LessonRepositoryTest {
@@ -30,16 +32,17 @@ public class LessonRepositoryTest {
     public void createLesson() {
         // given
         String title = "Test Title";
-        LocalDateTime date = LocalDateTime.now();
+        String date = LocalDateTime.now().toString();
         String note = "lesson note file url";
-        int type = 1;
+        Integer type = 1;
         String room = "Paldal 410";
         String meeting_id = "zoom meeting url";
         String video_url = "lesson video url";
 
         lessonRepository.save(Lesson.builder()
                 .title(title)
-                .date(date).note(note)
+                .date(date)
+                .note(note)
                 .type(type)
                 .room(room)
                 .meeting_id(meeting_id)
