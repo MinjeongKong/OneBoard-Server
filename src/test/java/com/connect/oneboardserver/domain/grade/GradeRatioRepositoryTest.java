@@ -47,7 +47,7 @@ public class GradeRatioRepositoryTest {
 
         Lecture lecture = lectureRepository.save(Lecture.builder()
                 .title(lectureTitle)
-                .lecturePlan(lecturePlan)
+                .lecturePlanUrl(lecturePlan)
                 .semester(semester)
                 .build());
 

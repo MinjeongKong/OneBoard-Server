@@ -62,7 +62,7 @@ public class GradeRatioApiControllerTest {
 
         Lecture lecture = lectureRepository.save(Lecture.builder()
                 .title(lectureTitle)
-                .lecturePlan(lecturePlan)
+                .lecturePlanUrl(lecturePlan)
                 .semester(semester)
                 .build());
 
@@ -122,7 +122,7 @@ public class GradeRatioApiControllerTest {
 
         Long lectureId = lectureRepository.save(Lecture.builder()
                 .title(lectureTitle)
-                .lecturePlan(lecturePlan)
+                .lecturePlanUrl(lecturePlan)
                 .semester(semester)
                 .build()).getId();
 
