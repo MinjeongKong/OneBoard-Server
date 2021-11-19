@@ -8,8 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SubmitFindResponseDto {
 
-    private Long id;
+    private Long submitId;
     private Long assignmentId;
+    private String assignmentTitle;
     private Long userId;
     private String userName;
     private String studentNumber;
@@ -21,11 +22,12 @@ public class SubmitFindResponseDto {
     private String updatedDt;
 
     public SubmitFindResponseDto(Submit entity) {
-        this.id = entity.getId();
+        this.submitId = entity.getId();
         this.assignmentId = entity.getAssignment().getId();
-        this.userId = entity.getMember().getId();
-        this.userName = entity.getMember().getName();
-        this.studentNumber = entity.getMember().getStudentNumber();
+        this.assignmentTitle = entity.getAssignment().getTitle();
+        this.userId = entity.getStudent().getId();
+        this.userName = entity.getStudent().getName();
+        this.studentNumber = entity.getStudent().getStudentNumber();
         this.content = entity.getContent();
         this.fileUrl = entity.getFileUrl();
         this.score = entity.getScore();
