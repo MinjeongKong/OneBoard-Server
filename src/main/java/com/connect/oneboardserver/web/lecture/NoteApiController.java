@@ -29,7 +29,7 @@ public class NoteApiController {
 
     // 강의노트 로드
     @GetMapping("/lecture/{lectureId}/lesson/{lessonId}/note")
-    public ResponseEntity<Resource> loadNote(@PathVariable Long lectureId, @PathVariable Long lessonId) {
+    public ResponseEntity<Resource> loadNote(@PathVariable Long lectureId, @PathVariable Long lessonId) throws Exception {
         return noteService.loadNote(lectureId, lessonId);
     }
 }

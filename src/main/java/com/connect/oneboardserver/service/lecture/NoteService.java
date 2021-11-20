@@ -1,5 +1,6 @@
 package com.connect.oneboardserver.service.lecture;
 
+import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.lesson.Lesson;
 import com.connect.oneboardserver.domain.lecture.lesson.LessonRepository;
 import com.connect.oneboardserver.service.storage.StorageService;
@@ -25,7 +26,7 @@ public class NoteService {
 
     @Transactional
     public ResponseDto uploadNote(Long lectureId, Long lessonId, MultipartFile file) {
-        if(file.isEmpty()) {
+        if (file.isEmpty()) {
             return new ResponseDto("FAIL");
         }
         Lesson lesson = null;
@@ -36,8 +37,8 @@ public class NoteService {
                 return new ResponseDto("FAIL");
             }
             // 강의노트 파일이 있으면 파일 삭제
-            if(lesson.getNote() != null) {
-                if(storageService.delete(lesson.getNote())) {
+            if (lesson.getNoteUrl() != null) {
+                if (storageService.delete(lesson.getNoteUrl())) {
                     lesson.updateNote(null);
                 }
             }
@@ -67,9 +68,9 @@ public class NoteService {
             if (!lesson.getLecture().getId().equals(lectureId)) {
                 return new ResponseDto("FAIL");
             }
-            if(lesson.getNote() != null) {
-                System.out.println(lesson.getNote());
-                if(storageService.delete(lesson.getNote())) {
+            if (lesson.getNoteUrl() != null) {
+                System.out.println(lesson.getNoteUrl());
+                if (storageService.delete(lesson.getNoteUrl())) {
                     lesson.updateNote(null);
                     return new ResponseDto("SUCCESS");
                 } else {
@@ -84,28 +85,25 @@ public class NoteService {
         }
     }
 
-    public ResponseEntity<Resource> loadNote(Long lectureId, Long lessonId) {
+    public ResponseEntity<Resource> loadNote(Long lectureId, Long lessonId) throws Exception {
         Lesson lesson = null;
         Resource resource = null;
         try {
             lesson = lessonRepository.findById(lessonId).orElseThrow(Exception::new);
-            if(lesson.getNote() != null) {
-                String filePath = lesson.getNote();
-                resource = storageService.load(filePath);
-                if (!lesson.getLecture().getId().equals(lectureId)) {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resource);
-                }
-                String contentDisposition = "attachment; filename=\"" +
-                        lesson.getTitle() + "_note\"";
-                return ResponseEntity.ok()
-                        .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
-                        .body(resource);
-            }else {
-                throw new Exception("No file to load");
+            String filePath = lesson.getNoteUrl();
+            resource = storageService.load(filePath);
+            if (!lesson.getLecture().getId().equals(lectureId)) {
+                throw new Exception("no matched lecture");
             }
+            String contentDisposition = "attachment; filename=\"" +
+                    lesson.getTitle() + "_note" + filePath.substring(filePath.lastIndexOf(".")) + "\"";
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                    .body(resource);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resource);
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resource);
+            throw new Exception("Fail to load lesson note : lessonId = " + lessonId);
         }
     }
 }
