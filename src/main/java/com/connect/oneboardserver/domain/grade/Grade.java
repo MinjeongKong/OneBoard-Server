@@ -34,17 +34,31 @@ public class Grade {
     @Column
     private String result;
 
+    @Column
+    private String changeResult;
+
     @Builder
-    public Grade(Lecture lecture, Member student, Float totalScore, Float submitScore, Float attendScore, String result) {
+    public Grade(Lecture lecture, Member student, Float totalScore, Float submitScore, Float attendScore, String result, String changeResult) {
         this.lecture = lecture;
         this.student = student;
         this.totalScore = totalScore;
         this.submitScore = submitScore;
         this.attendScore = attendScore;
         this.result = result;
+        this.changeResult = changeResult;
     }
 
     public void setResult(String result) {
         this.result = result;
+    }
+
+    public void setChangeResult(String changeResult) {
+        this.changeResult = changeResult;
+    }
+
+    public void updateScore(Float submitScore, Float attendScore, Float totalScore) {
+        this.submitScore = submitScore;
+        this.attendScore = attendScore;
+        this.totalScore = totalScore;
     }
 }
