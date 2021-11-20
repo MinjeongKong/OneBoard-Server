@@ -1,4 +1,4 @@
-package com.connect.oneboardserver.web.assignment;
+package com.connect.oneboardserver.web.controller.assignment;
 
 import com.connect.oneboardserver.domain.assignment.AssignmentRepository;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;

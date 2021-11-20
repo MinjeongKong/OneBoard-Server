@@ -1,4 +1,4 @@
-package com.connect.oneboardserver.web.login;
+package com.connect.oneboardserver.web.controller.login;
 
 import com.connect.oneboardserver.config.security.JwtTokenProvider;
 import com.connect.oneboardserver.domain.login.Member;

@@ -1,4 +1,4 @@
-package com.connect.oneboardserver.web.lecture;
+package com.connect.oneboardserver.web.controller.lecture;
 
 import com.connect.oneboardserver.config.security.JwtTokenProvider;
 import com.connect.oneboardserver.service.lecture.LectureService;

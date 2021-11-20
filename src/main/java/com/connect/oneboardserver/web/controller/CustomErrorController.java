@@ -1,4 +1,4 @@
-package com.connect.oneboardserver.web;
+package com.connect.oneboardserver.web.controller;
 
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import lombok.extern.slf4j.Slf4j;

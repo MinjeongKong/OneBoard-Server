@@ -1,4 +1,4 @@
-package com.connect.oneboardserver.web.lecture;
+package com.connect.oneboardserver.web.controller.lecture;
 
 import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;
@@ -7,7 +7,6 @@ import com.connect.oneboardserver.domain.lecture.lesson.LessonRepository;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.lesson.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.ToString;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -60,7 +59,7 @@ public class LessonApiControllerTest {
 
         String title = "Test Title";
         String date = LocalDateTime.now().toString();
-        String note = "lesson note file url";
+        String noteUrl = "lesson note file url";
         Integer type = 1;
         String room = "Paldal 410";
         String meetingId = "zoom meeting url";
@@ -69,7 +68,7 @@ public class LessonApiControllerTest {
         LessonCreateRequestDto requestDto = LessonCreateRequestDto.builder()
                 .title(title)
                 .date(date)
-                .note(note)
+                .noteUrl(noteUrl)
                 .type(type)
                 .room(room)
                 .meetingId(meetingId)
@@ -97,7 +96,7 @@ public class LessonApiControllerTest {
 
         assertThat(newLesson.getLecture().getTitle()).isEqualTo(lectureTitle);
         assertThat(newLesson.getLecture().getId()).isEqualTo(lectureId);
-        assertThat(newLesson.getNote()).isEqualTo(note);
+        assertThat(newLesson.getNoteUrl()).isEqualTo(noteUrl);
         assertThat(newLesson.getType()).isEqualTo(type);
         assertThat(newLesson.getRoom()).isEqualTo(room);
         assertThat(newLesson.getMeetingId()).isEqualTo(meetingId);
@@ -120,7 +119,7 @@ public class LessonApiControllerTest {
 
         String title = "Test Title";
         String date = LocalDateTime.now().toString();
-        String note = "lesson note file url";
+        String noteUrl = "lesson note file url";
         Integer type = 1;
         String room = "Paldal 410";
         String meetingId = "zoom meeting url";
@@ -129,7 +128,8 @@ public class LessonApiControllerTest {
         Long lessonId = lessonRepository.save(Lesson.builder()
                 .lecture(lecture)
                 .title(title)
-                .date(date).note(note)
+                .date(date)
+                .noteUrl(noteUrl)
                 .type(type)
                 .room(room)
                 .meetingId(meetingId)
@@ -153,7 +153,7 @@ public class LessonApiControllerTest {
 
         assertThat(responseDto.getTitle()).isEqualTo(title);
         assertThat(responseDto.getLectureId()).isEqualTo(lecture.getId());
-        assertThat(responseDto.getNote()).isEqualTo(note);
+        assertThat(responseDto.getNoteUrl()).isEqualTo(noteUrl);
         assertThat(responseDto.getMeetingId()).isEqualTo(meetingId);
         assertThat(responseDto.getVideoUrl()).isEqualTo(videoUrl);
         assertThat(responseDto.getRoom()).isEqualTo(room);
@@ -178,7 +178,7 @@ public class LessonApiControllerTest {
 
         String title = "Test Title";
         String date = LocalDateTime.now().toString();
-        String note = "lesson note file url";
+        String noteUrl = "lesson note file url";
         Integer type = 1;
         String room = "Paldal 410";
         String meetingId = "zoom meeting url";
@@ -187,7 +187,8 @@ public class LessonApiControllerTest {
         Long lessonId = lessonRepository.save(Lesson.builder()
                 .lecture(lecture)
                 .title(title)
-                .date(date).note(note)
+                .date(date)
+                .noteUrl(noteUrl)
                 .type(type)
                 .room(room)
                 .meetingId(meetingId)
@@ -220,7 +221,7 @@ public class LessonApiControllerTest {
 
         String title = "Test Title";
         String date = LocalDateTime.now().toString();
-        String note = "lesson note file url";
+        String noteUrl = "lesson note file url";
         Integer type = 1;
         String room = "Paldal 410";
         String meetingId = "zoom meeting url";
@@ -230,7 +231,7 @@ public class LessonApiControllerTest {
         Lesson lesson = Lesson.builder()
                 .lecture(lecture)
                 .title(title)
-                .date(date).note(note)
+                .date(date).noteUrl(noteUrl)
                 .type(type)
                 .room(room)
                 .meetingId(meetingId)
@@ -241,7 +242,7 @@ public class LessonApiControllerTest {
 
         String updateTitle = "Test Title2";
         String updateDate = LocalDateTime.now().toString();
-        String updateNote = "lesson note file url2";
+        String updateNoteUrl = "lesson note file url2";
         Integer updateType = 2;
         String updateRoom = "Paldal 411";
         String updateMeetingId = "zoom meeting url2";
@@ -250,7 +251,7 @@ public class LessonApiControllerTest {
         LessonUpdateRequestDto requestDto = LessonUpdateRequestDto.builder()
                 .title(updateTitle)
                 .date(updateDate)
-                .note(updateNote)
+                .noteUrl(updateNoteUrl)
                 .type(updateType)
                 .room(updateRoom)
                 .meetingId(updateMeetingId)
@@ -278,7 +279,7 @@ public class LessonApiControllerTest {
 
         assertThat(updatedLesson.getTitle()).isEqualTo(updateTitle);
         assertThat(updatedLesson.getType()).isEqualTo(updateType);
-        assertThat(updatedLesson.getNote()).isEqualTo(updateNote);
+        assertThat(updatedLesson.getNoteUrl()).isEqualTo(updateNoteUrl);
         assertThat(updatedLesson.getRoom()).isEqualTo(updateRoom);
         assertThat(updatedLesson.getMeetingId()).isEqualTo(updateMeetingId);
         assertThat(updatedLesson.getVideoUrl()).isEqualTo(updateVideoUrl);

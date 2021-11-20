@@ -1,4 +1,4 @@
-package com.connect.oneboardserver.web.grade;
+package com.connect.oneboardserver.web.controller.grade;
 
 import com.connect.oneboardserver.domain.grade.GradeRatio;
 import com.connect.oneboardserver.domain.grade.GradeRatioRepository;

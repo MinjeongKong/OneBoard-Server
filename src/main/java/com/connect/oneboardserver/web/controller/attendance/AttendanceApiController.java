@@ -1,4 +1,4 @@
-package com.connect.oneboardserver.web.attendance;
+package com.connect.oneboardserver.web.controller.attendance;
 
 import com.connect.oneboardserver.config.security.JwtTokenProvider;
 import com.connect.oneboardserver.service.attendance.AttendanceService;
