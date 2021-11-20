@@ -25,8 +25,8 @@ public class Lesson {
     @Column(nullable = false)
     private String date;
 
-    @Column(length = 128, nullable = false)
-    private String note;
+    @Column(length = 128)
+    private String noteUrl;
 
     @Column(nullable = false)
     private Integer type;
@@ -41,11 +41,11 @@ public class Lesson {
     private String videoUrl;
 
     @Builder
-    public Lesson(Lecture lecture, String title, String date, String note, Integer type, String room, String meetingId, String videoUrl) {
+    public Lesson(Lecture lecture, String title, String date, String noteUrl, Integer type, String room, String meetingId, String videoUrl) {
         this.lecture = lecture;
         this.title = title;
         this.date = date;
-        this.note = note;
+        this.noteUrl = noteUrl;
         this.type = type;
         this.room = room;
         this.meetingId = meetingId;
@@ -59,10 +59,13 @@ public class Lesson {
     public void update(String title, String date, String note, Integer type, String room, String meetingId, String videoUrl) {
         this.title = title;
         this.date = date;
-        this.note = note;
+        this.noteUrl = note;
         this.type = type;
         this.room = room;
         this.meetingId = meetingId;
         this.videoUrl = videoUrl;
+    }
+    public void updateNote(String note) {
+        this.noteUrl = note;
     }
 }

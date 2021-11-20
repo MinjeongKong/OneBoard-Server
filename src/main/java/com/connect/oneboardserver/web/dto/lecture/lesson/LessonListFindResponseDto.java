@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Getter
 @NoArgsConstructor
 public class LessonListFindResponseDto {
@@ -15,19 +13,19 @@ public class LessonListFindResponseDto {
     private Long id;
     private String title;
     private String date;
-    private String note;
+    private String noteUrl;
     private Integer type;
     private String room;
     private String meetingId;
     private String videoUrl;
 
     @Builder
-    public LessonListFindResponseDto(Long id, Long lectureId, String title, String date, String note, Integer type, String room, String meetingId, String videoUrl) {
+    public LessonListFindResponseDto(Long id, Long lectureId, String title, String date, String noteUrl, Integer type, String room, String meetingId, String videoUrl) {
         this.id = id;
         this.lectureId = lectureId;
         this.title = title;
         this.date = date;
-        this.note = note;
+        this.noteUrl = noteUrl;
         this.type = type;
         this.room = room;
         this.meetingId = meetingId;
@@ -40,7 +38,7 @@ public class LessonListFindResponseDto {
                 .title(entity.getTitle())
                 .date(entity.getDate())
                 .lectureId(entity.getLecture().getId())
-                .note(entity.getNote())
+                .noteUrl(entity.getNoteUrl())
                 .type(entity.getType())
                 .room(entity.getRoom())
                 .meetingId(entity.getMeetingId())
