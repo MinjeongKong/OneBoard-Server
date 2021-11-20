@@ -159,13 +159,13 @@ public class AttendanceRepositoryTest {
     private Lesson createLesson() {
         String title = "title" + random.nextInt(100);
         String date = LocalDateTime.now().toString();
-        String note = "url" + random.nextInt(100);
+        String noteUrl = "url" + random.nextInt(100);
         int type = 0;
 
         Lesson lesson = lessonRepository.save(Lesson.builder()
                 .title(title)
                 .date(date)
-                .note(note)
+                .noteUrl(noteUrl)
                 .type(type)
                 .build());
 
