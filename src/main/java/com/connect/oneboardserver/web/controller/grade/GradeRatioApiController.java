@@ -16,10 +16,10 @@ public class GradeRatioApiController {
 
     private final GradeRatioService gradeRatioService;
 
-    //비율 등록 -> 개발용
-    @PostMapping("/lecture/{lectureId}/grade/ratio-dev")
-    public ResponseDto createGradeRatio(@PathVariable Long lectureId, @Valid @RequestBody GradeRatioCreateRequestDto requestDto) {
-        return gradeRatioService.createGradeRatio(lectureId, requestDto);
+    //비율 등록 (default:30/70) -> 개발용
+    @GetMapping("/lecture/{lectureId}/grade/ratio-dev")
+    public void init(@PathVariable Long lectureId) {
+        gradeRatioService.init(lectureId);
     }
 
     //비율 수정

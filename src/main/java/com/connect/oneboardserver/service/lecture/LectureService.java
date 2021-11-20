@@ -6,6 +6,8 @@ import com.connect.oneboardserver.domain.login.Member;
 import com.connect.oneboardserver.domain.login.MemberRepository;
 import com.connect.oneboardserver.domain.relation.MemberLecture;
 import com.connect.oneboardserver.domain.relation.MemberLectureRepository;
+import com.connect.oneboardserver.service.grade.GradeRatioService;
+import com.connect.oneboardserver.service.grade.GradeService;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.LectureCreateRequestDto;
 import com.connect.oneboardserver.web.dto.lecture.LectureCreateResponseDto;
@@ -26,6 +28,8 @@ public class LectureService {
     private final MemberRepository memberRepository;
     private final LectureRepository lectureRepository;
     private final MemberLectureRepository memberLectureRepository;
+    private final GradeRatioService gradeRatioService;
+    private final GradeService gradeService;
 
     public ResponseDto createLecture(LectureCreateRequestDto requestDto) {
         Lecture lecture = lectureRepository.save(requestDto.toEntity());
@@ -52,6 +56,10 @@ public class LectureService {
                         .member(member)
                         .lecture(lecture)
                         .build());
+
+        gradeRatioService.init(lectureId);
+        gradeService.init(lectureId);
+
         return new ResponseDto("SUCCESS", memberLecture);
     }
 

@@ -52,68 +52,9 @@ public class GradeRatioApiControllerTest {
         lectureRepository.deleteAll();
     }
 
+
     @Test
-    @DisplayName("학점 비율 수정 요청")
-    void requestUpdateGradeRatio() {
-        // given
-        String lectureTitle = "test lecture";
-        String lecturePlan = "test url";
-        String semester = "2021-2";
-
-        Lecture lecture = lectureRepository.save(Lecture.builder()
-                .title(lectureTitle)
-                .lecturePlanUrl(lecturePlan)
-                .semester(semester)
-                .build());
-
-        Long lectureId = lectureRepository.save(lecture).getId();
-        Integer aratio = 30;
-        Integer bRatio = 70;
-
-        GradeRatio gradeRatio = gradeRatioRepository.save(GradeRatio.builder()
-                .aratio(aratio)
-                .bratio(bRatio)
-                .build());
-
-        GradeRatioLecture gradeRatioLecture = gradeRatioLectureRepository.save(GradeRatioLecture.builder()
-                .lecture(lecture)
-                .gradeRatio(gradeRatio)
-                .build());
-
-        Integer updateA = 20;
-        Integer updateB = 80;
-
-        GradeRatioUpdateRequestDto requestDto = GradeRatioUpdateRequestDto.builder()
-                .aratio(updateA)
-                .bratio(updateB)
-                .build();
-
-
-        String url = "http://localhost:" + port + "/lecture/{lectureId}/grade/ratio";
-
-        // when
-        ResponseEntity<ResponseDto> responseEntity
-                = restTemplate.postForEntity(url, requestDto, ResponseDto.class, lectureId);
-
-        // then
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        // responseData: LinkedHashMap
-        Object responseData = responseEntity.getBody().getData();
-
-        ObjectMapper mapper = new ObjectMapper();
-        GradeRatioResponseDto responseDto = mapper.convertValue(responseData, GradeRatioResponseDto.class);
-
-        GradeRatio newGradeRatio = gradeRatioRepository.findById(responseDto.getGradeRatioId()).orElseThrow();
-
-        assertThat(newGradeRatio.getAratio()).isEqualTo(updateA);
-        assertThat(newGradeRatio.getBratio()).isEqualTo(updateB);
-
-    }
-
-
-//    @Test
-//    @DisplayName("학점 비율 입력")
+    @DisplayName("학점 비율 초기화 및 수정 요청")
     void requestCreateGradeRatio() {
         // given
         String lectureTitle = "test lecture";
@@ -126,38 +67,44 @@ public class GradeRatioApiControllerTest {
                 .semester(semester)
                 .build()).getId();
 
-        Integer aratio = 30;
+        Integer aratio = 20;
         Integer bRatio = 70;
 
         Integer aerror = 40;
         Integer berror = 80;
 
-        GradeRatioCreateRequestDto requestDto1 = GradeRatioCreateRequestDto.builder()
+        GradeRatioUpdateRequestDto requestDto1 = GradeRatioUpdateRequestDto.builder()
                 .aratio(aratio)
                 .bratio(bRatio)
                 .build();
 
-        GradeRatioCreateRequestDto requestDto2 = GradeRatioCreateRequestDto.builder()
+        GradeRatioUpdateRequestDto requestDto2 = GradeRatioUpdateRequestDto.builder()
                 .aratio(aerror)
                 .bratio(berror)
                 .build();
 
-        String url = "http://localhost:" + port + "/lecture/{lectureId}/grade/ratio-dev";
+        String url1 = "http://localhost:" + port + "/lecture/{lectureId}/grade/ratio-dev";
+        String url2 = "http://localhost:" + port + "/lecture/{lectureId}/grade/ratio";
+
 
         // when
         ResponseEntity<ResponseDto> responseEntity
-                = restTemplate.postForEntity(url, requestDto1, ResponseDto.class, lectureId);
+                = restTemplate.getForEntity(url1, ResponseDto.class, lectureId);
 
         ResponseEntity<ResponseDto> responseEntity1
-                = restTemplate.postForEntity(url, requestDto2, ResponseDto.class, lectureId);
+                = restTemplate.postForEntity(url2, requestDto1, ResponseDto.class, lectureId);
+
+        ResponseEntity<ResponseDto> responseEntity2
+                = restTemplate.postForEntity(url2, requestDto2, ResponseDto.class, lectureId);
 
         // then
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity1.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity1.getBody().getResult()).isEqualTo("FAIL");
+        assertThat(responseEntity1.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity2.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity2.getBody().getResult()).isEqualTo("FAIL");
 
         // responseData: LinkedHashMap
-        Object responseData = responseEntity.getBody().getData();
+        Object responseData = responseEntity1.getBody().getData();
 
         ObjectMapper mapper = new ObjectMapper();
         GradeRatioResponseDto responseDto = mapper.convertValue(responseData, GradeRatioResponseDto.class);
