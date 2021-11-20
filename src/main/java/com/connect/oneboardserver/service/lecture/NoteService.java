@@ -37,7 +37,7 @@ public class NoteService {
             // 강의노트 파일이 있으면 파일 삭제
             if (lesson.getNoteUrl() != null) {
                 if (storageService.delete(lesson.getNoteUrl())) {
-                    lesson.updateNote(null);
+                    lesson.updateNoteUrl(null);
                 }
             }
             String path = "/lecture_" + lectureId + "/lesson_" + lessonId + "/note";
@@ -47,7 +47,7 @@ public class NoteService {
             e.printStackTrace();
             return new ResponseDto("FAIL");
         }
-        lesson.updateNote(uploadedFile);
+        lesson.updateNoteUrl(uploadedFile);
 
         NoteUploadResponseDto responseDto = NoteUploadResponseDto.builder()
                 .lessonId(lesson.getId())
@@ -69,7 +69,7 @@ public class NoteService {
             if (lesson.getNoteUrl() != null) {
                 System.out.println(lesson.getNoteUrl());
                 if (storageService.delete(lesson.getNoteUrl())) {
-                    lesson.updateNote(null);
+                    lesson.updateNoteUrl(null);
                     return new ResponseDto("SUCCESS");
                 } else {
                     throw new Exception("fail");

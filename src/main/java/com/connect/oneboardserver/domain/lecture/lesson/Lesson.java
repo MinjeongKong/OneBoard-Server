@@ -56,16 +56,16 @@ public class Lesson {
         this.lecture = lecture;
     }
 
-    public void update(String title, String date, String note, Integer type, String room, String meetingId, String videoUrl) {
+    public void update(String title, String date, String noteUrl, Integer type, String room, String meetingId, String videoUrl) {
         this.title = title;
         this.date = date;
-        this.noteUrl = note;
+        this.noteUrl = noteUrl;
         this.type = type;
         this.room = room;
         this.meetingId = meetingId;
         this.videoUrl = videoUrl;
     }
-    public void updateNote(String note) {
-        this.noteUrl = note;
+    public void updateNoteUrl(String noteUrl) {
+        this.noteUrl = noteUrl;
     }
 }

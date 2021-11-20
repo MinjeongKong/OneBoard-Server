@@ -199,14 +199,14 @@ public class AttendanceApiControllerTest {
     private Lesson createLesson(Lecture lecture) {
         String title = "title" + random.nextInt(100);
         String date = LocalDateTime.now().toString();
-        String note = "url" + random.nextInt(100);
+        String noteUrl = "url" + random.nextInt(100);
         int type = 0;
 
         Lesson lesson = lessonRepository.save(Lesson.builder()
                 .lecture(lecture)
                 .title(title)
                 .date(date)
-                .note(note)
+                .noteUrl(noteUrl)
                 .type(type)
                 .build());
 
