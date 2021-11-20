@@ -26,23 +26,25 @@ public class GradeRatioService {
     private final LectureRepository lectureRepository;
     private final GradeRatioLectureRepository gradeRatioLectureRepository;
 
+    // 개발용
     @Transactional
-    public ResponseDto createGradeRatio(Long lectureId, GradeRatioCreateRequestDto requestDto) {
+    public void init(Long lectureId) {
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(()->new IllegalArgumentException("해당 과목이 없습니다. id="+lectureId));
 
-        GradeRatio gradeRatio = requestDto.toEntity();
-        if (!gradeRatio.isValid()) {
-            return new ResponseDto("FAIL");
-        } else {
+        if (gradeRatioLectureRepository.findByLectureId(lectureId) == null) {
+            GradeRatio gradeRatio = GradeRatio.builder()
+                    .aratio(30)
+                    .bratio(70)
+                    .build();
+
             gradeRatioRepository.save(gradeRatio);
             gradeRatioLectureRepository.save(GradeRatioLecture.builder()
                     .gradeRatio(gradeRatio)
                     .lecture(lecture)
                     .build());
-            GradeRatioResponseDto responseDto = new GradeRatioResponseDto(gradeRatio);
-            return new ResponseDto("SUCCESS", responseDto);
         }
+
     }
 
     @Transactional
@@ -74,6 +76,27 @@ public class GradeRatioService {
         GradeRatioFindResponseDto responseDto = new GradeRatioFindResponseDto(gradeRatio);
         return new ResponseDto("SUCCESS", responseDto);
     }
+
+    // 개발용
+    @Transactional
+    public ResponseDto createGradeRatio(Long lectureId, GradeRatioCreateRequestDto requestDto) {
+        Lecture lecture = lectureRepository.findById(lectureId)
+                .orElseThrow(()->new IllegalArgumentException("해당 과목이 없습니다. id="+lectureId));
+
+        GradeRatio gradeRatio = requestDto.toEntity();
+        if (!gradeRatio.isValid()) {
+            return new ResponseDto("FAIL");
+        } else {
+            gradeRatioRepository.save(gradeRatio);
+            gradeRatioLectureRepository.save(GradeRatioLecture.builder()
+                    .gradeRatio(gradeRatio)
+                    .lecture(lecture)
+                    .build());
+            GradeRatioResponseDto responseDto = new GradeRatioResponseDto(gradeRatio);
+            return new ResponseDto("SUCCESS", responseDto);
+        }
+    }
+
 
 
 }

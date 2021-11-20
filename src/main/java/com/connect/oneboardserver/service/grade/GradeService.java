@@ -58,19 +58,36 @@ public class GradeService {
         gradeRepository.deleteAllByLectureId(lectureId);
     }
 
+    @Transactional
     public void init(Long lectureId) {
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(()->new IllegalArgumentException("해당 과목이 없습니다. id="+lectureId));
 
+        deleteGrade(lectureId);
+        List<MemberLecture> studentList = memberLectureRepository.findAllByLectureIdAndMemberUserType(lectureId, "S");
+
+        for (int s = 0; s < studentList.size(); s++) {
+            Float totalScore = 0f;
+            Float attendScore = 0f;
+            Float submitScore = 0f;
+            Member student = studentList.get(s).getMember();
+
+            gradeRepository.save(Grade.builder()
+                    .lecture(lecture)
+                    .student(student)
+                    .submitScore(submitScore)
+                    .attendScore(attendScore)
+                    .totalScore(totalScore)
+                    .build());
+        }
 
     }
 
     @Transactional
-    public void createGrade(Long lectureId) {
+    public void updateGrade(Long lectureId) {
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(()->new IllegalArgumentException("해당 과목이 없습니다. id="+lectureId));
 
-        deleteGrade(lectureId);
         sumScore(lectureId, lecture);
 
         List<Grade> gradeList = gradeRepository.findAllByLectureIdOrderByTotalScoreDesc(lectureId);
@@ -84,14 +101,16 @@ public class GradeService {
 
             for (int i = 1; i <= length; i++) {
                 Grade grade = gradeList.get(i - 1);
-                if (i <= cutB) {
-                    if (i <= cutA) {
-                        grade.setResult("A");
+                if (grade.getChangeResult()==null) {
+                    if (i <= cutB) {
+                        if (i <= cutA) {
+                            grade.setResult("A");
+                        } else {
+                            grade.setResult("B");
+                        }
                     } else {
-                        grade.setResult("B");
+                        grade.setResult("C");
                     }
-                } else {
-                    grade.setResult("C");
                 }
             }
         } catch (Exception e) {
@@ -115,7 +134,6 @@ public class GradeService {
 
             for (int a = 0; a < assignmentList.size(); a++) {
                 Long assignmentId = assignmentList.get(a).getId();
-                log.info(assignmentId.toString());
                 Submit submit = submitRepository.findByStudentIdAndAssignmentId(studentId, assignmentId);
                 try {
                     submitScore+=submit.getScore();
@@ -134,13 +152,8 @@ public class GradeService {
             attendScore = attendScore*10/100;
             totalScore = attendScore+submitScore;
 
-            gradeRepository.save(Grade.builder()
-                    .lecture(lecture)
-                    .student(student)
-                    .submitScore(submitScore)
-                    .attendScore(attendScore)
-                    .totalScore(totalScore)
-                    .build());
+            Grade grade = gradeRepository.findByStudentIdAndLectureId(studentId, lectureId);
+            grade.updateScore(submitScore, attendScore, totalScore);
         }
     }
 
@@ -192,7 +205,7 @@ public class GradeService {
             return new ResponseDto("FAIL");
         }
 
-        createGrade(lectureId);
+        updateGrade(lectureId);
         GradeFindResponseDto responseDto = findGrade(lectureId, student, lecture);
 
         if (responseDto == null) {
@@ -215,7 +228,7 @@ public class GradeService {
             return new ResponseDto("FAIL");
         }
 
-        createGrade(lectureId);
+        updateGrade(lectureId);
         GradeFindResponseDto responseDto = findGrade(lectureId, student, lecture);
 
         if (responseDto == null) {
@@ -231,7 +244,7 @@ public class GradeService {
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 과목이 없습니다 : id = " + lectureId));
 
-        createGrade(lectureId);
+        updateGrade(lectureId);
 
         List<MemberLecture> memberLectureList = memberLectureRepository.findAllByLectureId(lectureId);
         List<GradeFindListResponseDto> responseDtoList = new ArrayList<>();
@@ -248,6 +261,7 @@ public class GradeService {
 
     }
 
+    @Transactional
     public ResponseDto updateResult(Long lectureId, Long studentId, GradeUpdateRequestDto requestDto) {
 
         Lecture lecture = lectureRepository.findById(lectureId)
@@ -262,6 +276,7 @@ public class GradeService {
         }
 
         Grade grade = gradeRepository.findByStudentIdAndLectureId(studentId, lectureId);
+        grade.setChangeResult(requestDto.getResult());
         grade.setResult(requestDto.getResult());
 
         return new ResponseDto("SUCCESS");
