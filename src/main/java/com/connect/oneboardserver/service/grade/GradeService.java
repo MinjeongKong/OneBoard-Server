@@ -63,22 +63,24 @@ public class GradeService {
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(()->new IllegalArgumentException("해당 과목이 없습니다. id="+lectureId));
 
-        deleteGrade(lectureId);
         List<MemberLecture> studentList = memberLectureRepository.findAllByLectureIdAndMemberUserType(lectureId, "S");
 
         for (int s = 0; s < studentList.size(); s++) {
-            Float totalScore = 0f;
-            Float attendScore = 0f;
-            Float submitScore = 0f;
             Member student = studentList.get(s).getMember();
 
-            gradeRepository.save(Grade.builder()
-                    .lecture(lecture)
-                    .student(student)
-                    .submitScore(submitScore)
-                    .attendScore(attendScore)
-                    .totalScore(totalScore)
-                    .build());
+            Grade grade = gradeRepository.findByStudentIdAndLectureId(student.getId(), lectureId);
+            if (grade == null) {
+                gradeRepository.save(Grade.builder()
+                        .lecture(lecture)
+                        .student(student)
+                        .submitScore(0f)
+                        .attendScore(0f)
+                        .totalScore(0f)
+                        .build());
+            } else {
+                grade.init();
+            }
+
         }
 
     }

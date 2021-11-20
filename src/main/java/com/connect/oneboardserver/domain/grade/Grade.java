@@ -61,4 +61,12 @@ public class Grade {
         this.attendScore = attendScore;
         this.totalScore = totalScore;
     }
+
+    public void init() {
+        this.submitScore = 0f;
+        this.attendScore = 0f;
+        this.totalScore = 0f;
+        this.result = null;
+        this.changeResult = null;
+    }
 }

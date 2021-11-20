@@ -17,7 +17,7 @@ public class GradeApiController {
 
     // 개발용
     @GetMapping("/lecture/{lectureId}/grade-dev")
-    public void createGrade(@PathVariable Long lectureId) {
+    public void init(@PathVariable Long lectureId) {
         gradeService.init(lectureId);
     }
 

@@ -32,17 +32,20 @@ public class GradeRatioService {
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(()->new IllegalArgumentException("해당 과목이 없습니다. id="+lectureId));
 
-        if (gradeRatioLectureRepository.findByLectureId(lectureId) == null) {
-            GradeRatio gradeRatio = GradeRatio.builder()
-                    .aratio(30)
-                    .bratio(70)
-                    .build();
-
+        GradeRatioLecture gradeRatioLecture = gradeRatioLectureRepository.findByLectureId(lectureId);
+        GradeRatio gradeRatio = GradeRatio.builder()
+                .aratio(30)
+                .bratio(70)
+                .build();
+        if (gradeRatioLecture == null) {
             gradeRatioRepository.save(gradeRatio);
             gradeRatioLectureRepository.save(GradeRatioLecture.builder()
                     .gradeRatio(gradeRatio)
                     .lecture(lecture)
                     .build());
+        } else {
+            GradeRatio gradeRatio1 = gradeRatioLecture.getGradeRatio();
+            gradeRatio1.update(gradeRatio);
         }
 
     }
