@@ -1,4 +1,4 @@
-package com.connect.oneboardserver.web;
+package com.connect.oneboardserver.web.controller;
 
 import com.connect.oneboardserver.web.dto.HelloResponseDto;
 import org.springframework.web.bind.annotation.CrossOrigin;

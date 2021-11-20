@@ -1,4 +1,4 @@
-package com.connect.oneboardserver.web.assignment;
+package com.connect.oneboardserver.web.controller.assignment;
 
 import com.connect.oneboardserver.service.assignment.SubmitService;
 import com.connect.oneboardserver.web.dto.ResponseDto;

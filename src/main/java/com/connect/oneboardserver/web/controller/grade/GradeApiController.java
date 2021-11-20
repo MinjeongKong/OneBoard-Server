@@ -1,4 +1,4 @@
-package com.connect.oneboardserver.web.grade;
+package com.connect.oneboardserver.web.controller.grade;
 
 import com.connect.oneboardserver.service.grade.GradeService;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.connect.oneboardserver.web.attendance;
+package com.connect.oneboardserver.web.controller.attendance;
 
 import com.connect.oneboardserver.domain.attendance.Attendance;
 import com.connect.oneboardserver.domain.attendance.AttendanceRepository;
