@@ -59,7 +59,7 @@ public class LessonApiControllerTest {
 
         String title = "Test Title";
         String date = LocalDateTime.now().toString();
-        String noteUrl = "lesson note file url";
+        String noteUrl = null;
         Integer type = 1;
         String room = "Paldal 410";
         String meetingId = "zoom meeting url";
@@ -76,7 +76,6 @@ public class LessonApiControllerTest {
                 .build();
 
         String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson";
-
         // when
         ResponseEntity<ResponseDto> responseEntity
                 = restTemplate.postForEntity(url, requestDto, ResponseDto.class, lectureId);
