@@ -8,7 +8,6 @@ import com.connect.oneboardserver.service.attendance.AttendanceService;
 import com.connect.oneboardserver.service.storage.StorageService;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.lesson.*;
-import com.connect.oneboardserver.web.dto.lecture.lesson.note.NoteUploadResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -45,34 +44,34 @@ public class LessonService {
         }
         return new ResponseDto("SUCCESS", lessonListFindResponseDtoList);
     }
-//
-//    @Transactional
-//    public ResponseDto createLesson(Long lectureId, LessonCreateRequestDto requestDto) {
-//        Lecture lecture = null;
-//        try {
-//            lecture = lectureRepository.findById(lectureId).orElseThrow(Exception::new);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return new ResponseDto("FAIL");
-//        }
-//
-//        Lesson lesson = requestDto.toEntity();
-//        lesson.setLecture(lecture);
-//
-//        Lesson savedLesson = lessonRepository.save(lesson);
-//
-//        attendanceService.initLessonAttendance(lecture.getId(), savedLesson);
-//
-//        LessonCreateResponseDto responseDto = LessonCreateResponseDto.builder()
-//                .lessonId(savedLesson.getId())
-//                .build();
-//
-//        return new ResponseDto("SUCCESS" ,responseDto);
-//
-//    }
 
     @Transactional
-    public ResponseDto createLesson(Long lectureId, LessonCreateRequestDto requestDto, MultipartFile file) throws Exception {
+    public ResponseDto createLesson(Long lectureId, LessonCreateRequestDto requestDto) {
+        Lecture lecture = null;
+        try {
+            lecture = lectureRepository.findById(lectureId).orElseThrow(Exception::new);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseDto("FAIL");
+        }
+
+        Lesson lesson = requestDto.toEntity();
+        lesson.setLecture(lecture);
+
+        Lesson savedLesson = lessonRepository.save(lesson);
+
+        attendanceService.initLessonAttendance(lecture.getId(), savedLesson);
+
+        LessonCreateResponseDto responseDto = LessonCreateResponseDto.builder()
+                .lessonId(savedLesson.getId())
+                .build();
+
+        return new ResponseDto("SUCCESS" ,responseDto);
+
+    }
+
+    @Transactional
+    public ResponseDto createLessonFile(Long lectureId, LessonCreateRequestDto requestDto, MultipartFile file) throws Exception {
         Lecture lecture = null;
         String uploadedFile = null;
 
@@ -138,9 +137,7 @@ public class LessonService {
         } else {
             if (lesson.getNoteUrl() != null) {
                 System.out.println(lesson.getNoteUrl());
-                if (storageService.delete(lesson.getNoteUrl())) {
-                    lesson.updateNoteUrl(null);
-                }
+                storageService.delete(lesson.getNoteUrl());
             }
             attendanceService.deleteLessonAttendance(lesson.getId());
             lessonRepository.deleteById(lessonId);

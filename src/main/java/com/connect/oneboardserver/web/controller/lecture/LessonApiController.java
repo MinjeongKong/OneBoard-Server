@@ -22,9 +22,16 @@ public class LessonApiController {
         return lessonService.findLessonList(lectureId);
     }
 
+    // 수업 생성
+    @PostMapping("/lecture/{lectureId}/lesson1")
+    public ResponseDto createLesson(@PathVariable Long lectureId, @RequestBody LessonCreateRequestDto requestDto) {
+        return lessonService.createLesson(lectureId, requestDto);
+    }
+
+    // 수업 생성 (파일)
     @PostMapping("/lecture/{lectureId}/lesson")
-    public ResponseDto createLesson(@PathVariable Long lectureId, @ModelAttribute LessonCreateRequestDto requestDto, @ModelAttribute MultipartFile file) throws Exception {
-        return lessonService.createLesson(lectureId, requestDto, file);
+    public ResponseDto createLessonFile(@PathVariable Long lectureId, @ModelAttribute LessonCreateRequestDto requestDto, @RequestParam(value = "file", required = false) MultipartFile file) throws Exception {
+        return lessonService.createLessonFile(lectureId, requestDto, file);
     }
 
     @GetMapping("/lecture/{lectureId}/lesson/{lessonId}")

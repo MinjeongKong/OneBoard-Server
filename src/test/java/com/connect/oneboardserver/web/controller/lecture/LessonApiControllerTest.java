@@ -21,6 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class LessonApiControllerTest {
@@ -45,7 +46,7 @@ public class LessonApiControllerTest {
 
     @Test
     @DisplayName("수업 생성하기")
-    public void requestCreateLesson() {
+    public void requestCreateLesson(){
         // given
         String lectureTitle = "lecture";
         String lecturePlanUrl = "url";
@@ -75,7 +76,10 @@ public class LessonApiControllerTest {
                 .videoUrl(videoUrl)
                 .build();
 
-        String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson";
+        System.out.println("date " + requestDto.getDate());
+        System.out.println("title " + requestDto.getTitle());
+        System.out.println("print" + requestDto.getClass());
+        String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson1";
         // when
         ResponseEntity<ResponseDto> responseEntity
                 = restTemplate.postForEntity(url, requestDto, ResponseDto.class, lectureId);
