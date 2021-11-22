@@ -5,6 +5,9 @@ import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.lesson.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
@@ -20,18 +23,24 @@ public class LessonApiController {
     }
 
     // 수업 생성
-    @PostMapping("/lecture/{lectureId}/lesson")
+    @PostMapping("/lecture/{lectureId}/lesson1")
     public ResponseDto createLesson(@PathVariable Long lectureId, @RequestBody LessonCreateRequestDto requestDto) {
         return lessonService.createLesson(lectureId, requestDto);
     }
-    // 수업 조회
+
+    // 수업 생성 (파일)
+    @PostMapping("/lecture/{lectureId}/lesson")
+    public ResponseDto createLessonFile(@PathVariable Long lectureId, @ModelAttribute LessonCreateRequestDto requestDto, @RequestParam(value = "file", required = false) MultipartFile file) throws Exception {
+        return lessonService.createLessonFile(lectureId, requestDto, file);
+    }
+
     @GetMapping("/lecture/{lectureId}/lesson/{lessonId}")
     public ResponseDto findLesson(@PathVariable Long lectureId, @PathVariable Long lessonId) {
         return lessonService.findLesson(lectureId, lessonId);
     }
     // 수업 삭제
     @DeleteMapping("/lecture/{lectureId}/lesson/{lessonId}")
-    public ResponseDto deleteLesson(@PathVariable Long lectureId, @PathVariable Long lessonId) {
+    public ResponseDto deleteLesson(@PathVariable Long lectureId, @PathVariable Long lessonId) throws IOException {
         return lessonService.deleteLesson(lectureId, lessonId);
     }
     // 수업 수정
@@ -40,5 +49,4 @@ public class LessonApiController {
                                     @RequestBody LessonUpdateRequestDto requestDto) {
         return lessonService.updateLesson(lectureId, lessonId, requestDto);
     }
-
 }
