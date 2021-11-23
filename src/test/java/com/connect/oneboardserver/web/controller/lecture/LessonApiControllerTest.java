@@ -19,6 +19,8 @@ import org.springframework.http.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
+import java.util.Random;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
@@ -37,6 +39,8 @@ public class LessonApiControllerTest {
     @Autowired
     private LectureRepository lectureRepository;
 
+    Random random = new Random();
+
     @AfterEach
     public void tearDown() throws Exception {
         lessonRepository.deleteAll();
@@ -47,15 +51,7 @@ public class LessonApiControllerTest {
     @DisplayName("수업 생성하기")
     public void requestCreateLesson(){
         // given
-        String lectureTitle = "lecture";
-        String lecturePlanUrl = "url";
-        String semester = "2021-2";
-
-        Long lectureId = lectureRepository.save(Lecture.builder()
-                .title(lectureTitle)
-                .lecturePlanUrl(lecturePlanUrl)
-                .semester(semester)
-                .build()).getId();
+        Lecture expectedLecture = createLecture();
 
         String title = "Test Title";
         String date = LocalDateTime.now().toString();
@@ -78,7 +74,7 @@ public class LessonApiControllerTest {
         String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson1";
         // when
         ResponseEntity<ResponseDto> responseEntity
-                = restTemplate.postForEntity(url, requestDto, ResponseDto.class, lectureId);
+                = restTemplate.postForEntity(url, requestDto, ResponseDto.class, expectedLecture.getId());
 
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -92,9 +88,8 @@ public class LessonApiControllerTest {
 
         Lesson newLesson = lessonRepository.findById(responseDto.getLessonId()).orElseThrow();
 
-
-        assertThat(newLesson.getLecture().getTitle()).isEqualTo(lectureTitle);
-        assertThat(newLesson.getLecture().getId()).isEqualTo(lectureId);
+        assertThat(newLesson.getLecture().getTitle()).isEqualTo(expectedLecture.getTitle());
+        assertThat(newLesson.getLecture().getId()).isEqualTo(expectedLecture.getId());
         assertThat(newLesson.getNoteUrl()).isEqualTo(noteUrl);
         assertThat(newLesson.getType()).isEqualTo(type);
         assertThat(newLesson.getRoom()).isEqualTo(null);
@@ -106,15 +101,7 @@ public class LessonApiControllerTest {
     @DisplayName("수업 조회 요청")
     void requestFindLesson() {
         // given
-        String lectureTitle = "test lecture";
-        String lecturePlanUrl = "test url";
-        String semester = "2021-2";
-
-        Lecture lecture = lectureRepository.save(Lecture.builder()
-                .title(lectureTitle)
-                .lecturePlanUrl(lecturePlanUrl)
-                .semester(semester)
-                .build());
+        Lecture lecture = createLecture();
 
         String title = "Test Title";
         String date = LocalDateTime.now().toString();
@@ -149,7 +136,6 @@ public class LessonApiControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         LessonFindResponseDto responseDto = mapper.convertValue(responseData, LessonFindResponseDto.class);
 
-
         assertThat(responseDto.getTitle()).isEqualTo(title);
         assertThat(responseDto.getLectureId()).isEqualTo(lecture.getId());
         assertThat(responseDto.getNoteUrl()).isEqualTo(noteUrl);
@@ -163,17 +149,7 @@ public class LessonApiControllerTest {
     @DisplayName("수업 삭제 요청")
     void requestDeleteLesson() {
         // given
-        String lectureTitle = "test lecture";
-        String lecturePlanUrl = "test url";
-        String semester = "2021-2";
-
-        Lecture lecture = Lecture.builder()
-                .title(lectureTitle)
-                .lecturePlanUrl(lecturePlanUrl)
-                .semester(semester)
-                .build();
-
-        Long lectureId = lectureRepository.save(lecture).getId();
+        Lecture expectedLecture = createLecture();
 
         String title = "Test Title";
         String date = LocalDateTime.now().toString();
@@ -184,7 +160,7 @@ public class LessonApiControllerTest {
         String videoUrl = "lesson video url";
 
         Long lessonId = lessonRepository.save(Lesson.builder()
-                .lecture(lecture)
+                .lecture(expectedLecture)
                 .title(title)
                 .date(date)
                 .noteUrl(noteUrl)
@@ -197,26 +173,17 @@ public class LessonApiControllerTest {
         String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson/{lessonId}";
 
         // when
-        restTemplate.delete(url, lectureId, lessonId);
+        restTemplate.delete(url, expectedLecture.getId(), lessonId);
 
         // then
         assertThat(lessonRepository.findById(lessonId)).isEmpty();
     }
+
     @Test
     @DisplayName("수업 수정 요청")
     void requestUpdateLesson() {
         // given
-        String lectureTitle = "test lecture";
-        String lecturePlanUrl = "test url";
-        String semester = "2021-2";
-
-        Lecture lecture = Lecture.builder()
-                .title(lectureTitle)
-                .lecturePlanUrl(lecturePlanUrl)
-                .semester(semester)
-                .build();
-
-        Long lectureId = lectureRepository.save(lecture).getId();
+        Lecture expectedLecture = createLecture();
 
         String title = "Test Title";
         String date = LocalDateTime.now().toString();
@@ -226,9 +193,8 @@ public class LessonApiControllerTest {
         String meetingId = "zoom meeting url";
         String videoUrl = "lesson video url";
 
-
         Lesson lesson = Lesson.builder()
-                .lecture(lecture)
+                .lecture(expectedLecture)
                 .title(title)
                 .date(date).noteUrl(noteUrl)
                 .type(type)
@@ -263,7 +229,7 @@ public class LessonApiControllerTest {
 
         // when
         ResponseEntity<ResponseDto> responseEntity
-                = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, ResponseDto.class, lectureId, lessonId);
+                = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, ResponseDto.class, expectedLecture.getId(), lessonId);
 
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -282,6 +248,24 @@ public class LessonApiControllerTest {
         assertThat(updatedLesson.getRoom()).isEqualTo(updateRoom);
         assertThat(updatedLesson.getMeetingId()).isEqualTo(updateMeetingId);
         assertThat(updatedLesson.getVideoUrl()).isEqualTo(updateVideoUrl);
+    }
+
+    private Lecture createLecture() {
+        String title = "lecture" + random.nextInt(100);
+        String semester = "semester" + random.nextInt(100);
+        String defaultDateTime = "화 12:00-14:00, 목 16:30-18:00";
+        String defaultRoom = "room" + random.nextInt(100);
+        String lecturePlanUrl = "fakeUrl" + random.nextInt(100);
+
+        Lecture lecture = lectureRepository.save(Lecture.builder()
+                .title(title)
+                .semester(semester)
+                .defaultDateTime(defaultDateTime)
+                .defaultRoom(defaultRoom)
+                .lecturePlanUrl(lecturePlanUrl)
+                .build());
+
+        return lecture;
     }
 
 }
