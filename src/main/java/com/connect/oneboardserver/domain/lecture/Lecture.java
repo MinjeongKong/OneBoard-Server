@@ -25,7 +25,7 @@ public class Lecture {
     private String semester;
 
     @Column(length = 30)
-    private String defaultDateTime;     // 입력 형식 : 요일 HH:mm-HH:mm, ex) 월 12:00-14:00, 목 16:30-18:00
+    private String defaultDateTime;
 
     @Column(length = 30)
     private String defaultRoom;

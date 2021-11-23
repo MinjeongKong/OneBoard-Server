@@ -45,7 +45,7 @@ public class LessonApiControllerTest {
 
     @Test
     @DisplayName("수업 생성하기")
-    public void requestCreateLesson() {
+    public void requestCreateLesson(){
         // given
         String lectureTitle = "lecture";
         String lecturePlanUrl = "url";
@@ -59,10 +59,10 @@ public class LessonApiControllerTest {
 
         String title = "Test Title";
         String date = LocalDateTime.now().toString();
-        String noteUrl = "lesson note file url";
-        Integer type = 1;
-        String room = "Paldal 410";
-        String meetingId = "zoom meeting url";
+        String noteUrl = null;
+        Integer type = 0;
+        String room = "adsadqwads";
+        String meetingId = null;
         String videoUrl = "lesson video url";
 
         LessonCreateRequestDto requestDto = LessonCreateRequestDto.builder()
@@ -75,8 +75,7 @@ public class LessonApiControllerTest {
                 .videoUrl(videoUrl)
                 .build();
 
-        String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson";
-
+        String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson1";
         // when
         ResponseEntity<ResponseDto> responseEntity
                 = restTemplate.postForEntity(url, requestDto, ResponseDto.class, lectureId);
@@ -98,8 +97,8 @@ public class LessonApiControllerTest {
         assertThat(newLesson.getLecture().getId()).isEqualTo(lectureId);
         assertThat(newLesson.getNoteUrl()).isEqualTo(noteUrl);
         assertThat(newLesson.getType()).isEqualTo(type);
-        assertThat(newLesson.getRoom()).isEqualTo(room);
-        assertThat(newLesson.getMeetingId()).isEqualTo(meetingId);
+        assertThat(newLesson.getRoom()).isEqualTo(null);
+        assertThat(newLesson.getMeetingId()).isEqualTo(null);
         assertThat(newLesson.getVideoUrl()).isEqualTo(videoUrl);
     }
 
