@@ -61,9 +61,9 @@ public class LessonApiControllerTest {
         String title = "Test Title";
         String date = LocalDateTime.now().toString();
         String noteUrl = null;
-        Integer type = 1;
-        String room = "Paldal 410";
-        String meetingId = "zoom meeting url";
+        Integer type = 0;
+        String room = "adsadqwads";
+        String meetingId = null;
         String videoUrl = "lesson video url";
 
         LessonCreateRequestDto requestDto = LessonCreateRequestDto.builder()
@@ -76,9 +76,6 @@ public class LessonApiControllerTest {
                 .videoUrl(videoUrl)
                 .build();
 
-        System.out.println("date " + requestDto.getDate());
-        System.out.println("title " + requestDto.getTitle());
-        System.out.println("print" + requestDto.getClass());
         String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson1";
         // when
         ResponseEntity<ResponseDto> responseEntity
@@ -101,8 +98,8 @@ public class LessonApiControllerTest {
         assertThat(newLesson.getLecture().getId()).isEqualTo(lectureId);
         assertThat(newLesson.getNoteUrl()).isEqualTo(noteUrl);
         assertThat(newLesson.getType()).isEqualTo(type);
-        assertThat(newLesson.getRoom()).isEqualTo(room);
-        assertThat(newLesson.getMeetingId()).isEqualTo(meetingId);
+        assertThat(newLesson.getRoom()).isEqualTo(null);
+        assertThat(newLesson.getMeetingId()).isEqualTo(null);
         assertThat(newLesson.getVideoUrl()).isEqualTo(videoUrl);
     }
 

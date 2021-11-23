@@ -48,18 +48,45 @@ public class LessonService {
     @Transactional
     public ResponseDto createLesson(Long lectureId, LessonCreateRequestDto requestDto) {
         Lecture lecture = null;
+        Lesson savedLesson = null;
+
         try {
             lecture = lectureRepository.findById(lectureId).orElseThrow(Exception::new);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseDto("FAIL");
         }
-
-        Lesson lesson = requestDto.toEntity();
-        lesson.setLecture(lecture);
-
-        Lesson savedLesson = lessonRepository.save(lesson);
-
+        Integer Type = requestDto.getType();
+        if (Type == 0) {
+            savedLesson = lessonRepository.save(Lesson.builder()
+                    .lecture((lecture))
+                    .title(requestDto.getTitle())
+                    .date(requestDto.getDate())
+                    .noteUrl(requestDto.getNoteUrl())
+                    .type(requestDto.getType())
+                    .videoUrl(requestDto.getVideoUrl())
+                    .build());
+        }
+        if (Type == 1) {
+            savedLesson = lessonRepository.save(Lesson.builder()
+                    .lecture((lecture))
+                    .title(requestDto.getTitle())
+                    .date(requestDto.getDate())
+                    .noteUrl(requestDto.getNoteUrl())
+                    .type(requestDto.getType())
+                    .meetingId(requestDto.getMeetingId())
+                    .build());
+        }
+        if (Type == 2) {
+            savedLesson = lessonRepository.save(Lesson.builder()
+                    .lecture((lecture))
+                    .title(requestDto.getTitle())
+                    .date(requestDto.getDate())
+                    .noteUrl(requestDto.getNoteUrl())
+                    .type(requestDto.getType())
+                    .room(requestDto.getRoom())
+                    .build());
+        }
         attendanceService.initLessonAttendance(lecture.getId(), savedLesson);
 
         LessonCreateResponseDto responseDto = LessonCreateResponseDto.builder()
@@ -67,13 +94,13 @@ public class LessonService {
                 .build();
 
         return new ResponseDto("SUCCESS" ,responseDto);
-
     }
 
     @Transactional
     public ResponseDto createLessonFile(Long lectureId, LessonCreateRequestDto requestDto, MultipartFile file) throws Exception {
         Lecture lecture = null;
         String uploadedFile = null;
+        Lesson savedLesson = null;
 
         try {
             lecture = lectureRepository.findById(lectureId).orElseThrow(Exception::new);
@@ -81,26 +108,50 @@ public class LessonService {
             e.printStackTrace();
             return new ResponseDto("FAIL");
         }
-
-        Lesson lesson = requestDto.toEntity();
-        lesson.setLecture(lecture);
-
-        if (!lesson.getLecture().getId().equals(lectureId)) {
+        Integer Type = requestDto.getType();
+        if (Type == 0) {
+            savedLesson = lessonRepository.save(Lesson.builder()
+                    .lecture((lecture))
+                    .title(requestDto.getTitle())
+                    .date(requestDto.getDate())
+                    .noteUrl(requestDto.getNoteUrl())
+                    .type(requestDto.getType())
+                    .videoUrl(requestDto.getVideoUrl())
+                    .build());
+        } else if (Type == 1) {
+            savedLesson = lessonRepository.save(Lesson.builder()
+                    .lecture((lecture))
+                    .title(requestDto.getTitle())
+                    .date(requestDto.getDate())
+                    .noteUrl(requestDto.getNoteUrl())
+                    .type(requestDto.getType())
+                    .meetingId(requestDto.getMeetingId())
+                    .build());
+        } else if (Type == 2) {
+            savedLesson = lessonRepository.save(Lesson.builder()
+                    .lecture((lecture))
+                    .title(requestDto.getTitle())
+                    .date(requestDto.getDate())
+                    .noteUrl(requestDto.getNoteUrl())
+                    .type(requestDto.getType())
+                    .room(requestDto.getRoom())
+                    .build());
+            } else {
             return new ResponseDto("FAIL");
         }
-        Lesson savedLesson = lessonRepository.save(lesson);
-
+        if (!savedLesson.getLecture().getId().equals(lectureId)) {
+            return new ResponseDto("FAIL");
+        }
         attendanceService.initLessonAttendance(lecture.getId(), savedLesson);
-
         LessonCreateResponseDto responseDto = LessonCreateResponseDto.builder()
                 .lessonId(savedLesson.getId())
                 .build();
 
         if (file != null) {
-            String path = "/lecture_" + lectureId + "/lesson_" + lesson.getId() + "/note";
+            String path = "/lecture_" + lectureId + "/lesson_" + savedLesson.getId() + "/note";
             uploadedFile = storageService.store(path, file);
 
-            lesson.updateNoteUrl(uploadedFile);
+            savedLesson.updateNoteUrl(uploadedFile);
         }
         return new ResponseDto("SUCCESS", responseDto);
     }
