@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Getter
-
 @NoArgsConstructor
 public class AttendanceUpdateAllRequestDto {
 

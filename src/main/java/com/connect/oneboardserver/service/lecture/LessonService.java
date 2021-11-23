@@ -11,7 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -121,5 +125,75 @@ public class LessonService {
                     .build();
             return new ResponseDto("SUCCESS", responseDto);
         }
+    }
+
+    public ResponseDto findLessonDefaultInfo(Long lectureId) {
+        Lecture lecture = lectureRepository.findById(lectureId)
+                .orElseThrow(()-> new IllegalArgumentException("해당 과목이 없습니다 : id = " + lectureId));
+
+        List<Lesson> lessonList = lessonRepository.findAllByLectureId(lectureId);
+        String lessonDefaultTitle = lecture.getTitle() + " 수업 " + (lessonList.size() + 1);
+
+        List<String[]> defaultDateTimeList = parseDefaultDateTime(lecture.getDefaultDateTime());
+        String nextLessonDateTime = getNextLessonDateTime(defaultDateTimeList);
+
+        LessonFindDefaultResponseDto responseDto = LessonFindDefaultResponseDto.builder()
+                .defaultTitle(lessonDefaultTitle)
+                .defaultDateTime(nextLessonDateTime)
+                .defaultRoom(lecture.getDefaultRoom())
+                .build();
+
+        return new ResponseDto("SUCCESS", responseDto);
+    }
+
+    private int getDayOfWeekValue(String day) {
+        String[] dayOfWeek = {"월", "화", "수", "목", "금", "토", "일"};
+        return Arrays.asList(dayOfWeek).indexOf(day) + 1;
+    }
+
+    private List<String[]> parseDefaultDateTime(String defaultDateTime) {
+        String[] defaultDateTimes = defaultDateTime.split(", ");
+
+        List<String[]> defaultDateTimeList = new ArrayList<>();
+        for(int i = 0; i < defaultDateTimes.length; i++) {
+            String[] splitStr = defaultDateTimes[i].split("[ :-]");     // 월 12:00-13:30
+            defaultDateTimeList.add(splitStr);
+        }
+        return defaultDateTimeList;
+    }
+
+    private String getNextLessonDateTime(List<String[]> defaultDateTimeList) {
+        LocalDateTime nextLessonDateTime = null;
+
+        LocalDateTime now = LocalDateTime.now();
+        int todayOfWeek = now.getDayOfWeek().getValue();
+
+        for(int i = 0; i < defaultDateTimeList.size(); i++) {
+            String[] defaultDateTime = defaultDateTimeList.get(i);
+
+            int dateGap = getDayOfWeekValue(defaultDateTime[0]) - todayOfWeek;
+            boolean isNowBefore = LocalTime.of(now.getHour(), now.getMinute(), now.getSecond())
+                    .isBefore(LocalTime.of(Integer.valueOf(defaultDateTime[1]), Integer.valueOf(defaultDateTime[2])));
+            if((dateGap > 0) || (dateGap == 0 && isNowBefore)) {
+                nextLessonDateTime = now.plusDays(dateGap);
+                nextLessonDateTime = nextLessonDateTime
+                        .withHour(Integer.valueOf(defaultDateTime[1]))
+                        .withMinute(Integer.valueOf(defaultDateTime[2]))
+                        .withSecond(0);
+                break;
+            }
+        }
+        if(nextLessonDateTime == null) {
+            String[] defaultDateTime = defaultDateTimeList.get(0);
+            int dateGap = getDayOfWeekValue(defaultDateTime[0]) - todayOfWeek;
+
+            nextLessonDateTime = now.plusDays(7 - Math.abs(dateGap));
+            nextLessonDateTime = nextLessonDateTime
+                    .withHour(Integer.valueOf(defaultDateTime[1]))
+                    .withMinute(Integer.valueOf(defaultDateTime[2]))
+                    .withSecond(0);
+        }
+
+        return nextLessonDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 }
