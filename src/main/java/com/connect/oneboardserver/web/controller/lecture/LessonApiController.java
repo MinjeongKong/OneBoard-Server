@@ -41,4 +41,9 @@ public class LessonApiController {
         return lessonService.updateLesson(lectureId, lessonId, requestDto);
     }
 
+    // 수업 생성 시 디폴트 정보 요청
+    @GetMapping("/lecture/{lectureId}/lesson/default")
+    public ResponseDto findLessonDefaultInfo(@PathVariable Long lectureId) {
+        return lessonService.findLessonDefaultInfo(lectureId);
+    }
 }
