@@ -194,6 +194,34 @@ public class LessonApiControllerTest {
         assertThat(updatedLesson.getVideoUrl()).isEqualTo(updateVideoUrl);
     }
 
+    @Test
+    @DisplayName("수업 생성 시 디폴트 정보 요청")
+    void requestFindLessonDefaultInfo() {
+        // given
+        Lecture expectedLecture = createLecture();
+        Lesson expectedLesson = createLesson(expectedLecture);
+
+        String expectedDefaultTitle = expectedLecture.getTitle() + " 수업 " + 2;
+        String expectedDefaultRoom = expectedLecture.getDefaultRoom();
+
+        String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson/default";
+
+        // when
+        ResponseEntity<ResponseDto> responseEntity
+                = restTemplate.getForEntity(url, ResponseDto.class, expectedLecture.getId());
+
+        // then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        // responseData: LinkedHashMap
+        Object responseData = responseEntity.getBody().getData();
+        ObjectMapper mapper = new ObjectMapper();
+        LessonFindDefaultResponseDto responseDto = mapper.convertValue(responseData, LessonFindDefaultResponseDto.class);
+
+        assertThat(responseDto.getDefaultTitle()).isEqualTo(expectedDefaultTitle);
+        assertThat(responseDto.getDefaultRoom()).isEqualTo(expectedDefaultRoom);
+    }
+
     private Lecture createLecture() {
         String title = "lecture" + random.nextInt(100);
         String semester = "semester" + random.nextInt(100);
