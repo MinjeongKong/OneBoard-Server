@@ -156,6 +156,48 @@ public class AttendanceApiControllerTest {
         assertThat(actualAttendances.get(0).getStatus()).isEqualTo(expectedStatus);
     }
 
+    @Test
+    @DisplayName("학생 수업 출석 조회 요청")
+    void requestFindAllLessonAttendanceList() {
+        // given
+        List<Member> expectedMemberList = new ArrayList<>();
+        expectedMemberList.add(createMember("S"));
+        expectedMemberList.add(createMember("S"));
+        Lecture expectedLecture = createLecture();
+        for(Member member : expectedMemberList) {
+            registerMemberLecture(member, expectedLecture);
+        }
+
+        Lesson expectedLesson = createLesson(expectedLecture);
+        for(Member member : expectedMemberList) {
+            initAttendance(member, expectedLesson);
+        }
+
+        String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson/{lessonId}/attendances";
+
+        // when
+        ResponseEntity<ResponseDto> responseEntity
+                = restTemplate.getForEntity(url, ResponseDto.class, expectedLecture.getId(), expectedLesson.getId());
+
+        // then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        List<AttendanceFindOfStuResponseDto> responseDtoList
+                = (List<AttendanceFindOfStuResponseDto>) responseEntity.getBody().getData();
+
+        // responseDtoList.get(i): LinkedHashMap
+        ObjectMapper mapper = new ObjectMapper();
+
+        for(int i = 0; i < responseDtoList.size(); i++) {
+            AttendanceFindOfStuResponseDto responseDto
+                    = mapper.convertValue(responseDtoList.get(i), AttendanceFindOfStuResponseDto.class);
+
+            assertThat(responseDto.getStudentId()).isEqualTo(expectedMemberList.get(i).getId());
+            assertThat(responseDto.getAttendanceList().get(0).getLessonId()).isEqualTo(expectedLesson.getId());
+            assertThat(responseDto.getAttendanceList().get(0).getStatus()).isEqualTo(0);
+        }
+    }
+
     private Member createMember(String type) {
         String studentNumber = "number" + random.nextInt(100);
         String name = "name" + random.nextInt(100);
