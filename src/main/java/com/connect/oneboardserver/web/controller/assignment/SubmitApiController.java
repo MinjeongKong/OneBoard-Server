@@ -7,6 +7,7 @@ import com.connect.oneboardserver.web.dto.assignment.SubmitCreateRequestDto;
 import com.connect.oneboardserver.web.dto.assignment.SubmitUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletRequest;
 
@@ -18,10 +19,18 @@ public class SubmitApiController {
     private final SubmitService submitService;
 
     //과제 제출
-    @PostMapping("/lecture/{lectureId}/assignment/{assignmentId}/submit")
+    @PostMapping("/lecture/{lectureId}/assignment/{assignmentId}/submit/ver1")
     public ResponseDto createSubmit(@PathVariable Long lectureId, @PathVariable Long assignmentId,
                                     ServletRequest request, @RequestBody SubmitCreateRequestDto requestDto) {
         return submitService.createSubmit(lectureId, assignmentId, request, requestDto);
+    }
+
+    //과제 제출(파일)
+    @PostMapping("/lecture/{lectureId}/assignment/{assignmentId}/submit")
+    public ResponseDto createSubmit(@PathVariable Long lectureId, @PathVariable Long assignmentId,
+                                    ServletRequest request, @ModelAttribute SubmitCreateRequestDto requestDto,
+                                    @RequestParam(value = "file", required = false) MultipartFile file) throws Exception{
+        return submitService.createSubmitFile(lectureId, assignmentId, request, requestDto, file);
     }
 
     //과제 피드백 입력
@@ -45,10 +54,18 @@ public class SubmitApiController {
     }
 
     //과제 결과물 수정
-    @PutMapping("/lecture/{lectureId}/assignment/{assignmentId}/submit")
+    @PutMapping("/lecture/{lectureId}/assignment/{assignmentId}/submit/ver1")
     public ResponseDto updateSubmit(@PathVariable Long lectureId, @PathVariable Long assignmentId,
                                     ServletRequest request, @RequestBody SubmitUpdateRequestDto requestDto) {
         return submitService.updateSubmit(lectureId, assignmentId, request, requestDto);
+    }
+
+    //과제 결과물 수정(파일)
+    @PutMapping("/lecture/{lectureId}/assignment/{assignmentId}/submit")
+    public ResponseDto updateSubmit(@PathVariable Long lectureId, @PathVariable Long assignmentId,
+                                    ServletRequest request, @ModelAttribute SubmitUpdateRequestDto requestDto,
+                                    @RequestParam(value = "file", required = false) MultipartFile file) throws Exception{
+        return submitService.updateSubmitFile(lectureId, assignmentId, request, requestDto, file);
     }
 
     //과제 제출 리스트 조회

@@ -60,4 +60,7 @@ public class Submit extends BaseTimeEntity {
         this.fileUrl = fileUrl;
     }
 
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
+    }
 }
