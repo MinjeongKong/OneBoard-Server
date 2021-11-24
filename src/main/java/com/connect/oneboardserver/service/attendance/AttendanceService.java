@@ -11,7 +11,7 @@ import com.connect.oneboardserver.domain.relation.MemberLecture;
 import com.connect.oneboardserver.domain.relation.MemberLectureRepository;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendFindAllForStuResponseDto;
-import com.connect.oneboardserver.web.dto.attendance.AttendFindForStuDto;
+import com.connect.oneboardserver.web.dto.attendance.AttendanceDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateAllRequestDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -83,7 +83,7 @@ public class AttendanceService {
                     .studentNumber(student.getStudentNumber())
                     .studentName(student.getName())
                     .build();
-            List<AttendFindForStuDto> attendanceList = new ArrayList<>();
+            List<AttendanceDto> attendanceList = new ArrayList<>();
             for(Lesson lesson : lessonList) {
                 List<Attendance> attendances = attendanceRepository.findAllByMemberIdAndLessonId(student.getId(), lesson.getId());
                 if(attendances.size() != 1) {
@@ -91,7 +91,7 @@ public class AttendanceService {
 //                    throw new Exception("출석 오류");
                     return new ResponseDto("FAIL");
                 }
-                AttendFindForStuDto result = AttendFindForStuDto.builder()
+                AttendanceDto result = AttendanceDto.builder()
                         .lessonId(lesson.getId())
                         .lessonDate(lesson.getDate())
                         .status(attendances.get(0).getStatus())
@@ -131,13 +131,13 @@ public class AttendanceService {
                 .studentNumber(member.getStudentNumber())
                 .studentName(member.getName())
                 .build();
-        List<AttendFindForStuDto> attendanceList = new ArrayList<>();
+        List<AttendanceDto> attendanceList = new ArrayList<>();
         for(Lesson lesson : lessonList) {
             List<Attendance> attendances = attendanceRepository.findAllByMemberIdAndLessonId(member.getId(), lesson.getId());
             if(attendances.size() != 1) {
                 return new ResponseDto("FAIL");
             }
-            AttendFindForStuDto result = AttendFindForStuDto.builder()
+            AttendanceDto result = AttendanceDto.builder()
                     .lessonId(lesson.getId())
                     .lessonDate(lesson.getDate())
                     .status(attendances.get(0).getStatus())
