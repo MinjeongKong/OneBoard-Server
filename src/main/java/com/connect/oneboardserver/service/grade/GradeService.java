@@ -137,10 +137,11 @@ public class GradeService {
             for (int a = 0; a < assignmentList.size(); a++) {
                 Long assignmentId = assignmentList.get(a).getId();
                 Submit submit = submitRepository.findByStudentIdAndAssignmentId(studentId, assignmentId);
-                try {
-                    submitScore+=submit.getScore();
-                } catch (NullPointerException e) {}
-
+                if (submit != null) {
+                    if (submit.getScore() != null) {
+                        submitScore += submit.getScore();
+                    }
+                }
             }
 
             for (int t = 0; t < lessonList.size(); t++) {
