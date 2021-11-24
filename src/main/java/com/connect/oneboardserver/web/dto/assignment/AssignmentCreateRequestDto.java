@@ -1,33 +1,23 @@
 package com.connect.oneboardserver.web.dto.assignment;
 
 import com.connect.oneboardserver.domain.assignment.Assignment;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class AssignmentCreateRequestDto {
 
-    @NotEmpty
     private String title;
-
     private String content;
     private String fileUrl;
-
-    @NotEmpty
     private String startDt;
-    @NotEmpty
     private String endDt;
-
     private String exposeDt;
-
-    @NotEmpty
     private Float score;
 
     @Builder
