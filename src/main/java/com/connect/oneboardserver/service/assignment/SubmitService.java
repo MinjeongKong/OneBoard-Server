@@ -6,11 +6,14 @@ import com.connect.oneboardserver.domain.assignment.AssignmentRepository;
 import com.connect.oneboardserver.domain.assignment.Submit;
 import com.connect.oneboardserver.domain.assignment.SubmitRepository;
 import com.connect.oneboardserver.domain.login.Member;
+import com.connect.oneboardserver.service.storage.StorageService;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.assignment.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +25,8 @@ import java.util.List;
 @Service
 public class SubmitService {
 
+    @Qualifier("FileStorageService")
+    private final StorageService storageService;
     private final AssignmentRepository assignmentRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
@@ -32,7 +37,6 @@ public class SubmitService {
 
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
         Member student = (Member) userDetailsService.loadUserByUsername(jwtTokenProvider.getUserPk(token));
-
 
         Assignment assignment = assignmentRepository.findById(assignmentId)
                 .orElseThrow(()->new IllegalArgumentException("해당 과제가 없습니다. id="+assignmentId));
@@ -46,6 +50,38 @@ public class SubmitService {
 
             submitRepository.save(submit);
             SubmitResponseDto responseDto = new SubmitResponseDto(submit);
+
+            return new ResponseDto("SUCCESS", responseDto);
+        }
+
+    }
+
+    @Transactional
+    public ResponseDto createSubmitFile(Long lectureId, Long assignmentId, ServletRequest request,
+                                        SubmitCreateRequestDto requestDto, MultipartFile file) throws Exception{
+        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+        Member student = (Member) userDetailsService.loadUserByUsername(jwtTokenProvider.getUserPk(token));
+
+        Assignment assignment = assignmentRepository.findById(assignmentId)
+                .orElseThrow(()->new IllegalArgumentException("해당 과제가 없습니다. id="+assignmentId));
+
+        if (!assignment.getLecture().getId().equals(lectureId)) {
+            return new ResponseDto("FAIL");
+        } else {
+            Submit submit = requestDto.toEntity();
+            submit.setStudent(student);
+            submit.setAssignment(assignment);
+
+            submitRepository.save(submit);
+            SubmitResponseDto responseDto = new SubmitResponseDto(submit);
+
+            String uploadedFile = null;
+            if (file != null) {
+                String path = "/lecture_" + lectureId + "/assignment_" + assignment.getId() + "/submit_" + student.getStudentNumber();
+                uploadedFile = storageService.store(path, file);
+
+                submit.setFileUrl(uploadedFile);
+            }
 
             return new ResponseDto("SUCCESS", responseDto);
         }
@@ -118,6 +154,7 @@ public class SubmitService {
         }
     }
 
+    @Transactional
     public ResponseDto updateSubmit(Long lectureId, Long assignmentId, ServletRequest request, SubmitUpdateRequestDto requestDto) {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
         Member student = (Member) userDetailsService.loadUserByUsername(jwtTokenProvider.getUserPk(token));
@@ -130,6 +167,38 @@ public class SubmitService {
         } else {
             Submit submit = submitRepository.findByStudentIdAndAssignmentId(student.getId(), assignmentId);
             submit.update(requestDto.getContent(), requestDto.getFileUrl());
+            SubmitResponseDto responseDto = new SubmitResponseDto(submit);
+            return new ResponseDto("SUCCESS", responseDto);
+        }
+    }
+
+    @Transactional
+    public ResponseDto updateSubmitFile(Long lectureId, Long assignmentId, ServletRequest request,
+                                        SubmitUpdateRequestDto requestDto, MultipartFile file) throws Exception {
+        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+        Member student = (Member) userDetailsService.loadUserByUsername(jwtTokenProvider.getUserPk(token));
+
+        Assignment assignment = assignmentRepository.findById(assignmentId)
+                .orElseThrow(()->new IllegalArgumentException("해당 과제가 없습니다. id="+assignmentId));
+
+        if (!assignment.getLecture().getId().equals(lectureId)) {
+            return new ResponseDto("FAIL");
+        } else {
+            Submit submit = submitRepository.findByStudentIdAndAssignmentId(student.getId(), assignmentId);
+
+            if (submit.getFileUrl() != null) {
+                if (storageService.delete(submit.getFileUrl())) {
+                    submit.setFileUrl(null);
+                }
+            }
+            submit.update(requestDto.getContent(), requestDto.getFileUrl());
+
+            if (file != null) {
+                String path = "/lecture_" + lectureId + "/assignment_" + assignment.getId() + "/submit_" + student.getStudentNumber();
+                String uploadedFile = storageService.store(path, file);
+
+                submit.setFileUrl(uploadedFile);
+            }
             SubmitResponseDto responseDto = new SubmitResponseDto(submit);
             return new ResponseDto("SUCCESS", responseDto);
         }
