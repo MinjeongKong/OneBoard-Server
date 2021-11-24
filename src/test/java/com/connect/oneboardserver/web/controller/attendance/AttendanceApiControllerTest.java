@@ -11,7 +11,7 @@ import com.connect.oneboardserver.domain.login.MemberRepository;
 import com.connect.oneboardserver.domain.relation.MemberLecture;
 import com.connect.oneboardserver.domain.relation.MemberLectureRepository;
 import com.connect.oneboardserver.web.dto.ResponseDto;
-import com.connect.oneboardserver.web.dto.attendance.AttendFindAllForStuResponseDto;
+import com.connect.oneboardserver.web.dto.attendance.AttendanceFindOfStuResponseDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateAllRequestDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -102,15 +102,15 @@ public class AttendanceApiControllerTest {
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        List<AttendFindAllForStuResponseDto> responseDtoList
-                = (List<AttendFindAllForStuResponseDto>) responseEntity.getBody().getData();
+        List<AttendanceFindOfStuResponseDto> responseDtoList
+                = (List<AttendanceFindOfStuResponseDto>) responseEntity.getBody().getData();
 
         // responseDtoList.get(i): LinkedHashMap
         ObjectMapper mapper = new ObjectMapper();
 
         for(int i = 0; i < responseDtoList.size(); i++) {
-            AttendFindAllForStuResponseDto responseDto
-                    = mapper.convertValue(responseDtoList.get(i), AttendFindAllForStuResponseDto.class);
+            AttendanceFindOfStuResponseDto responseDto
+                    = mapper.convertValue(responseDtoList.get(i), AttendanceFindOfStuResponseDto.class);
 
             assertThat(responseDto.getStudentId()).isEqualTo(expectedMemberList.get(i).getId());
             assertThat(responseDto.getAttendanceList().get(i).getLessonId()).isEqualTo(expectedLessonList.get(i).getId());

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class AttendFindAllForStuResponseDto {
+public class AttendanceFindOfStuResponseDto {
 
     private Long studentId;
     private String studentNumber;
@@ -16,7 +16,7 @@ public class AttendFindAllForStuResponseDto {
     private List<AttendanceDto> attendanceList;
 
     @Builder
-    public AttendFindAllForStuResponseDto(Long studentId, String studentNumber, String studentName, List<AttendanceDto> attendanceList) {
+    public AttendanceFindOfStuResponseDto(Long studentId, String studentNumber, String studentName, List<AttendanceDto> attendanceList) {
         this.studentId = studentId;
         this.studentNumber = studentNumber;
         this.studentName = studentName;

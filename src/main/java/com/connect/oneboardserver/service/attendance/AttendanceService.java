@@ -10,7 +10,7 @@ import com.connect.oneboardserver.domain.login.Member;
 import com.connect.oneboardserver.domain.relation.MemberLecture;
 import com.connect.oneboardserver.domain.relation.MemberLectureRepository;
 import com.connect.oneboardserver.web.dto.ResponseDto;
-import com.connect.oneboardserver.web.dto.attendance.AttendFindAllForStuResponseDto;
+import com.connect.oneboardserver.web.dto.attendance.AttendanceFindOfStuResponseDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateAllRequestDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateRequestDto;
@@ -74,11 +74,11 @@ public class AttendanceService {
         // lectureId로 Lesson에서 해당 과목의 모든 수업 조회
         List<Lesson> lessonList = lessonRepository.findAllByLectureIdOrderByDate(lecture.getId());
 
-        List<AttendFindAllForStuResponseDto> responseDtoList = new ArrayList<>();
+        List<AttendanceFindOfStuResponseDto> responseDtoList = new ArrayList<>();
         // 학생을 기준으로 Attendance에서 학생과 모든 수업에 대해서 조회
         for(Member student : studentList) {
-            AttendFindAllForStuResponseDto responseDto
-                    = AttendFindAllForStuResponseDto.builder()
+            AttendanceFindOfStuResponseDto responseDto
+                    = AttendanceFindOfStuResponseDto.builder()
                     .studentId(student.getId())
                     .studentNumber(student.getStudentNumber())
                     .studentName(student.getName())
@@ -125,8 +125,8 @@ public class AttendanceService {
 
         List<Lesson> lessonList = lessonRepository.findAllByLectureIdOrderByDate(lectureId);
 
-        AttendFindAllForStuResponseDto responseDto
-                = AttendFindAllForStuResponseDto.builder()
+        AttendanceFindOfStuResponseDto responseDto
+                = AttendanceFindOfStuResponseDto.builder()
                 .studentId(member.getId())
                 .studentNumber(member.getStudentNumber())
                 .studentName(member.getName())
