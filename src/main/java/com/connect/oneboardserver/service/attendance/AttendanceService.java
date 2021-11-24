@@ -57,7 +57,7 @@ public class AttendanceService {
         attendanceRepository.deleteAllByLessonId(lessonId);
     }
 
-    public ResponseDto findAllLectureAttendanceList(Long lectureId) {
+    public ResponseDto findAllLectureAttendanceList(Long lectureId) throws Exception {
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 과목이 없습니다 : id = " + lectureId));
 
@@ -88,8 +88,7 @@ public class AttendanceService {
                 List<Attendance> attendances = attendanceRepository.findAllByMemberIdAndLessonId(student.getId(), lesson.getId());
                 if(attendances.size() != 1) {
                     // 동일한 학생 & 수업에 대해 출석 데이터가 없거나 2개 이상인 경우
-//                    throw new Exception("출석 오류");
-                    return new ResponseDto("FAIL");
+                    throw new Exception("출석 데이터 오류");
                 }
                 AttendanceDto result = AttendanceDto.builder()
                         .lessonId(lesson.getId())
@@ -148,4 +147,43 @@ public class AttendanceService {
 
         return new ResponseDto("SUCCESS", responseDto);
     }
+
+    public ResponseDto findAllLessonAttendanceList(Long lectureId, Long lessonId) throws Exception {
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 수업이 없습니다 : id = " + lessonId));
+        if(!lesson.getLecture().getId().equals(lectureId)) {
+            throw new IllegalArgumentException("올바른 과목 id와 수업 id가 아닙니다 : lecture id = " + lectureId + " lesson id = " + lessonId);
+        }
+
+        List<MemberLecture> studentList = memberLectureRepository.findAllByLectureIdAndMemberUserType(lectureId, "S");
+
+        List<AttendanceFindOfStuResponseDto> responseDtoList = new ArrayList<>();
+        for(MemberLecture ml : studentList) {
+            System.out.println(ml.getMember().getId());
+            AttendanceFindOfStuResponseDto responseDto = AttendanceFindOfStuResponseDto.builder()
+                    .studentId(ml.getMember().getId())
+                    .studentNumber(ml.getMember().getStudentNumber())
+                    .studentName(ml.getMember().getName())
+                    .build();
+
+            List<AttendanceDto> attendanceList = new ArrayList<>();
+            List<Attendance> attendances = attendanceRepository.findAllByMemberIdAndLessonId(responseDto.getStudentId(), lesson.getId());
+            if(attendances.size() != 1) {
+                // 동일한 학생 & 수업에 대해 출석 데이터가 없거나 2개 이상인 경우
+                    throw new Exception("출석 데이터 오류");
+            }
+            AttendanceDto result = AttendanceDto.builder()
+                    .lessonId(lesson.getId())
+                    .lessonDate(lesson.getDate())
+                    .status(attendances.get(0).getStatus())
+                    .build();
+
+            attendanceList.add(result);
+            responseDto.setAttendanceList(attendanceList);
+            responseDtoList.add(responseDto);
+        }
+
+        return new ResponseDto("SUCCESS", responseDtoList);
+    }
+
 }

@@ -19,7 +19,7 @@ public class AttendanceApiController {
 
     // 과목 전체 출석 조회 - 강의자
     @GetMapping("/lecture/{lectureId}/attendances")
-    public ResponseDto findAllLectureAttendanceList(@PathVariable Long lectureId) {
+    public ResponseDto findAllLectureAttendanceList(@PathVariable Long lectureId) throws Exception {
         return attendanceService.findAllLectureAttendanceList(lectureId);
     }
 
@@ -38,7 +38,12 @@ public class AttendanceApiController {
         return attendanceService.findAllMyLectureAttendanceList(email, lectureId);
     }
 
-    // 모든 학생 수업 출석 확인 - 강의자
+    // 학생 수업 출석 조회 - 강의자
+    @GetMapping("/lecture/{lectureId}/lesson/{lessonId}/attendances")
+    public ResponseDto findAllLessonAttendanceList(@PathVariable Long lectureId, @PathVariable Long lessonId) throws Exception {
+        return attendanceService.findAllLessonAttendanceList(lectureId, lessonId);
+    }
+
 
     // 모든 학생 수업 출석 수정 - 강의자
 
