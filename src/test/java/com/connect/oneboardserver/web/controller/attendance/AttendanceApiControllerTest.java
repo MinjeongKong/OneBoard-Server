@@ -11,6 +11,7 @@ import com.connect.oneboardserver.domain.login.MemberRepository;
 import com.connect.oneboardserver.domain.relation.MemberLecture;
 import com.connect.oneboardserver.domain.relation.MemberLectureRepository;
 import com.connect.oneboardserver.web.dto.ResponseDto;
+import com.connect.oneboardserver.web.dto.attendance.AttendanceDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceFindOfStuResponseDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateAllRequestDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateRequestDto;
@@ -75,7 +76,7 @@ public class AttendanceApiControllerTest {
 
     @Test
     @DisplayName("과목 전체 출석 조회 요청")
-    void requestFindAllAttendance() {
+    void requestFindAllLectureAttendanceList() {
         // given
         List<Member> expectedMemberList = new ArrayList<>();
         expectedMemberList.add(createMember("S"));
@@ -113,14 +114,18 @@ public class AttendanceApiControllerTest {
                     = mapper.convertValue(responseDtoList.get(i), AttendanceFindOfStuResponseDto.class);
 
             assertThat(responseDto.getStudentId()).isEqualTo(expectedMemberList.get(i).getId());
-            assertThat(responseDto.getAttendanceList().get(i).getLessonId()).isEqualTo(expectedLessonList.get(i).getId());
-            assertThat(responseDto.getAttendanceList().get(i).getStatus()).isEqualTo(0);
+
+            List<AttendanceDto> attendanceList = responseDto.getAttendanceList();
+            for(int j = 0; j < attendanceList.size(); j++) {
+                assertThat(attendanceList.get(j).getLessonId()).isEqualTo(expectedLessonList.get(j).getId());
+                assertThat(attendanceList.get(j).getStatus()).isEqualTo(0);
+            }
         }
     }
 
     @Test
     @DisplayName("과목 전체 출석 수정 요청")
-    void requestUpdateAllAttendance() {
+    void requestUpdateAllLectureAttendanceList() {
         // given
         Member expectedMember = createMember("S");
         Lecture lecture = createLecture();
