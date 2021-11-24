@@ -2,6 +2,8 @@ package com.connect.oneboardserver.service.assignment;
 
 import com.connect.oneboardserver.domain.assignment.Assignment;
 import com.connect.oneboardserver.domain.assignment.AssignmentRepository;
+import com.connect.oneboardserver.domain.assignment.Submit;
+import com.connect.oneboardserver.domain.assignment.SubmitRepository;
 import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;
 import com.connect.oneboardserver.service.storage.StorageService;
@@ -25,6 +27,7 @@ public class AssignmentService {
     @Qualifier("FileStorageService")
     private final StorageService storageService;
     private final AssignmentRepository assignmentRepository;
+    private final SubmitRepository submitRepository;
     private final LectureRepository lectureRepository;
 
     @Transactional
@@ -116,6 +119,7 @@ public class AssignmentService {
         if (!assignment.getLecture().getId().equals(lectureId)) {
             return new ResponseDto("FAIL");
         } else {
+            submitRepository.deleteAllByAssignmentId(assignmentId);
             assignmentRepository.deleteById(assignmentId);
             return new ResponseDto("SUCCESS");
         }
