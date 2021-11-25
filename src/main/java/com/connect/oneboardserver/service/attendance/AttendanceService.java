@@ -186,4 +186,28 @@ public class AttendanceService {
         return new ResponseDto("SUCCESS", responseDtoList);
     }
 
+    @Transactional
+    public ResponseDto updateAllLessonAttendanceList(Long lectureId, Long lessonId, AttendanceUpdateAllRequestDto requestDto) throws Exception {
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 수업이 없습니다 : id = " + lessonId));
+        if(!lesson.getLecture().getId().equals(lectureId)) {
+            throw new IllegalArgumentException("올바른 과목 id와 수업 id가 아닙니다 : lecture id = " + lectureId + " lesson id = " + lessonId);
+        }
+
+        for(AttendanceUpdateRequestDto updateData : requestDto.getUpdateDataList()) {
+            if(!updateData.getLessonId().equals(lessonId)) {
+                throw new Exception("수정하려는 수업 id가 올바르지 않습니다 : lesson id = " + lessonId);
+            }
+            List<Attendance> attendances
+                    = attendanceRepository.findAllByMemberIdAndLessonId(updateData.getStudentId(), updateData.getLessonId());
+            if(attendances.size() != 1) {
+                // 동일한 학생 & 수업에 대해 출석 데이터가 없거나 2개 이상인 경우
+                throw new Exception("출석 데이터 오류");
+            }
+            attendances.get(0).updateStatus(updateData.getStatus());
+        }
+
+        return new ResponseDto("SUCCESS");
+    }
+
 }

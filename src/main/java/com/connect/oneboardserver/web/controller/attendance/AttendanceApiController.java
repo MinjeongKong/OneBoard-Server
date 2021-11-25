@@ -44,6 +44,12 @@ public class AttendanceApiController {
         return attendanceService.findAllLessonAttendanceList(lectureId, lessonId);
     }
 
+    // 학생 수업 출석 수정 - 강의자
+    @PutMapping("/lecture/{lectureId}/lesson/{lessonId}/attendances")
+    public ResponseDto updateAllLessonAttendanceList(@PathVariable Long lectureId, @PathVariable Long lessonId,
+                                                     @RequestBody AttendanceUpdateAllRequestDto requestDto) throws Exception {
+        return attendanceService.updateAllLessonAttendanceList(lectureId, lessonId, requestDto);
+    }
 
     // 모든 학생 수업 출석 수정 - 강의자
 
