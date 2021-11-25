@@ -10,10 +10,7 @@ import com.connect.oneboardserver.domain.login.Member;
 import com.connect.oneboardserver.domain.relation.MemberLecture;
 import com.connect.oneboardserver.domain.relation.MemberLectureRepository;
 import com.connect.oneboardserver.web.dto.ResponseDto;
-import com.connect.oneboardserver.web.dto.attendance.AttendanceFindOfStuResponseDto;
-import com.connect.oneboardserver.web.dto.attendance.AttendanceDto;
-import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateAllRequestDto;
-import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateRequestDto;
+import com.connect.oneboardserver.web.dto.attendance.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -208,6 +205,30 @@ public class AttendanceService {
         }
 
         return new ResponseDto("SUCCESS");
+    }
+
+    public ResponseDto findMyLessonAttendance(String email, Long lectureId, Long lessonId) throws Exception {
+        Member member = (Member) userDetailsService.loadUserByUsername(email);
+
+        // parameter validation
+        if(memberLectureRepository.findByMemberIdAndLectureId(member.getId(), lectureId) == null) {
+            throw new IllegalArgumentException("과목에 해당 학생이 등록되어 있지 않습니다");
+        }
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 수업이 없습니다 : id = " + lessonId));
+        if(!lesson.getLecture().getId().equals(lectureId)) {
+            throw new IllegalArgumentException("올바른 과목 id와 수업 id가 아닙니다 : lecture id = " + lectureId + " lesson id = " + lessonId);
+        }
+
+        List<Attendance> attendances = attendanceRepository.findAllByMemberIdAndLessonId(member.getId(), lessonId);
+        if(attendances.size() != 1) {
+            // 동일한 학생 & 수업에 대해 출석 데이터가 없거나 2개 이상인 경우
+            throw new Exception("출석 데이터 오류");
+        }
+
+        AttendanceFindMyLessonResponseDto responseDto = AttendanceFindMyLessonResponseDto.toResponseDto(attendances.get(0));
+
+        return new ResponseDto("SUCCESS", responseDto);
     }
 
 }

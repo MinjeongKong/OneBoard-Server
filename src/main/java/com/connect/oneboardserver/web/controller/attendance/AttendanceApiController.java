@@ -51,9 +51,16 @@ public class AttendanceApiController {
         return attendanceService.updateAllLessonAttendanceList(lectureId, lessonId, requestDto);
     }
 
-    // 모든 학생 수업 출석 수정 - 강의자
+    // 본인 수업 출석 조회 - 학생
+    @GetMapping("/lecture/{lectureId}/lesson/{lessonId}/attendance/my")
+    public ResponseDto findMyLessonAttendance(@PathVariable Long lectureId, @PathVariable Long lessonId,
+                                              HttpServletRequest request) throws Exception {
+        String token = jwtTokenProvider.resolveToken(request);
+        String email = jwtTokenProvider.getUserPk(token);
 
-    // 학생 본인 수업 출석 확인 - 학생
+        return attendanceService.findMyLessonAttendance(email, lectureId, lessonId);
+    }
+
 
     // 실시간 수업 출석 요청 - 강의자
 
