@@ -3,7 +3,9 @@ package com.connect.oneboardserver.web.dto.lecture.lesson;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
 @Getter
 @NoArgsConstructor
 public class LessonUpdateRequestDto {
