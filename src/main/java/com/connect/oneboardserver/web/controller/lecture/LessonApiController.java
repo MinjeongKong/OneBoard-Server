@@ -44,10 +44,16 @@ public class LessonApiController {
         return lessonService.deleteLesson(lectureId, lessonId);
     }
     // 수업 수정
-    @PutMapping("/lecture/{lectureId}/lesson/{lessonId}")
+    @PutMapping("/lecture/{lectureId}/lesson1/{lessonId}")
     public ResponseDto updateLesson(@PathVariable Long lectureId, @PathVariable Long lessonId,
                                     @RequestBody LessonUpdateRequestDto requestDto) {
         return lessonService.updateLesson(lectureId, lessonId, requestDto);
+    }
+    // 수업 수정
+    @PutMapping("/lecture/{lectureId}/lesson/{lessonId}")
+    public ResponseDto updateLessonFile(@PathVariable Long lectureId, @PathVariable Long lessonId,
+                                    @ModelAttribute LessonUpdateRequestDto requestDto, @RequestParam(value = "file", required = false) MultipartFile file) throws Exception {
+        return lessonService.updateLessonFile(lectureId, lessonId, requestDto, file);
     }
 
     // 수업 생성 시 디폴트 정보 요청

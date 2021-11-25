@@ -224,6 +224,53 @@ public class LessonService {
         }
     }
 
+    @Transactional
+    public ResponseDto updateLessonFile(Long lectureId, Long lessonId, LessonUpdateRequestDto requestDto, MultipartFile file) throws Exception {
+        Lesson lesson = null;
+        String uploadedFile = null;
+
+        try {
+            lesson = lessonRepository.findById(lessonId)
+                    .orElseThrow(Exception::new);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseDto("FAIL");
+        }
+        if (!lesson.getLecture().getId().equals(lectureId)) {
+            return new ResponseDto("FAIL");
+        } else {
+            if (lesson.getNoteUrl() != null) {storageService.delete(lesson.getNoteUrl());}
+
+            Integer Type = requestDto.getType();
+            if (Type == 0) {
+                requestDto.setRoom(null);
+                requestDto.setMeetingId(null);
+                lessonUpdate(requestDto, lesson);
+            } else if (Type == 1) {
+                requestDto.setRoom(null);
+                requestDto.setVideoUrl(null);
+                lessonUpdate(requestDto, lesson);
+            } else if (Type == 2) {
+                requestDto.setVideoUrl(null);
+                requestDto.setMeetingId(null);
+                lessonUpdate(requestDto, lesson);
+            } else {
+                return new ResponseDto("FAIL");
+            }
+            LessonUpdateResponseDto responseDto = LessonUpdateResponseDto.builder()
+                    .lessonId(lesson.getId())
+                    .build();
+
+            if (file != null) {
+                String path = "/lecture_" + lectureId + "/lesson_" + lessonId + "/note";
+                uploadedFile = storageService.store(path, file);
+
+                lesson.updateNoteUrl(uploadedFile);
+            }
+            return new ResponseDto("SUCCESS", responseDto);
+        }
+    }
+
     public ResponseDto findLessonDefaultInfo(Long lectureId) {
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(()-> new IllegalArgumentException("해당 과목이 없습니다 : id = " + lectureId));
@@ -292,5 +339,10 @@ public class LessonService {
         }
 
         return nextLessonDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    private void lessonUpdate(LessonUpdateRequestDto requestDto, Lesson lesson) {
+        lesson.update(requestDto.getTitle(), requestDto.getDate(), requestDto.getNoteUrl(), requestDto.getType(),
+                requestDto.getRoom(), requestDto.getMeetingId(), requestDto.getVideoUrl());
     }
 }
