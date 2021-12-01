@@ -30,19 +30,19 @@ public class Lesson {
     private String noteUrl;
 
     @Column(nullable = false)
-    private Integer type;
+    private Integer type;   // 0 : 녹화, 1 : 비대면, 2 : 대면
+
+    @Column(length = 128)
+    private String videoUrl;
+
+    @OneToOne
+    private LiveMeeting liveMeeting;
 
     @Column(length = 30)
     private String room;
 
     @Column(length = 128)
-    private String meetingId;
-
-    @OneToOne
-    private LiveMeeting liveMeeting;
-
-    @Column(length = 128)
-    private String videoUrl;
+    private String meetingId;   // 삭제 예정
 
 //    @Builder
 //    public Lesson(Lecture lecture, String title, String date, String noteUrl, Integer type, String room, String meetingId, String videoUrl) {
@@ -58,32 +58,51 @@ public class Lesson {
 
     @Builder
     public Lesson(Lecture lecture, String title, String date, String noteUrl, Integer type,
-                  String room, String meetingId, LiveMeeting liveMeeting, String videoUrl) {
+                  String videoUrl, LiveMeeting liveMeeting, String room, String meetingId) {
         this.lecture = lecture;
         this.title = title;
         this.date = date;
         this.noteUrl = noteUrl;
         this.type = type;
+        this.videoUrl = videoUrl;
+        this.liveMeeting = liveMeeting;
         this.room = room;
         this.meetingId = meetingId;
-        this.liveMeeting = liveMeeting;
-        this.videoUrl = videoUrl;
     }
 
     public void setLecture(Lecture lecture) {
         this.lecture = lecture;
     }
 
-    public void update(String title, String date, String noteUrl, Integer type, String room, String meetingId, String videoUrl) {
+    public void update(String title, String date, String noteUrl, Integer type, String videoUrl, String meetingId, String room) {
         this.title = title;
         this.date = date;
         this.noteUrl = noteUrl;
         this.type = type;
-        this.room = room;
-        this.meetingId = meetingId;
         this.videoUrl = videoUrl;
+        this.meetingId = meetingId;
+        this.room = room;
     }
+
     public void updateNoteUrl(String noteUrl) {
         this.noteUrl = noteUrl;
+    }
+
+    public void setRecordingLesson(String videoUrl) {
+        this.videoUrl = videoUrl;
+        this.meetingId = null;
+        this.room = null;
+    }
+
+    public void setNonFaceToFaceLesson(String meetingId) {
+        this.videoUrl = null;
+        this.meetingId = meetingId;
+        this.room = null;
+    }
+
+    public void setFaceToFaceLesson(String room) {
+        this.videoUrl = null;
+        this.meetingId = null;
+        this.room = room;
     }
 }

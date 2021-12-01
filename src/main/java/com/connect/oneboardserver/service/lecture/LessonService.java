@@ -102,61 +102,45 @@ public class LessonService {
 
     @Transactional
     public ResponseDto createLessonFile(Long lectureId, LessonCreateRequestDto requestDto, MultipartFile file) throws Exception {
-        Lecture lecture = null;
-        String uploadedFile = null;
-        Lesson savedLesson = null;
+        Lecture lecture = lectureRepository.findById(lectureId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 과목이 없습니다 : id = " + lectureId));
 
-        try {
-            lecture = lectureRepository.findById(lectureId).orElseThrow(Exception::new);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseDto("FAIL");
+        Lesson lesson = Lesson.builder()
+                .lecture(lecture)
+                .title(requestDto.getTitle())
+                .date(requestDto.getDate())
+                .type(requestDto.getType())
+                .build();
+
+        switch(lesson.getType()) {
+            case 0 :
+                lesson.setRecordingLesson(requestDto.getVideoUrl());
+                break;
+            case 1 :
+                lesson.setNonFaceToFaceLesson(requestDto.getMeetingId());
+                break;
+            case 2 :
+                lesson.setFaceToFaceLesson(requestDto.getRoom());
+                break;
+            default :
+                throw new IllegalArgumentException("유효한 수업 타입이 아닙니다 : type = " + lesson.getType());
         }
-        Integer Type = requestDto.getType();
-        if (Type == 0) {
-            savedLesson = lessonRepository.save(Lesson.builder()
-                    .lecture((lecture))
-                    .title(requestDto.getTitle())
-                    .date(requestDto.getDate())
-                    .noteUrl(requestDto.getNoteUrl())
-                    .type(requestDto.getType())
-                    .videoUrl(requestDto.getVideoUrl())
-                    .build());
-        } else if (Type == 1) {
-            savedLesson = lessonRepository.save(Lesson.builder()
-                    .lecture((lecture))
-                    .title(requestDto.getTitle())
-                    .date(requestDto.getDate())
-                    .noteUrl(requestDto.getNoteUrl())
-                    .type(requestDto.getType())
-                    .meetingId(requestDto.getMeetingId())
-                    .build());
-        } else if (Type == 2) {
-            savedLesson = lessonRepository.save(Lesson.builder()
-                    .lecture((lecture))
-                    .title(requestDto.getTitle())
-                    .date(requestDto.getDate())
-                    .noteUrl(requestDto.getNoteUrl())
-                    .type(requestDto.getType())
-                    .room(requestDto.getRoom())
-                    .build());
-            } else {
-            return new ResponseDto("FAIL");
+
+        Lesson savedLesson = lessonRepository.save(lesson);
+
+        if(file != null) {
+            String path = "/lecture_" + lectureId + "/lesson_" + savedLesson.getId() + "/note";
+            String uploadedFilePath = storageService.store(path, file);
+
+            savedLesson.updateNoteUrl(uploadedFilePath);
         }
-        if (!savedLesson.getLecture().getId().equals(lectureId)) {
-            return new ResponseDto("FAIL");
-        }
+
         attendanceService.initLessonAttendance(lecture.getId(), savedLesson);
+
         LessonCreateResponseDto responseDto = LessonCreateResponseDto.builder()
                 .lessonId(savedLesson.getId())
                 .build();
 
-        if (file != null) {
-            String path = "/lecture_" + lectureId + "/lesson_" + savedLesson.getId() + "/note";
-            uploadedFile = storageService.store(path, file);
-
-            savedLesson.updateNoteUrl(uploadedFile);
-        }
         return new ResponseDto("SUCCESS", responseDto);
     }
 
@@ -216,7 +200,7 @@ public class LessonService {
             return new ResponseDto("FAIL");
         } else {
             lesson.update(requestDto.getTitle(), requestDto.getDate(), requestDto.getNoteUrl(), requestDto.getType(),
-                    requestDto.getRoom(), requestDto.getMeetingId(), requestDto.getVideoUrl());
+                    requestDto.getVideoUrl(), requestDto.getMeetingId(), requestDto.getRoom());
             LessonUpdateResponseDto responseDto = LessonUpdateResponseDto.builder()
                     .lessonId(lesson.getId())
                     .build();

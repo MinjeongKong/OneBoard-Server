@@ -38,17 +38,20 @@ public class LessonApiController {
     public ResponseDto findLesson(@PathVariable Long lectureId, @PathVariable Long lessonId) {
         return lessonService.findLesson(lectureId, lessonId);
     }
+
     // 수업 삭제
     @DeleteMapping("/lecture/{lectureId}/lesson/{lessonId}")
     public ResponseDto deleteLesson(@PathVariable Long lectureId, @PathVariable Long lessonId) throws IOException {
         return lessonService.deleteLesson(lectureId, lessonId);
     }
+
     // 수업 수정
     @PutMapping("/lecture/{lectureId}/lesson1/{lessonId}")
     public ResponseDto updateLesson(@PathVariable Long lectureId, @PathVariable Long lessonId,
                                     @RequestBody LessonUpdateRequestDto requestDto) {
         return lessonService.updateLesson(lectureId, lessonId, requestDto);
     }
+
     // 수업 수정
     @PutMapping("/lecture/{lectureId}/lesson/{lessonId}")
     public ResponseDto updateLessonFile(@PathVariable Long lectureId, @PathVariable Long lessonId,
