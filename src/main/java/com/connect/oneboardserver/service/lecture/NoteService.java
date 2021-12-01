@@ -24,7 +24,7 @@ public class NoteService {
 
     @Transactional
     public ResponseDto uploadNote(Long lectureId, Long lessonId, MultipartFile file) {
-        if (file.isEmpty()) {
+        if (file == null) {
             return new ResponseDto("FAIL");
         }
         Lesson lesson = null;
@@ -100,7 +100,6 @@ public class NoteService {
                     .body(resource);
         } catch (Exception e) {
             e.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resource);
             throw new Exception("Fail to load lesson note : lessonId = " + lessonId);
         }
     }

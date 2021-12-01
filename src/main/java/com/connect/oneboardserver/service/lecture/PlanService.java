@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +25,7 @@ public class PlanService {
 
     @Transactional
     public ResponseDto uploadLecturePlan(Long lectureId, MultipartFile file) {
-        if(file.isEmpty()) {
+        if(file == null) {
             return new ResponseDto("FAIL");
         }
 
@@ -97,7 +96,6 @@ public class PlanService {
                     .body(resource);
         } catch (Exception e) {
             e.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resource);
             throw new Exception("Fail to load lecture plan : lectureId = " + lectureId);
         }
     }
