@@ -27,7 +27,7 @@ public class AssignmentFindResponseDto {
         this.lectureTitle = entity.getLecture().getTitle();
         this.title = entity.getTitle();
         this.content = entity.getContent();
-        this.fileUrl = entity.getFileUrl();
+        this.fileUrl = entity.getLoadUrl();
         this.startDt = entity.getStartDt();
         this.endDt = entity.getEndDt();
         this.exposeDt = entity.getExposeDt();

@@ -11,6 +11,9 @@ import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.assignment.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -59,8 +62,10 @@ public class AssignmentService {
         if (file != null) {
             String path = "/lecture_" + lectureId + "/assignment_" + assignment.getId();
             uploadedFile = storageService.store(path, file);
-
             assignment.setFileUrl(uploadedFile);
+
+            String loadUrl = "/lecture/"+lectureId+"/assignment/"+assignment.getId()+"/file";
+            assignment.setLoadUrl(loadUrl);
         }
 
         return new ResponseDto("SUCCESS", responseDto);
@@ -102,8 +107,12 @@ public class AssignmentService {
             if (file != null) {
                 String path = "/lecture_" + lectureId + "/assignment_" + assignment.getId();
                 String uploadedFile = storageService.store(path, file);
-
                 assignment.setFileUrl(uploadedFile);
+
+                String loadUrl = "/lecture/"+lectureId+"/assignment/"+assignment.getId()+"/file";
+                assignment.setLoadUrl(loadUrl);
+            } else {
+                assignment.setLoadUrl(null);
             }
             AssignmentResponseDto responseDto = new AssignmentResponseDto(assignment);
             return new ResponseDto("SUCCESS", responseDto);
@@ -159,5 +168,28 @@ public class AssignmentService {
         }
 
         return new ResponseDto("SUCCESS", assignmentFindResponseDtoList);
+    }
+
+    public ResponseEntity<Resource> loadAssignmentFile(Long lectureId, Long assignmentId) throws Exception{
+
+        Assignment assignment = assignmentRepository.findById(assignmentId)
+                .orElseThrow(()->new IllegalArgumentException("해당 과제가 없습니다. id="+assignmentId));
+
+        if (!assignment.getLecture().getId().equals(lectureId)) {
+            throw  new Exception("Wrong api path");
+        }
+        Resource resource = null;
+        try {
+            String filePath = assignment.getFileUrl();
+            resource = storageService.load(filePath);
+            String contentDisposition = "attachment; filename=\"" +
+                    assignment.getTitle() + filePath.substring(filePath.lastIndexOf(".")) + "\"";
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                    .body(resource);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Fail to load assignment file : assignmentId = " + assignmentId);
+        }
     }
 }

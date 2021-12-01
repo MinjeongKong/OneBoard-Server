@@ -28,6 +28,9 @@ public class Assignment extends BaseTimeEntity {
     @Column(length = 128)
     private String fileUrl;
 
+    @Column(length = 128)
+    private String loadUrl;
+
     @Column(nullable = false)
     private String startDt;
 
@@ -67,5 +70,9 @@ public class Assignment extends BaseTimeEntity {
 
     public void setFileUrl(String fileUrl) {
         this.fileUrl = fileUrl;
+    }
+
+    public void setLoadUrl(String loadUrl) {
+        this.loadUrl = loadUrl;
     }
 }

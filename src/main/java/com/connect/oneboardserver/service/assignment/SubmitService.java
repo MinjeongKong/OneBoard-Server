@@ -11,6 +11,9 @@ import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.assignment.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -79,8 +82,10 @@ public class SubmitService {
             if (file != null) {
                 String path = "/lecture_" + lectureId + "/assignment_" + assignment.getId() + "/submit_" + student.getStudentNumber();
                 uploadedFile = storageService.store(path, file);
-
                 submit.setFileUrl(uploadedFile);
+
+                String loadUrl = "/lecture/" + lectureId + "/assignment/" + assignment.getId() + "/submit/" + submit.getId() + "/file";
+                submit.setLoadUrl(loadUrl);
             }
 
             return new ResponseDto("SUCCESS", responseDto);
@@ -196,11 +201,40 @@ public class SubmitService {
             if (file != null) {
                 String path = "/lecture_" + lectureId + "/assignment_" + assignment.getId() + "/submit_" + student.getStudentNumber();
                 String uploadedFile = storageService.store(path, file);
-
                 submit.setFileUrl(uploadedFile);
+
+                String loadUrl = "/lecture/" + lectureId + "/assignment/" + assignment.getId() + "/submit/" + submit.getId() + "/file";
+                submit.setLoadUrl(loadUrl);
+            } else {
+                submit.setLoadUrl(null);
             }
             SubmitResponseDto responseDto = new SubmitResponseDto(submit);
             return new ResponseDto("SUCCESS", responseDto);
+        }
+    }
+
+    public ResponseEntity<Resource> loadSubmitFile(Long lectureId, Long assignmentId, Long submitId) throws Exception{
+        Assignment assignment = assignmentRepository.findById(assignmentId)
+                .orElseThrow(()->new IllegalArgumentException("해당 과제가 없습니다. id="+assignmentId));
+
+        Submit submit = submitRepository.findById(submitId)
+                .orElseThrow(()->new IllegalArgumentException("해당 제출물이 없습니다. id="+submitId));
+
+        if (!(submit.getAssignment().getId().equals(assignmentId)&&submit.getAssignment().getLecture().getId().equals(lectureId))) {
+            throw new Exception("Wrong api path");
+        }
+        Resource resource = null;
+        try {
+            String filePath = submit.getFileUrl();
+            resource = storageService.load(filePath);
+            String contentDisposition = "attachment; filename=\"" + assignment.getTitle() + "_" +
+                    submit.getStudent().getStudentNumber() + filePath.substring(filePath.lastIndexOf(".")) + "\"";
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                    .body(resource);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Fail to load submit file : submitId = " + submitId);
         }
     }
 }

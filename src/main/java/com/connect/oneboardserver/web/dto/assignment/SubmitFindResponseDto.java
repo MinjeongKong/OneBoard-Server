@@ -29,7 +29,7 @@ public class SubmitFindResponseDto {
         this.userName = entity.getStudent().getName();
         this.studentNumber = entity.getStudent().getStudentNumber();
         this.content = entity.getContent();
-        this.fileUrl = entity.getFileUrl();
+        this.fileUrl = entity.getLoadUrl();
         this.score = entity.getScore();
         this.feedback = entity.getFeedback();
         this.createdDt = entity.getCreatedDt();
