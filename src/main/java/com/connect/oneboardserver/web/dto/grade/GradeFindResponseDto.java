@@ -1,8 +1,7 @@
 package com.connect.oneboardserver.web.dto.grade;
 
 import com.connect.oneboardserver.domain.grade.Grade;
-import com.connect.oneboardserver.web.dto.attendance.AttendFindForStuDto;
-import lombok.Builder;
+import com.connect.oneboardserver.web.dto.attendance.AttendanceDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,9 +22,9 @@ public class GradeFindResponseDto {
     private String result;
 
     private List<SubmitScoreResponseDto> submitList;
-    private List<AttendFindForStuDto> attendanceList;
+    private List<AttendanceDto> attendanceList;
 
-    public GradeFindResponseDto(Grade entity, List<SubmitScoreResponseDto> submitList, List<AttendFindForStuDto> attendanceList) {
+    public GradeFindResponseDto(Grade entity, List<SubmitScoreResponseDto> submitList, List<AttendanceDto> attendanceList) {
         this.lectureId = entity.getLecture().getId();
         this.lectureTitle = entity.getLecture().getTitle();
         this.userId = entity.getStudent().getId();

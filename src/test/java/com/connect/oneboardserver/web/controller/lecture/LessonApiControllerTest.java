@@ -167,7 +167,7 @@ public class LessonApiControllerTest {
                 .videoUrl(updateVideoUrl)
                 .build();
 
-        String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson/{lessonId}";
+        String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson1/{lessonId}";
 
         HttpEntity<LessonUpdateRequestDto> requestEntity = new HttpEntity<>(requestDto);
 

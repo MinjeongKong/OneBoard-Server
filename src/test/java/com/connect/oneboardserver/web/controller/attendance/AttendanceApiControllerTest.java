@@ -11,7 +11,8 @@ import com.connect.oneboardserver.domain.login.MemberRepository;
 import com.connect.oneboardserver.domain.relation.MemberLecture;
 import com.connect.oneboardserver.domain.relation.MemberLectureRepository;
 import com.connect.oneboardserver.web.dto.ResponseDto;
-import com.connect.oneboardserver.web.dto.attendance.AttendFindAllForStuResponseDto;
+import com.connect.oneboardserver.web.dto.attendance.AttendanceDto;
+import com.connect.oneboardserver.web.dto.attendance.AttendanceFindOfStuResponseDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateAllRequestDto;
 import com.connect.oneboardserver.web.dto.attendance.AttendanceUpdateRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -75,7 +76,7 @@ public class AttendanceApiControllerTest {
 
     @Test
     @DisplayName("과목 전체 출석 조회 요청")
-    void requestFindAllAttendance() {
+    void requestFindAllLectureAttendanceList() {
         // given
         List<Member> expectedMemberList = new ArrayList<>();
         expectedMemberList.add(createMember("S"));
@@ -102,25 +103,29 @@ public class AttendanceApiControllerTest {
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        List<AttendFindAllForStuResponseDto> responseDtoList
-                = (List<AttendFindAllForStuResponseDto>) responseEntity.getBody().getData();
+        List<AttendanceFindOfStuResponseDto> responseDtoList
+                = (List<AttendanceFindOfStuResponseDto>) responseEntity.getBody().getData();
 
         // responseDtoList.get(i): LinkedHashMap
         ObjectMapper mapper = new ObjectMapper();
 
         for(int i = 0; i < responseDtoList.size(); i++) {
-            AttendFindAllForStuResponseDto responseDto
-                    = mapper.convertValue(responseDtoList.get(i), AttendFindAllForStuResponseDto.class);
+            AttendanceFindOfStuResponseDto responseDto
+                    = mapper.convertValue(responseDtoList.get(i), AttendanceFindOfStuResponseDto.class);
 
             assertThat(responseDto.getStudentId()).isEqualTo(expectedMemberList.get(i).getId());
-            assertThat(responseDto.getAttendanceList().get(i).getLessonId()).isEqualTo(expectedLessonList.get(i).getId());
-            assertThat(responseDto.getAttendanceList().get(i).getStatus()).isEqualTo(0);
+
+            List<AttendanceDto> attendanceList = responseDto.getAttendanceList();
+            for(int j = 0; j < attendanceList.size(); j++) {
+                assertThat(attendanceList.get(j).getLessonId()).isEqualTo(expectedLessonList.get(j).getId());
+                assertThat(attendanceList.get(j).getStatus()).isEqualTo(0);
+            }
         }
     }
 
     @Test
     @DisplayName("과목 전체 출석 수정 요청")
-    void requestUpdateAllAttendance() {
+    void requestUpdateAllLectureAttendanceList() {
         // given
         Member expectedMember = createMember("S");
         Lecture lecture = createLecture();
@@ -154,6 +159,48 @@ public class AttendanceApiControllerTest {
                 = attendanceRepository.findAllByMemberIdAndLessonId(expectedMember.getId(), expectedLesson.getId());
         assertThat(actualAttendances.size()).isEqualTo(1);
         assertThat(actualAttendances.get(0).getStatus()).isEqualTo(expectedStatus);
+    }
+
+    @Test
+    @DisplayName("학생 수업 출석 조회 요청")
+    void requestFindAllLessonAttendanceList() {
+        // given
+        List<Member> expectedMemberList = new ArrayList<>();
+        expectedMemberList.add(createMember("S"));
+        expectedMemberList.add(createMember("S"));
+        Lecture expectedLecture = createLecture();
+        for(Member member : expectedMemberList) {
+            registerMemberLecture(member, expectedLecture);
+        }
+
+        Lesson expectedLesson = createLesson(expectedLecture);
+        for(Member member : expectedMemberList) {
+            initAttendance(member, expectedLesson);
+        }
+
+        String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson/{lessonId}/attendances";
+
+        // when
+        ResponseEntity<ResponseDto> responseEntity
+                = restTemplate.getForEntity(url, ResponseDto.class, expectedLecture.getId(), expectedLesson.getId());
+
+        // then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        List<AttendanceFindOfStuResponseDto> responseDtoList
+                = (List<AttendanceFindOfStuResponseDto>) responseEntity.getBody().getData();
+
+        // responseDtoList.get(i): LinkedHashMap
+        ObjectMapper mapper = new ObjectMapper();
+
+        for(int i = 0; i < responseDtoList.size(); i++) {
+            AttendanceFindOfStuResponseDto responseDto
+                    = mapper.convertValue(responseDtoList.get(i), AttendanceFindOfStuResponseDto.class);
+
+            assertThat(responseDto.getStudentId()).isEqualTo(expectedMemberList.get(i).getId());
+            assertThat(responseDto.getAttendanceList().get(0).getLessonId()).isEqualTo(expectedLesson.getId());
+            assertThat(responseDto.getAttendanceList().get(0).getStatus()).isEqualTo(0);
+        }
     }
 
     private Member createMember(String type) {

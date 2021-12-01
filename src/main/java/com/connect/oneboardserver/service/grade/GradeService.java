@@ -21,7 +21,7 @@ import com.connect.oneboardserver.domain.relation.GradeRatioLectureRepository;
 import com.connect.oneboardserver.domain.relation.MemberLecture;
 import com.connect.oneboardserver.domain.relation.MemberLectureRepository;
 import com.connect.oneboardserver.web.dto.ResponseDto;
-import com.connect.oneboardserver.web.dto.attendance.AttendFindForStuDto;
+import com.connect.oneboardserver.web.dto.attendance.AttendanceDto;
 import com.connect.oneboardserver.web.dto.grade.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -137,10 +137,11 @@ public class GradeService {
             for (int a = 0; a < assignmentList.size(); a++) {
                 Long assignmentId = assignmentList.get(a).getId();
                 Submit submit = submitRepository.findByStudentIdAndAssignmentId(studentId, assignmentId);
-                try {
-                    submitScore+=submit.getScore();
-                } catch (NullPointerException e) {}
-
+                if (submit != null) {
+                    if (submit.getScore() != null) {
+                        submitScore += submit.getScore();
+                    }
+                }
             }
 
             for (int t = 0; t < lessonList.size(); t++) {
@@ -176,21 +177,21 @@ public class GradeService {
         }
 
         List<Lesson> lessonList = lessonRepository.findAllByLectureId(lecture.getId());
-        List<AttendFindForStuDto> attendFindForStuDtoList = new ArrayList<>();
+        List<AttendanceDto> attendanceDtoList = new ArrayList<>();
 
         for(Lesson lesson : lessonList) {
             Attendance attendances = attendanceRepository.findByMemberIdAndLessonId(student.getId(), lesson.getId());
             if(attendances != null) {
-                AttendFindForStuDto attendFindForStuDto = AttendFindForStuDto.builder()
+                AttendanceDto attendanceDto = AttendanceDto.builder()
                         .lessonId(lesson.getId())
                         .lessonDate(lesson.getDate())
                         .status(attendances.getStatus())
                         .build();
-                attendFindForStuDtoList.add(attendFindForStuDto);
+                attendanceDtoList.add(attendanceDto);
             }
         }
 
-        GradeFindResponseDto responseDto = new GradeFindResponseDto(grade, submitScoreResponseDtoList, attendFindForStuDtoList);
+        GradeFindResponseDto responseDto = new GradeFindResponseDto(grade, submitScoreResponseDtoList, attendanceDtoList);
         return responseDto;
     }
 
