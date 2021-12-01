@@ -1,6 +1,7 @@
 package com.connect.oneboardserver.domain.lecture.lesson;
 
 import com.connect.oneboardserver.domain.lecture.Lecture;
+import com.connect.oneboardserver.domain.livemeeting.LiveMeeting;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,11 +38,27 @@ public class Lesson {
     @Column(length = 128)
     private String meetingId;
 
+    @OneToOne
+    private LiveMeeting liveMeeting;
+
     @Column(length = 128)
     private String videoUrl;
 
+//    @Builder
+//    public Lesson(Lecture lecture, String title, String date, String noteUrl, Integer type, String room, String meetingId, String videoUrl) {
+//        this.lecture = lecture;
+//        this.title = title;
+//        this.date = date;
+//        this.noteUrl = noteUrl;
+//        this.type = type;
+//        this.room = room;
+//        this.meetingId = meetingId;
+//        this.videoUrl = videoUrl;
+//    }
+
     @Builder
-    public Lesson(Lecture lecture, String title, String date, String noteUrl, Integer type, String room, String meetingId, String videoUrl) {
+    public Lesson(Lecture lecture, String title, String date, String noteUrl, Integer type,
+                  String room, String meetingId, LiveMeeting liveMeeting, String videoUrl) {
         this.lecture = lecture;
         this.title = title;
         this.date = date;
@@ -49,6 +66,7 @@ public class Lesson {
         this.type = type;
         this.room = room;
         this.meetingId = meetingId;
+        this.liveMeeting = liveMeeting;
         this.videoUrl = videoUrl;
     }
 

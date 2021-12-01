@@ -1,6 +1,5 @@
 package com.connect.oneboardserver.domain.livemeeting;
 
-import com.connect.oneboardserver.domain.lecture.lesson.Lesson;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,9 +15,6 @@ public class LiveMeeting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    private Lesson lesson;
-
     @Column(length = 30, nullable = false)
     private String session;
 
@@ -29,8 +25,7 @@ public class LiveMeeting {
     private String endDt;
 
     @Builder
-    public LiveMeeting(Lesson lesson, String session, String startDt, String endDt) {
-        this.lesson = lesson;
+    public LiveMeeting(String session, String startDt, String endDt) {
         this.session = session;
         this.startDt = startDt;
         this.endDt = endDt;
