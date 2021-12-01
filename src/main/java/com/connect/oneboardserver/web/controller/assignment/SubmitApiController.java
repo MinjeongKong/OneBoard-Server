@@ -6,6 +6,8 @@ import com.connect.oneboardserver.web.dto.assignment.SubmitCheckRequestDto;
 import com.connect.oneboardserver.web.dto.assignment.SubmitCreateRequestDto;
 import com.connect.oneboardserver.web.dto.assignment.SubmitUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -72,6 +74,13 @@ public class SubmitApiController {
     @GetMapping("/lecture/{lectureId}/assignment/{assignmentId}/submits")
     public ResponseDto findSubmitList(@PathVariable Long lectureId, @PathVariable Long assignmentId) {
         return submitService.findSubmitList(lectureId, assignmentId);
+    }
+
+    //과제 제출물 파일 로그
+    @GetMapping("/lecture/{lectureId}/assignment/{assignmentId}/submit/{submitId}/file")
+    public ResponseEntity<Resource> loadSubmitFile(@PathVariable Long lectureId, @PathVariable Long assignmentId,
+                                                   @PathVariable Long submitId) throws Exception{
+        return submitService.loadSubmitFile(lectureId, assignmentId, submitId);
     }
 
 }

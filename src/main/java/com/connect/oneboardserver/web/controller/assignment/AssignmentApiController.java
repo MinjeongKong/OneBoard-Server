@@ -5,6 +5,8 @@ import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.assignment.AssignmentCreateRequestDto;
 import com.connect.oneboardserver.web.dto.assignment.AssignmentUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -62,6 +64,12 @@ public class AssignmentApiController {
     @GetMapping("/lecture/{lectureId}/assignments")
     public ResponseDto findAssignmentList(@PathVariable Long lectureId) {
         return assignmentService.findAssignmentList(lectureId);
+    }
+
+    //과제 파일 로드
+    @GetMapping("/lecture/{lectureId}/assignment/{assignmentId}/file")
+    public ResponseEntity<Resource> loadAssignmentFile(@PathVariable Long lectureId, @PathVariable Long assignmentId) throws Exception {
+        return assignmentService.loadAssignmentFile(lectureId, assignmentId);
     }
 
 }
