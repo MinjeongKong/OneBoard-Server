@@ -72,7 +72,7 @@ public class LessonApiControllerTest {
                 .videoUrl(videoUrl)
                 .build();
 
-        String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson1";
+        String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson/test";
         // when
         ResponseEntity<ResponseDto> responseEntity
                 = restTemplate.postForEntity(url, requestDto, ResponseDto.class, expectedLecture.getId());
@@ -167,7 +167,7 @@ public class LessonApiControllerTest {
                 .videoUrl(updateVideoUrl)
                 .build();
 
-        String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson1/{lessonId}";
+        String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson/{lessonId}/test";
 
         HttpEntity<LessonUpdateRequestDto> requestEntity = new HttpEntity<>(requestDto);
 
