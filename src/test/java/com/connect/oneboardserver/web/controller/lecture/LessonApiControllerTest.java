@@ -68,7 +68,7 @@ public class LessonApiControllerTest {
                 .noteUrl(noteUrl)
                 .type(type)
                 .room(room)
-                .meetingId(meetingId)
+//                .meetingId(meetingId)
                 .videoUrl(videoUrl)
                 .build();
 

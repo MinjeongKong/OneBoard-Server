@@ -4,7 +4,9 @@ import com.connect.oneboardserver.domain.lecture.Lecture;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;
 import com.connect.oneboardserver.domain.lecture.lesson.Lesson;
 import com.connect.oneboardserver.domain.lecture.lesson.LessonRepository;
+import com.connect.oneboardserver.domain.livemeeting.LiveMeeting;
 import com.connect.oneboardserver.service.attendance.AttendanceService;
+import com.connect.oneboardserver.service.livemeeting.LiveMeetingService;
 import com.connect.oneboardserver.service.storage.StorageService;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.lecture.lesson.*;
@@ -31,6 +33,7 @@ public class LessonService {
     private final LessonRepository lessonRepository;
     private final LectureRepository lectureRepository;
     private final AttendanceService attendanceService;
+    private final LiveMeetingService liveMeetingService;
 
     public ResponseDto findLessonList(Long lectureId) {
         Lecture lecture = null;
@@ -82,7 +85,8 @@ public class LessonService {
                 lesson.setRecordingLesson(requestDto.getVideoUrl());
                 break;
             case 1 :
-                lesson.setNonFaceToFaceLesson(requestDto.getMeetingId());
+                LiveMeeting liveMeeting = liveMeetingService.createLiveMeeting(lectureId);
+                lesson.setNonFaceToFaceLesson(liveMeeting);
                 break;
             case 2 :
                 lesson.setFaceToFaceLesson(requestDto.getRoom());
@@ -209,7 +213,7 @@ public class LessonService {
                     .date(requestDto.getDate())
                     .noteUrl(requestDto.getNoteUrl())
                     .type(requestDto.getType())
-                    .meetingId(requestDto.getMeetingId())
+//                    .meetingId(requestDto.getMeetingId())
                     .build());
         }
         if (Type == 2) {

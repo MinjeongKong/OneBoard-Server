@@ -90,19 +90,19 @@ public class Lesson {
 
     public void setRecordingLesson(String videoUrl) {
         this.videoUrl = videoUrl;
-        this.meetingId = null;
+        this.liveMeeting = null;
         this.room = null;
     }
 
-    public void setNonFaceToFaceLesson(String meetingId) {
+    public void setNonFaceToFaceLesson(LiveMeeting liveMeeting) {
         this.videoUrl = null;
-        this.meetingId = meetingId;
+        this.liveMeeting = liveMeeting;
         this.room = null;
     }
 
     public void setFaceToFaceLesson(String room) {
         this.videoUrl = null;
-        this.meetingId = null;
+        this.liveMeeting = null;
         this.room = room;
     }
 }
