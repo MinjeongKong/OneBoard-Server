@@ -36,14 +36,9 @@ public class LessonService {
     private final LiveMeetingService liveMeetingService;
 
     public ResponseDto findLessonList(Long lectureId) {
-        Lecture lecture = null;
+        Lecture lecture = lectureRepository.findById(lectureId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 과목이 없습니다 : id = " + lectureId));
 
-        try {
-            lecture = lectureRepository.findById(lectureId).orElseThrow(Exception::new);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseDto("FAIL");
-        }
         List<Lesson> lessonList = lessonRepository.findAllByLectureIdOrderByDateDesc(lecture.getId());
         List<LessonListFindResponseDto> lessonListFindResponseDtoList = new ArrayList<>();
         for (int i = 0; i < lessonList.size(); i++) {
