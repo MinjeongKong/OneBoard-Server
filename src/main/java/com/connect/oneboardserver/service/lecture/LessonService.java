@@ -53,19 +53,16 @@ public class LessonService {
     }
 
     public ResponseDto findLesson(Long lectureId, Long lessonId) {
-        Lesson lesson = null;
-        try {
-            lesson = lessonRepository.findById(lessonId).orElseThrow(Exception::new);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseDto("FAIL");
-        }
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 수업이 없습니다 : id = " + lessonId));
+
         if (!lesson.getLecture().getId().equals(lectureId)) {
-            return new ResponseDto("FAIL");
-        } else {
-            LessonFindResponseDto responseDto = LessonFindResponseDto.toResponseDto(lesson);
-            return new ResponseDto("SUCCESS", responseDto);
+            throw new IllegalArgumentException("올바른 과목 id와 수업 id가 아닙니다 : lecture id = " + lectureId
+                    + " lesson id = " + lessonId);
         }
+
+        LessonFindResponseDto responseDto = LessonFindResponseDto.toResponseDto(lesson);
+        return new ResponseDto("SUCCESS", responseDto);
     }
 
     @Transactional
