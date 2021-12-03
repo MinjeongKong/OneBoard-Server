@@ -41,12 +41,9 @@ public class Lesson {
     @Column(length = 30)
     private String room;
 
-    @Column(length = 128)
-    private String meetingId;   // 삭제 예정
-
     @Builder
     public Lesson(Lecture lecture, String title, String date, String noteUrl, Integer type,
-                  String videoUrl, LiveMeeting liveMeeting, String room, String meetingId) {
+                  String videoUrl, LiveMeeting liveMeeting, String room) {
         this.lecture = lecture;
         this.title = title;
         this.date = date;
@@ -55,7 +52,6 @@ public class Lesson {
         this.videoUrl = videoUrl;
         this.liveMeeting = liveMeeting;
         this.room = room;
-        this.meetingId = meetingId;
     }
 
     public void setLecture(Lecture lecture) {
