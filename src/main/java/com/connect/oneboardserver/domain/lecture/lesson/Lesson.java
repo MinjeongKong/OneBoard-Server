@@ -44,18 +44,6 @@ public class Lesson {
     @Column(length = 128)
     private String meetingId;   // 삭제 예정
 
-//    @Builder
-//    public Lesson(Lecture lecture, String title, String date, String noteUrl, Integer type, String room, String meetingId, String videoUrl) {
-//        this.lecture = lecture;
-//        this.title = title;
-//        this.date = date;
-//        this.noteUrl = noteUrl;
-//        this.type = type;
-//        this.room = room;
-//        this.meetingId = meetingId;
-//        this.videoUrl = videoUrl;
-//    }
-
     @Builder
     public Lesson(Lecture lecture, String title, String date, String noteUrl, Integer type,
                   String videoUrl, LiveMeeting liveMeeting, String room, String meetingId) {
@@ -74,14 +62,10 @@ public class Lesson {
         this.lecture = lecture;
     }
 
-    public void update(String title, String date, String noteUrl, Integer type, String videoUrl, String meetingId, String room) {
+    public void update(String title, String date, Integer type) {
         this.title = title;
         this.date = date;
-        this.noteUrl = noteUrl;
         this.type = type;
-        this.videoUrl = videoUrl;
-        this.meetingId = meetingId;
-        this.room = room;
     }
 
     public void updateNoteUrl(String noteUrl) {

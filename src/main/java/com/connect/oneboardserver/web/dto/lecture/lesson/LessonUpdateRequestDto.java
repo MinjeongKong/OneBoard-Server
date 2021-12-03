@@ -9,23 +9,19 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class LessonUpdateRequestDto {
+
     private String title;
     private String date;
-    private String noteUrl;
     private Integer type;
-    private String room;
-    private String meetingId;
     private String videoUrl;
+    private String room;
 
     @Builder
-    public LessonUpdateRequestDto(String title, String date, String noteUrl, Integer type, String room, String meetingId, String videoUrl) {
+    public LessonUpdateRequestDto(String title, String date, Integer type, String videoUrl, String room) {
         this.title = title;
         this.date = date;
-        this.noteUrl = noteUrl;
         this.type = type;
-        this.room = room;
-        this.meetingId = meetingId;
         this.videoUrl = videoUrl;
+        this.room = room;
     }
-
 }

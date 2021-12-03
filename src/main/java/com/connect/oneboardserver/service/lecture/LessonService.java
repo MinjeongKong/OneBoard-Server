@@ -121,49 +121,57 @@ public class LessonService {
 
     @Transactional
     public ResponseDto updateLesson(Long lectureId, Long lessonId, LessonUpdateRequestDto requestDto, MultipartFile file) throws Exception {
-        Lesson lesson = null;
-        String uploadedFile = null;
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 수업이 없습니다 : id = " + lessonId));
 
-        try {
-            lesson = lessonRepository.findById(lessonId)
-                    .orElseThrow(Exception::new);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseDto("FAIL");
-        }
         if (!lesson.getLecture().getId().equals(lectureId)) {
-            return new ResponseDto("FAIL");
-        } else {
-            if (lesson.getNoteUrl() != null) {storageService.delete(lesson.getNoteUrl());}
-
-            Integer Type = requestDto.getType();
-            if (Type == 0) {
-                requestDto.setRoom(null);
-                requestDto.setMeetingId(null);
-                lessonUpdate(requestDto, lesson);
-            } else if (Type == 1) {
-                requestDto.setRoom(null);
-                requestDto.setVideoUrl(null);
-                lessonUpdate(requestDto, lesson);
-            } else if (Type == 2) {
-                requestDto.setVideoUrl(null);
-                requestDto.setMeetingId(null);
-                lessonUpdate(requestDto, lesson);
-            } else {
-                return new ResponseDto("FAIL");
-            }
-            LessonUpdateResponseDto responseDto = LessonUpdateResponseDto.builder()
-                    .lessonId(lesson.getId())
-                    .build();
-
-            if (file != null) {
-                String path = "/lecture_" + lectureId + "/lesson_" + lessonId + "/note";
-                uploadedFile = storageService.store(path, file);
-
-                lesson.updateNoteUrl(uploadedFile);
-            }
-            return new ResponseDto("SUCCESS", responseDto);
+            throw new IllegalArgumentException("올바른 과목 id와 수업 id가 아닙니다 : lecture id = " + lectureId
+                    + " lesson id = " + lessonId);
         }
+        // 수업 기본 정보 업데이트
+        lesson.update(requestDto.getTitle(), requestDto.getDate(), requestDto.getType());
+        // 수업 타입별 정보 업데이트
+        switch(lesson.getType()) {
+            case 0 :
+                if(lesson.getLiveMeeting() != null) {
+                    liveMeetingService.deleteLiveMeeting(lesson.getLiveMeeting().getId());
+                }
+                lesson.setRecordingLesson(requestDto.getVideoUrl());
+                break;
+            case 1 :
+                if(lesson.getLiveMeeting() == null) {
+                    LiveMeeting liveMeeting = liveMeetingService.createLiveMeeting(lectureId);
+                    lesson.setNonFaceToFaceLesson(liveMeeting);
+                }
+                break;
+            case 2 :
+                if(lesson.getLiveMeeting() != null) {
+                    liveMeetingService.deleteLiveMeeting(lesson.getLiveMeeting().getId());
+                }
+                lesson.setFaceToFaceLesson(requestDto.getRoom());
+                break;
+            default :
+                throw new IllegalArgumentException("유효한 수업 타입이 아닙니다 : type = " + lesson.getType());
+        }
+        // 기존 수업 강의노트 삭제
+        if(lesson.getNoteUrl() != null) {
+            if(storageService.delete(lesson.getNoteUrl())) {
+                lesson.updateNoteUrl(null);
+            }
+        }
+        // 수업 강의노트 업데이트
+        if(file != null) {
+            String path = "/lecture_" + lectureId + "/lesson_" + lesson.getId() + "/note";
+            String uploadedFilePath = storageService.store(path, file);
+
+            lesson.updateNoteUrl(uploadedFilePath);
+        }
+
+        LessonUpdateResponseDto responseDto = LessonUpdateResponseDto.builder()
+                .lessonId(lesson.getId())
+                .build();
+
+        return new ResponseDto("SUCCESS", responseDto);
     }
 
     @Transactional
@@ -256,8 +264,7 @@ public class LessonService {
         if(!lesson.getLecture().getId().equals(lectureId)) {
             return new ResponseDto("FAIL");
         } else {
-            lesson.update(requestDto.getTitle(), requestDto.getDate(), requestDto.getNoteUrl(), requestDto.getType(),
-                    requestDto.getVideoUrl(), requestDto.getMeetingId(), requestDto.getRoom());
+            lesson.update(requestDto.getTitle(), requestDto.getDate(), requestDto.getType());
             LessonUpdateResponseDto responseDto = LessonUpdateResponseDto.builder()
                     .lessonId(lesson.getId())
                     .build();
@@ -333,10 +340,5 @@ public class LessonService {
         }
 
         return nextLessonDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
-
-    private void lessonUpdate(LessonUpdateRequestDto requestDto, Lesson lesson) {
-        lesson.update(requestDto.getTitle(), requestDto.getDate(), requestDto.getNoteUrl(), requestDto.getType(),
-                requestDto.getRoom(), requestDto.getMeetingId(), requestDto.getVideoUrl());
     }
 }

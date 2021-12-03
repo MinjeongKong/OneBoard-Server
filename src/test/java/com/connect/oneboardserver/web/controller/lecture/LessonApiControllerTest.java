@@ -147,22 +147,18 @@ public class LessonApiControllerTest {
         Lecture expectedLecture = createLecture();
         Lesson expectedLesson = createLesson(expectedLecture);
 
-        String updateTitle = "Test Title2";
-        String updateDate = LocalDateTime.now().toString();
-        String updateNoteUrl = "lesson note file url2";
+        String updateTitle = "lesson" + random.nextInt(100);
+        String updateDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         Integer updateType = 2;
-        String updateRoom = "Paldal 411";
-        String updateMeetingId = "zoom meeting url2";
-        String updateVideoUrl = "lesson video url2";
+        String updateVideoUrl = null;
+        String updateRoom = "팔 411";
 
         LessonUpdateRequestDto requestDto = LessonUpdateRequestDto.builder()
                 .title(updateTitle)
                 .date(updateDate)
-                .noteUrl(updateNoteUrl)
                 .type(updateType)
-                .room(updateRoom)
-                .meetingId(updateMeetingId)
                 .videoUrl(updateVideoUrl)
+                .room(updateRoom)
                 .build();
 
         String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson/{lessonId}/test";
@@ -184,12 +180,11 @@ public class LessonApiControllerTest {
 
         Lesson updatedLesson = lessonRepository.findById(responseDto.getLessonId()).orElseThrow();
 
+        assertThat(updatedLesson.getLecture().getId()).isEqualTo(expectedLecture.getId());
+        assertThat(updatedLesson.getId()).isEqualTo(expectedLesson.getId());
         assertThat(updatedLesson.getTitle()).isEqualTo(updateTitle);
+        assertThat(updatedLesson.getDate()).isEqualTo(updateDate);
         assertThat(updatedLesson.getType()).isEqualTo(updateType);
-        assertThat(updatedLesson.getNoteUrl()).isEqualTo(updateNoteUrl);
-        assertThat(updatedLesson.getRoom()).isEqualTo(updateRoom);
-        assertThat(updatedLesson.getMeetingId()).isEqualTo(updateMeetingId);
-        assertThat(updatedLesson.getVideoUrl()).isEqualTo(updateVideoUrl);
     }
 
     @Test
