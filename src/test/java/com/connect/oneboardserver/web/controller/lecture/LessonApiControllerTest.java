@@ -49,30 +49,27 @@ public class LessonApiControllerTest {
     }
 
     @Test
-    @DisplayName("수업 생성하기")
+    @DisplayName("수업 생성 요청")
     public void requestCreateLesson(){
         // given
         Lecture expectedLecture = createLecture();
 
-        String title = "Test Title";
-        String date = LocalDateTime.now().toString();
-        String noteUrl = null;
-        Integer type = 0;
-        String room = "adsadqwads";
-        String meetingId = null;
-        String videoUrl = "lesson video url";
+        String expectedTitle = "lesson" + random.nextInt(100);
+        String expectedDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        Integer expectedType = 2;
+        String expectedVideoUrl = "videoUrl" + random.nextInt(100);
+        String expectedRoom = "room" + random.nextInt(100);
 
         LessonCreateRequestDto requestDto = LessonCreateRequestDto.builder()
-                .title(title)
-                .date(date)
-//                .noteUrl(noteUrl)
-                .type(type)
-                .room(room)
-//                .meetingId(meetingId)
-                .videoUrl(videoUrl)
+                .title(expectedTitle)
+                .date(expectedDate)
+                .type(expectedType)
+                .videoUrl(expectedVideoUrl)
+                .room(expectedRoom)
                 .build();
 
         String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson/test";
+
         // when
         ResponseEntity<ResponseDto> responseEntity
                 = restTemplate.postForEntity(url, requestDto, ResponseDto.class, expectedLecture.getId());
@@ -87,13 +84,12 @@ public class LessonApiControllerTest {
 
         Lesson newLesson = lessonRepository.findById(responseDto.getLessonId()).orElseThrow();
 
-        assertThat(newLesson.getLecture().getTitle()).isEqualTo(expectedLecture.getTitle());
         assertThat(newLesson.getLecture().getId()).isEqualTo(expectedLecture.getId());
-        assertThat(newLesson.getNoteUrl()).isEqualTo(noteUrl);
-        assertThat(newLesson.getType()).isEqualTo(type);
-        assertThat(newLesson.getRoom()).isEqualTo(null);
-        assertThat(newLesson.getMeetingId()).isEqualTo(null);
-        assertThat(newLesson.getVideoUrl()).isEqualTo(videoUrl);
+        assertThat(newLesson.getTitle()).isEqualTo(expectedTitle);
+        assertThat(newLesson.getDate()).isEqualTo(expectedDate);
+        assertThat(newLesson.getType()).isEqualTo(expectedType);
+        assertThat(newLesson.getVideoUrl()).isEqualTo(null);
+        assertThat(newLesson.getRoom()).isEqualTo(expectedRoom);
     }
 
     @Test
