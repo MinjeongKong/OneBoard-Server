@@ -65,7 +65,7 @@ public class LessonApiControllerTest {
         LessonCreateRequestDto requestDto = LessonCreateRequestDto.builder()
                 .title(title)
                 .date(date)
-                .noteUrl(noteUrl)
+//                .noteUrl(noteUrl)
                 .type(type)
                 .room(room)
 //                .meetingId(meetingId)

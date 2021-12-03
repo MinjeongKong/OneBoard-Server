@@ -73,12 +73,8 @@ public class LessonService {
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 과목이 없습니다 : id = " + lectureId));
 
-        Lesson lesson = Lesson.builder()
-                .lecture(lecture)
-                .title(requestDto.getTitle())
-                .date(requestDto.getDate())
-                .type(requestDto.getType())
-                .build();
+        Lesson lesson = requestDto.toEntity();
+        lesson.setLecture(lecture);
 
         switch(lesson.getType()) {
             case 0 :
@@ -201,7 +197,7 @@ public class LessonService {
                     .lecture((lecture))
                     .title(requestDto.getTitle())
                     .date(requestDto.getDate())
-                    .noteUrl(requestDto.getNoteUrl())
+//                    .noteUrl(requestDto.getNoteUrl())
                     .type(requestDto.getType())
                     .videoUrl(requestDto.getVideoUrl())
                     .build());
@@ -211,7 +207,7 @@ public class LessonService {
                     .lecture((lecture))
                     .title(requestDto.getTitle())
                     .date(requestDto.getDate())
-                    .noteUrl(requestDto.getNoteUrl())
+//                    .noteUrl(requestDto.getNoteUrl())
                     .type(requestDto.getType())
 //                    .meetingId(requestDto.getMeetingId())
                     .build());
@@ -221,7 +217,7 @@ public class LessonService {
                     .lecture((lecture))
                     .title(requestDto.getTitle())
                     .date(requestDto.getDate())
-                    .noteUrl(requestDto.getNoteUrl())
+//                    .noteUrl(requestDto.getNoteUrl())
                     .type(requestDto.getType())
                     .room(requestDto.getRoom())
                     .build());
