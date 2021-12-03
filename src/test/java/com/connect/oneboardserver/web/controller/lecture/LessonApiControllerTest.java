@@ -117,12 +117,10 @@ public class LessonApiControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         LessonFindResponseDto responseDto = mapper.convertValue(responseData, LessonFindResponseDto.class);
 
-        assertThat(responseDto.getTitle()).isEqualTo(expectedLesson.getTitle());
         assertThat(responseDto.getLectureId()).isEqualTo(expectedLecture.getId());
-        assertThat(responseDto.getNoteUrl()).isEqualTo(expectedLesson.getNoteUrl());
-        assertThat(responseDto.getMeetingId()).isEqualTo(expectedLesson.getMeetingId());
-        assertThat(responseDto.getVideoUrl()).isEqualTo(expectedLesson.getVideoUrl());
-        assertThat(responseDto.getRoom()).isEqualTo(expectedLesson.getRoom());
+        assertThat(responseDto.getLessonId()).isEqualTo(expectedLesson.getId());
+        assertThat(responseDto.getTitle()).isEqualTo(expectedLesson.getTitle());
+        assertThat(responseDto.getDate()).isEqualTo(expectedLesson.getDate());
         assertThat(responseDto.getType()).isEqualTo(expectedLesson.getType());
     }
 
@@ -229,15 +227,13 @@ public class LessonApiControllerTest {
         String defaultRoom = "room" + random.nextInt(100);
         String lecturePlanUrl = "lecturePlanUrl" + random.nextInt(100);
 
-        Lecture lecture = lectureRepository.save(Lecture.builder()
+        return lectureRepository.save(Lecture.builder()
                 .title(title)
                 .semester(semester)
                 .defaultDateTime(defaultDateTime)
                 .defaultRoom(defaultRoom)
                 .lecturePlanUrl(lecturePlanUrl)
                 .build());
-
-        return lecture;
     }
 
     private Lesson createLesson(Lecture lecture) {
@@ -245,22 +241,14 @@ public class LessonApiControllerTest {
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         String noteUrl = "noteUrl" + random.nextInt(100);
         Integer type = 1;
-        String room = "room" + random.nextInt(100);
-        String meetingId = "meetingId" + random.nextInt(100);
-        String videoUrl = "videoUrl" + random.nextInt(100);
 
-        Lesson lesson = lessonRepository.save(Lesson.builder()
+        return lessonRepository.save(Lesson.builder()
                 .lecture(lecture)
                 .title(title)
                 .date(date)
                 .noteUrl(noteUrl)
                 .type(type)
-                .room(room)
-                .meetingId(meetingId)
-                .videoUrl(videoUrl)
                 .build());
-
-        return lesson;
     }
 
 }

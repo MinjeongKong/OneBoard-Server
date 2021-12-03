@@ -11,39 +11,47 @@ import lombok.NoArgsConstructor;
 public class LessonFindResponseDto {
 
     private Long lectureId;
-    private Long id;
+    private Long lessonId;
     private String title;
     private String date;
     private String noteUrl;
     private Integer type;
-    private String room;
-    private String meetingId;
     private String videoUrl;
+    private String session;
+    private String room;
 
     @Builder
-    public LessonFindResponseDto(Long id, Long lectureId, String title, String date, String noteUrl, Integer type, String room, String meetingId, String videoUrl) {
-        this.id = id;
+    public LessonFindResponseDto(Long lectureId, Long lessonId, String title, String date, String noteUrl,
+                                 Integer type, String videoUrl, String session, String room) {
         this.lectureId = lectureId;
+        this.lessonId = lessonId;
         this.title = title;
         this.date = date;
         this.noteUrl = noteUrl;
         this.type = type;
-        this.room = room;
-        this.meetingId = meetingId;
         this.videoUrl = videoUrl;
+        this.session = session;
+        this.room = room;
     }
 
     public static LessonFindResponseDto toResponseDto(Lesson entity) {
         return LessonFindResponseDto.builder()
-                .id(entity.getId())
+                .lectureId(entity.getLecture().getId())
+                .lessonId(entity.getId())
                 .title(entity.getTitle())
                 .date(entity.getDate())
-                .lectureId(entity.getLecture().getId())
                 .noteUrl(entity.getNoteUrl())
                 .type(entity.getType())
-                .room(entity.getRoom())
-                .meetingId(entity.getMeetingId())
                 .videoUrl(entity.getVideoUrl())
+                .room(entity.getRoom())
                 .build();
+    }
+
+    public void setNoteUrl(String noteUrl) {
+        this.noteUrl = noteUrl;
+    }
+
+    public void setSession(String session) {
+        this.session = session;
     }
 }

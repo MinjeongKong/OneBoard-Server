@@ -57,6 +57,14 @@ public class LessonService {
         }
 
         LessonFindResponseDto responseDto = LessonFindResponseDto.toResponseDto(lesson);
+        if(lesson.getNoteUrl() != null) {
+            String loadNoteUrl = "/lecture/" + lectureId + "/lesson/" + lessonId + "/note";
+            responseDto.setNoteUrl(loadNoteUrl);
+        }
+        if(lesson.getLiveMeeting() != null) {
+            responseDto.setSession(lesson.getLiveMeeting().getSession());
+        }
+
         return new ResponseDto("SUCCESS", responseDto);
     }
 
