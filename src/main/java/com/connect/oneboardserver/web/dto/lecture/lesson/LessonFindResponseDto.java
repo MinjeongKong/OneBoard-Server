@@ -40,7 +40,6 @@ public class LessonFindResponseDto {
                 .lessonId(entity.getId())
                 .title(entity.getTitle())
                 .date(entity.getDate())
-                .noteUrl(entity.getNoteUrl())
                 .type(entity.getType())
                 .videoUrl(entity.getVideoUrl())
                 .room(entity.getRoom())

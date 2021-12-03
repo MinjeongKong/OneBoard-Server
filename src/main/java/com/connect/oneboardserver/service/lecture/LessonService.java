@@ -40,11 +40,21 @@ public class LessonService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 과목이 없습니다 : id = " + lectureId));
 
         List<Lesson> lessonList = lessonRepository.findAllByLectureIdOrderByDateDesc(lecture.getId());
-        List<LessonListFindResponseDto> lessonListFindResponseDtoList = new ArrayList<>();
-        for (int i = 0; i < lessonList.size(); i++) {
-            lessonListFindResponseDtoList.add(LessonListFindResponseDto.toResponseDto(lessonList.get(i)));
+
+        List<LessonFindResponseDto> responseDtoList = new ArrayList<>();
+        for(Lesson lesson : lessonList) {
+            LessonFindResponseDto responseDto = LessonFindResponseDto.toResponseDto(lesson);
+            if(lesson.getNoteUrl() != null) {
+                String loadNoteUrl = "/lecture/" + lectureId + "/lesson/" + lesson.getId() + "/note";
+                responseDto.setNoteUrl(loadNoteUrl);
+            }
+            if(lesson.getLiveMeeting() != null) {
+                responseDto.setSession(lesson.getLiveMeeting().getSession());
+            }
+            responseDtoList.add(responseDto);
         }
-        return new ResponseDto("SUCCESS", lessonListFindResponseDtoList);
+
+        return new ResponseDto("SUCCESS", responseDtoList);
     }
 
     public ResponseDto findLesson(Long lectureId, Long lessonId) {
