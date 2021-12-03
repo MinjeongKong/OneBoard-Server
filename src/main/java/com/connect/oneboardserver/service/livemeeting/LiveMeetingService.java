@@ -20,4 +20,10 @@ public class LiveMeetingService {
                 .session(session)
                 .build());
     }
+
+    public void deleteLiveMeeting(Long liveMeetingId) {
+        LiveMeeting liveMeeting = liveMeetingRepository.findById(liveMeetingId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 비대면 수업이 없습니다 : id = " + liveMeetingId));
+        liveMeetingRepository.deleteById(liveMeeting.getId());
+    }
 }
