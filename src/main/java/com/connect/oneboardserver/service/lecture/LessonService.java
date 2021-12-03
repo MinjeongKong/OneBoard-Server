@@ -176,26 +176,31 @@ public class LessonService {
 
     @Transactional
     public ResponseDto deleteLesson(Long lectureId, Long lessonId) throws IOException {
-        Lesson lesson = null;
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 수업이 없습니다 : id = " + lessonId));
 
-        try {
-            lesson = lessonRepository.findById(lessonId).orElseThrow(Exception::new);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseDto("FAIL");
+        if (!lesson.getLecture().getId().equals(lectureId)) {
+            throw new IllegalArgumentException("올바른 과목 id와 수업 id가 아닙니다 : lecture id = " + lectureId
+                    + " lesson id = " + lessonId);
         }
 
-        if(!lesson.getLecture().getId().equals(lectureId)) {
-            return new ResponseDto("FAIL");
-        } else {
-            if (lesson.getNoteUrl() != null) {
-                System.out.println(lesson.getNoteUrl());
-                storageService.delete(lesson.getNoteUrl());
+        // 수업 강의노트 삭제
+        if(lesson.getNoteUrl() != null) {
+            if(storageService.delete(lesson.getNoteUrl())) {
+                lesson.updateNoteUrl(null);
             }
-            attendanceService.deleteLessonAttendance(lesson.getId());
-            lessonRepository.deleteById(lessonId);
-            return new ResponseDto("SUCCESS");
         }
+        // 수업 비대면 수업 삭제
+        if(lesson.getLiveMeeting() != null) {
+            liveMeetingService.deleteLiveMeeting(lesson.getLiveMeeting().getId());
+            lesson.setFaceToFaceLesson(null);
+        }
+        // 수업 출석 삭제
+        attendanceService.deleteLessonAttendance(lesson.getId());
+        // 수업 삭제
+        lessonRepository.deleteById(lessonId);
+
+        return new ResponseDto("SUCCESS");
     }
 
     @Transactional
