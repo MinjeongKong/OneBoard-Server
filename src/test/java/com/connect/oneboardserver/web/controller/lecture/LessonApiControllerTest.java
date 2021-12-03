@@ -143,18 +143,14 @@ public class LessonApiControllerTest {
         Lecture expectedLecture = createLecture();
         Lesson expectedLesson = createLesson(expectedLecture);
 
-        String updateTitle = "lesson" + random.nextInt(100);
-        String updateDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        Integer updateType = 2;
-        String updateVideoUrl = null;
-        String updateRoom = "팔 411";
+        String expectedTitle = "lesson" + random.nextInt(100);
+        String expectedDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        Integer expectedType = 2;
 
         LessonUpdateRequestDto requestDto = LessonUpdateRequestDto.builder()
-                .title(updateTitle)
-                .date(updateDate)
-                .type(updateType)
-                .videoUrl(updateVideoUrl)
-                .room(updateRoom)
+                .title(expectedTitle)
+                .date(expectedDate)
+                .type(expectedType)
                 .build();
 
         String url = "http://localhost:" + port + "/lecture/{lectureId}/lesson/{lessonId}/test";
@@ -174,13 +170,13 @@ public class LessonApiControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         LessonUpdateResponseDto responseDto = mapper.convertValue(responseData, LessonUpdateResponseDto.class);
 
-        Lesson updatedLesson = lessonRepository.findById(responseDto.getLessonId()).orElseThrow();
+        Lesson actualLesson = lessonRepository.findById(responseDto.getLessonId()).orElseThrow();
 
-        assertThat(updatedLesson.getLecture().getId()).isEqualTo(expectedLecture.getId());
-        assertThat(updatedLesson.getId()).isEqualTo(expectedLesson.getId());
-        assertThat(updatedLesson.getTitle()).isEqualTo(updateTitle);
-        assertThat(updatedLesson.getDate()).isEqualTo(updateDate);
-        assertThat(updatedLesson.getType()).isEqualTo(updateType);
+        assertThat(actualLesson.getLecture().getId()).isEqualTo(expectedLecture.getId());
+        assertThat(actualLesson.getId()).isEqualTo(expectedLesson.getId());
+        assertThat(actualLesson.getTitle()).isEqualTo(expectedTitle);
+        assertThat(actualLesson.getDate()).isEqualTo(expectedDate);
+        assertThat(actualLesson.getType()).isEqualTo(expectedType);
     }
 
     @Test
