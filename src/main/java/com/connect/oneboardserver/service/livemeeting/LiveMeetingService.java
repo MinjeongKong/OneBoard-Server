@@ -74,6 +74,7 @@ public class LiveMeetingService {
         }
     }
 
+    @Transactional
     public ResponseDto exitLiveMeeting(String email, Long lectureId, Long lessonId, String session) throws Exception {
         Lesson lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 수업이 없습니다 : id = " + lessonId));
