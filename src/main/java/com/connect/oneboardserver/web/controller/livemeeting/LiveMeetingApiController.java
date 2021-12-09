@@ -27,7 +27,13 @@ public class LiveMeetingApiController {
         return liveMeetingService.enterLiveMeeting(email, lectureId, lessonId, session);
     }
 
-    // 비대면 수업 퇴장 - 학생
+    // 비대면 수업 종료(강의자) & 퇴장(학생)
+    @GetMapping("/lecture/{lectureId}/lesson/{lessonId}/live/exit")
+    public ResponseDto exitLiveMeeting(@PathVariable Long lectureId, @PathVariable Long lessonId,
+                                       @RequestParam("session") String session, HttpServletRequest request) throws Exception {
+        String token = jwtTokenProvider.resolveToken(request);
+        String email = jwtTokenProvider.getUserPk(token);
 
-    // 비대면 수업 종료 - 강의자
+        return liveMeetingService.exitLiveMeeting(email, lectureId, lessonId, session);
+    }
 }
