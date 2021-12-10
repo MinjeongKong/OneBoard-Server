@@ -4,6 +4,7 @@ import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
+import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,15 @@ public class SocketManager {
     }
 
     public void startSocketIOServer() {
+
+        server.addConnectListener(new ConnectListener() {
+            @Override
+            public void onConnect(SocketIOClient client) {
+                System.out.println("Socket Connected : " + client.getSessionId());
+                server.getBroadcastOperations().sendEvent("new connection", "new client : " + client.getSessionId());
+            }
+        });
+
         server.addEventListener("init", ChatObject.class, new DataListener<>() {
             @Override
             public void onData(SocketIOClient client, ChatObject data, AckRequest ackRequest) {
