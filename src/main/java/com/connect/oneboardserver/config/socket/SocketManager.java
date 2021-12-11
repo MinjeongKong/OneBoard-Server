@@ -117,7 +117,7 @@ public class SocketManager implements ApplicationListener<ContextClosedEvent> {
         stopSocketIOServer();
     }
 
-    public void attendanceRequestSocket(String room) {
+    public void sendAttendanceRequestEvent(String room) {
         for (SocketIOClient roomClient : mainNamespace.getRoomClients(room)) {
             if(roomClient.getSessionId().equals(roomHosts.get(room))) {
                 continue;
