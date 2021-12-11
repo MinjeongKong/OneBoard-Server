@@ -35,15 +35,17 @@ public class SocketManager implements ApplicationListener<ContextClosedEvent> {
 
     public void startSocketIOServer() {
 
-        server.addConnectListener(new ConnectListener() {
-            @Override
-            public void onConnect(SocketIOClient client) {
-                System.out.println("Socket Connected : " + client.getSessionId());
-                server.getBroadcastOperations().sendEvent("new connection", "new client : " + client.getSessionId());
-            }
-        });
+        addConnectListener();
 
-        server.addEventListener("init connection", InitObject.class, new DataListener<>() {
+        addInitEventListener();
+
+        addDisconnectListener();
+
+        server.start();
+    }
+
+    private void addInitEventListener() {
+        server.addEventListener("init", InitObject.class, new DataListener<>() {
             @Override
             public void onData(SocketIOClient client, InitObject data, AckRequest ackRequest) {
                 System.out.println("==============================");
@@ -72,7 +74,20 @@ public class SocketManager implements ApplicationListener<ContextClosedEvent> {
                 client.sendEvent("echo", "userType : " + data.getUserType() + " room : " + data.getRoom());
             }
         });
+    }
 
+
+    private void addConnectListener() {
+        server.addConnectListener(new ConnectListener() {
+            @Override
+            public void onConnect(SocketIOClient client) {
+                System.out.println("Socket Connected : " + client.getSessionId());
+                server.getBroadcastOperations().sendEvent("new connection", "new client : " + client.getSessionId());
+            }
+        });
+    }
+
+    private void addDisconnectListener() {
         server.addDisconnectListener(new DisconnectListener() {
             @Override
             public void onDisconnect(SocketIOClient client) {
@@ -81,10 +96,8 @@ public class SocketManager implements ApplicationListener<ContextClosedEvent> {
                 }
             }
         });
-
-        server.start();
     }
-
+    
     private String getKeyByValue(SocketIOClient client) {
         String result = null;
         for (Map.Entry<String, UUID> entry : roomHosts.entrySet()) {
