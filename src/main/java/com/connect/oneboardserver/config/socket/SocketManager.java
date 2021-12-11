@@ -70,7 +70,6 @@ public class SocketManager implements ApplicationListener<ContextClosedEvent> {
                 }
                 System.out.println("roomHosts : " + roomHosts);
 
-
                 client.sendEvent("echo", "userType : " + data.getUserType() + " room : " + data.getRoom());
             }
         });
@@ -116,5 +115,14 @@ public class SocketManager implements ApplicationListener<ContextClosedEvent> {
     public void onApplicationEvent(ContextClosedEvent event) {
         System.out.println("애플리케이션이 종료되어 소켓 연결을 중지합니다");
         stopSocketIOServer();
+    }
+
+    public void attendanceRequestSocket(String room) {
+        for (SocketIOClient roomClient : mainNamespace.getRoomClients(room)) {
+            if(roomClient.getSessionId().equals(roomHosts.get(room))) {
+                continue;
+            }
+            roomClient.sendEvent("attendance request", "response for professor's attendance check request");
+        }
     }
 }
