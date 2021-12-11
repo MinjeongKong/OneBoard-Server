@@ -22,6 +22,7 @@ public class SocketManager implements ApplicationListener<ContextClosedEvent> {
 
     private Configuration config;
     private SocketIOServer server;
+    private Namespace mainNamespace;
 
     private ConcurrentMap<String, UUID> roomHosts = new ConcurrentHashMap<>();
 
@@ -31,6 +32,7 @@ public class SocketManager implements ApplicationListener<ContextClosedEvent> {
         config.setPort(8070);
 
         server = new SocketIOServer(config);
+        mainNamespace = (Namespace) server.getNamespace("");
     }
 
     public void startSocketIOServer() {
@@ -51,8 +53,6 @@ public class SocketManager implements ApplicationListener<ContextClosedEvent> {
                 System.out.println("==============================");
                 System.out.println("userType = " + data.getUserType());
                 System.out.println("session = " + data.getRoom());
-
-                Namespace mainNamespace = (Namespace) server.getNamespace("");
 
                 mainNamespace.joinRoom(data.getRoom(), client.getSessionId());
 
@@ -75,7 +75,6 @@ public class SocketManager implements ApplicationListener<ContextClosedEvent> {
             }
         });
     }
-
 
     private void addConnectListener() {
         server.addConnectListener(new ConnectListener() {
@@ -108,7 +107,6 @@ public class SocketManager implements ApplicationListener<ContextClosedEvent> {
         }
         return result;
     }
-
 
     public void stopSocketIOServer() {
         server.stop();
