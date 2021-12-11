@@ -6,10 +6,12 @@ import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SocketManager {
+public class SocketManager implements ApplicationListener<ContextClosedEvent> {
 
     private Configuration config;
     private SocketIOServer server;
@@ -47,5 +49,11 @@ public class SocketManager {
 
     public void stopSocketIOServer() {
         server.stop();
+    }
+
+    @Override
+    public void onApplicationEvent(ContextClosedEvent event) {
+        System.out.println("애플리케이션이 종료되어 소켓 연결을 중지합니다");
+        stopSocketIOServer();
     }
 }
