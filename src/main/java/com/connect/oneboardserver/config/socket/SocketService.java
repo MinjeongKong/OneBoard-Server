@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Component;
 
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Map;
@@ -39,6 +40,10 @@ public class SocketService implements ApplicationListener<ContextClosedEvent> {
         config = new Configuration();
         config.setHostname(getServerIp());
         config.setPort(8070);
+
+        config.setKeyStorePassword("connect2021");
+        InputStream stream = SocketService.class.getResourceAsStream("/keystore.p12");
+        config.setKeyStore(stream);
 
         server = new SocketIOServer(config);
         mainNamespace = (Namespace) server.getNamespace("");
