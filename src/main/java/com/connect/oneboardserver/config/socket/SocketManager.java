@@ -134,4 +134,8 @@ public class SocketManager implements ApplicationListener<ContextClosedEvent> {
             roomClient.sendEvent("understanding request", "response for professor's understanding check request");
         }
     }
+
+    public void sendUnderstandingResponseEvent(String room) {
+        mainNamespace.getClient(roomHosts.get(room)).sendEvent("understanding response", "response of student's understanding check");
+    }
 }
