@@ -23,17 +23,19 @@ public class UnderstandProService {
 
     @Transactional
     public ResponseDto createUnderstandPro(Long lectureId, Long lessonId) {
-        Lecture lecture = lectureRepository.findById(lectureId)
-                .orElseThrow(()->new IllegalArgumentException("해당 과목이 없습니다. id="+lectureId));
-
         Lesson lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(()->new IllegalArgumentException("해당 수업이 없습니다. id="+lessonId));
 
-        UnderstandPro understandPro = UnderstandPro.builder()
-                .lesson(lesson).build();
-        understandProRepository.save(understandPro);
-        UnderstandProResponseDto responseDto = new UnderstandProResponseDto(understandPro);
-        return new ResponseDto("SUCCESS", responseDto);
+        if (!lesson.getLecture().getId().equals(lectureId)) {
+            return new ResponseDto("FAIL");
+        } else {
+            UnderstandPro understandPro = UnderstandPro.builder()
+                    .lesson(lesson).build();
+            understandProRepository.save(understandPro);
+            UnderstandProResponseDto responseDto = new UnderstandProResponseDto(understandPro);
+            return new ResponseDto("SUCCESS", responseDto);
+        }
+
     }
 
 }
