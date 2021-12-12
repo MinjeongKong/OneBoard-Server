@@ -1,6 +1,6 @@
 package com.connect.oneboardserver.service.attendance;
 
-import com.connect.oneboardserver.config.socket.SocketManager;
+import com.connect.oneboardserver.config.socket.SocketService;
 import com.connect.oneboardserver.domain.attendance.Attendance;
 import com.connect.oneboardserver.domain.attendance.AttendanceRepository;
 import com.connect.oneboardserver.domain.lecture.Lecture;
@@ -29,7 +29,7 @@ public class AttendanceService {
     private final MemberLectureRepository memberLectureRepository;
     private final LessonRepository lessonRepository;
     private final AttendanceRepository attendanceRepository;
-    private final SocketManager socketManager;
+    private final SocketService socketService;
 
 
     public void initLessonAttendance(Long lectureId, Lesson lesson) {
@@ -246,7 +246,7 @@ public class AttendanceService {
             throw new IllegalArgumentException("올바른 세션이 아닙니다 : session = " + session);
         }
 
-        socketManager.sendAttendanceRequestEvent(session);
+        socketService.sendAttendanceRequestEvent(session);
 
         return new ResponseDto("SUCCESS");
     }

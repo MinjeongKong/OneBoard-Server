@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 @Component
-public class SocketManager implements ApplicationListener<ContextClosedEvent> {
+public class SocketService implements ApplicationListener<ContextClosedEvent> {
 
     private Configuration config;
     private SocketIOServer server;
@@ -26,7 +26,7 @@ public class SocketManager implements ApplicationListener<ContextClosedEvent> {
 
     private ConcurrentMap<String, UUID> roomHosts = new ConcurrentHashMap<>();
 
-    public SocketManager() {
+    public SocketService() {
         config = new Configuration();
         config.setHostname("localhost");
         config.setPort(8070);
