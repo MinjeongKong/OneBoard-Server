@@ -20,13 +20,13 @@ public class ResultResponseDto {
     private List<UnderstandStuFindResponseDto> understandOList;
     private List<UnderstandStuFindResponseDto> understandXList;
 
-    public ResultResponseDto(UnderstandPro entity, Integer yes, Integer no, List<UnderstandStuFindResponseDto> understandOList, List<UnderstandStuFindResponseDto> understandXList) {
+    public ResultResponseDto(UnderstandPro entity, List<UnderstandStuFindResponseDto> understandOList, List<UnderstandStuFindResponseDto> understandXList) {
         this.lessonId = entity.getLesson().getId();
         this.lessonTitle = entity.getLesson().getTitle();
         this.understandId = entity.getId();
         this.createdDt = entity.getCreatedDt();
-        this.yes = yes;
-        this.no = no;
+        this.yes = entity.getYes();
+        this.no = entity.getNo();
         this.understandOList = understandOList;
         this.understandXList = understandXList;
     }
