@@ -6,12 +6,8 @@ import com.connect.oneboardserver.domain.quiz.QuizPro;
 import com.connect.oneboardserver.domain.quiz.QuizProRepository;
 import com.connect.oneboardserver.domain.quiz.QuizStu;
 import com.connect.oneboardserver.domain.quiz.QuizStuRepository;
-import com.connect.oneboardserver.web.dto.ResultProResponseDto;
-import com.connect.oneboardserver.web.dto.quiz.QuizStuFindResponseDto;
+import com.connect.oneboardserver.web.dto.quiz.*;
 import com.connect.oneboardserver.web.dto.ResponseDto;
-import com.connect.oneboardserver.web.dto.quiz.QuizStuCreateRequestDto;
-import com.connect.oneboardserver.web.dto.quiz.QuizStuResponseDto;
-import com.connect.oneboardserver.web.dto.quiz.ResultStuResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -81,10 +77,16 @@ public class QuizStuService {
                 }
                 quizPro.updateInfo(quizOList.size(), quizXList.size());
             }
-            QuizStu yourQuiz = quizStuRepository.findByStudentIdAndQuizProId(student.getId(), quizProId);
-            ResultStuResponseDto responseDto = new ResultStuResponseDto(yourQuiz);
 
-            return new ResponseDto("SUCCESS", responseDto);
+            QuizStu yourQuiz = quizStuRepository.findByStudentIdAndQuizProId(student.getId(), quizProId);
+            if (yourQuiz == null) {
+                ResultStuNullResponseDto responseDto = new ResultStuNullResponseDto(quizPro);
+                return new ResponseDto("SUCCESS", responseDto);
+            } else {
+                ResultStuResponseDto responseDto = new ResultStuResponseDto(yourQuiz);
+                return new ResponseDto("SUCCESS", responseDto);
+            }
+
         }
     }
 
