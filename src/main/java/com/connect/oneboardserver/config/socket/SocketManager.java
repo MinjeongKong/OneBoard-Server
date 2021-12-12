@@ -122,7 +122,7 @@ public class SocketManager implements ApplicationListener<ContextClosedEvent> {
             if(roomClient.getSessionId().equals(roomHosts.get(room))) {
                 continue;
             }
-            roomClient.sendEvent("attendance request", "response for professor's attendance check request");
+            roomClient.sendEvent("attendance request", "professor's attendance check request");
         }
     }
 
@@ -131,11 +131,24 @@ public class SocketManager implements ApplicationListener<ContextClosedEvent> {
             if (roomClient.getSessionId().equals(roomHosts.get(room))) {
                 continue;
             }
-            roomClient.sendEvent("understanding request", "response for professor's understanding check request");
+            roomClient.sendEvent("understanding request", "professor's understanding check request");
         }
     }
 
     public void sendUnderstandingResponseEvent(String room) {
-        mainNamespace.getClient(roomHosts.get(room)).sendEvent("understanding response", "response of student's understanding check");
+        mainNamespace.getClient(roomHosts.get(room)).sendEvent("understanding response", "student's response for understanding check request");
+    }
+
+    public void sendQuizRequestEvent(String room) {
+        for (SocketIOClient roomClient : mainNamespace.getRoomClients(room)) {
+            if (roomClient.getSessionId().equals(roomHosts.get(room))) {
+                continue;
+            }
+            roomClient.sendEvent("quiz request", "professor's quiz request");
+        }
+    }
+
+    public void sendQuizResponseEvent(String room) {
+        mainNamespace.getClient(roomHosts.get(room)).sendEvent("quiz response", "student's response for quiz request");
     }
 }
