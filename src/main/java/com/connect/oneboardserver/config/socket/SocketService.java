@@ -22,6 +22,13 @@ import java.util.concurrent.ConcurrentMap;
 @Component
 public class SocketService implements ApplicationListener<ContextClosedEvent> {
 
+    public static final String EVENT_NAME_INIT = "init";
+    public static final String EVENT_NAME_REQ_ATTENDANCE = "attendance request";
+    public static final String EVENT_NAME_REQ_UNDERSTANDING = "understanding request";
+    public static final String EVENT_NAME_RES_UNDERSTANDING = "understanding response";
+    public static final String EVENT_NAME_REQ_QUIZ = "quiz request";
+    public static final String EVENT_NAME_RES_QUIZ = "quiz response";
+
     private Configuration config;
     private SocketIOServer server;
     private Namespace mainNamespace;
@@ -64,7 +71,7 @@ public class SocketService implements ApplicationListener<ContextClosedEvent> {
     }
 
     private void addInitEventListener() {
-        server.addEventListener("init", InitObject.class, new DataListener<>() {
+        server.addEventListener(EVENT_NAME_INIT, InitObject.class, new DataListener<>() {
             @Override
             public void onData(SocketIOClient client, InitObject data, AckRequest ackRequest) {
 //                System.out.println("==============================");
@@ -139,7 +146,7 @@ public class SocketService implements ApplicationListener<ContextClosedEvent> {
             if(roomClient.getSessionId().equals(roomHosts.get(room))) {
                 continue;
             }
-            roomClient.sendEvent("attendance request", "professor's attendance check request");
+            roomClient.sendEvent(EVENT_NAME_REQ_ATTENDANCE, "professor's attendance check request");
         }
     }
 
@@ -148,12 +155,12 @@ public class SocketService implements ApplicationListener<ContextClosedEvent> {
             if (roomClient.getSessionId().equals(roomHosts.get(room))) {
                 continue;
             }
-            roomClient.sendEvent("understanding request", "professor's understanding check request");
+            roomClient.sendEvent(EVENT_NAME_REQ_UNDERSTANDING, "professor's understanding check request");
         }
     }
 
     public void sendUnderstandingResponseEvent(String room) {
-        mainNamespace.getClient(roomHosts.get(room)).sendEvent("understanding response", "student's response for understanding check request");
+        mainNamespace.getClient(roomHosts.get(room)).sendEvent(EVENT_NAME_RES_UNDERSTANDING, "student's response for understanding check request");
     }
 
     public void sendQuizRequestEvent(String room) {
@@ -161,11 +168,11 @@ public class SocketService implements ApplicationListener<ContextClosedEvent> {
             if (roomClient.getSessionId().equals(roomHosts.get(room))) {
                 continue;
             }
-            roomClient.sendEvent("quiz request", "professor's quiz request");
+            roomClient.sendEvent(EVENT_NAME_REQ_QUIZ, "professor's quiz request");
         }
     }
 
     public void sendQuizResponseEvent(String room) {
-        mainNamespace.getClient(roomHosts.get(room)).sendEvent("quiz response", "student's response for quiz request");
+        mainNamespace.getClient(roomHosts.get(room)).sendEvent(EVENT_NAME_RES_QUIZ, "student's response for quiz request");
     }
 }
