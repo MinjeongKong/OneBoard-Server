@@ -75,7 +75,8 @@ public class UnderstandStuService {
                 understandXList.add(new UnderstandStuFindResponseDto(understandStuXList.get(i)));
             }
 
-            ResultResponseDto responseDto = new ResultResponseDto(understandPro, understandOList.size(), understandXList.size(), understandOList, understandXList);
+            understandPro.updateInfo(understandOList.size(), understandXList.size());
+            ResultResponseDto responseDto = new ResultResponseDto(understandPro, understandPro.getYes(), understandPro.getNo(), understandOList, understandXList);
 
             return new ResponseDto("SUCCESS", responseDto);
         }
