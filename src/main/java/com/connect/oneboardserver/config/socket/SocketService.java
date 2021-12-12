@@ -12,6 +12,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Component;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,11 +30,29 @@ public class SocketService implements ApplicationListener<ContextClosedEvent> {
 
     public SocketService() {
         config = new Configuration();
-        config.setHostname("localhost");
+        config.setHostname(getServerIp());
         config.setPort(8070);
 
         server = new SocketIOServer(config);
         mainNamespace = (Namespace) server.getNamespace("");
+    }
+
+    private String getServerIp() {
+        InetAddress local = null;
+        try {
+            local = InetAddress.getLocalHost();
+        }
+        catch ( UnknownHostException e ) {
+            e.printStackTrace();
+        }
+
+        if( local == null ) {
+            return "";
+        }
+        else {
+            String ip = local.getHostAddress();
+            return ip;
+        }
     }
 
     public void startSocketIOServer() {
