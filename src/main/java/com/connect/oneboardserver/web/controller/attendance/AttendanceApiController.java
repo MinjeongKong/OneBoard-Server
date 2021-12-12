@@ -62,9 +62,21 @@ public class AttendanceApiController {
     }
 
 
-    // 실시간 수업 출석 요청 - 강의자
+    // 비대면 수업 출석 요청 - 강의자
+    @GetMapping("/lecture/{lectureId}/lesson/{lessonId}/live/attendance/professor")
+    public ResponseDto requestAttendanceCheck(@PathVariable Long lectureId, @PathVariable Long lessonId,
+                                              @RequestParam("session") String session) {
+        return attendanceService.requestAttendanceCheck(lectureId, lessonId, session);
+    }
 
-    // 실시간 수업 출석 응답 - 학생
+    // 비대면 수업 출석 응답 - 학생
+    @GetMapping("/lecture/{lectureId}/lesson/{lessonId}/live/attendance/student")
+    public ResponseDto responseAttendanceCheck(@PathVariable Long lectureId, @PathVariable Long lessonId,
+                                               @RequestParam("session") String session, HttpServletRequest request) throws Exception {
+        String token = jwtTokenProvider.resolveToken(request);
+        String email = jwtTokenProvider.getUserPk(token);
 
+        return attendanceService.responseAttendanceCheck(email, lectureId, lessonId, session);
+    }
 
 }

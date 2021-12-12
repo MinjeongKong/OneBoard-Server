@@ -1,5 +1,6 @@
 package com.connect.oneboardserver.service.attendance;
 
+import com.connect.oneboardserver.config.socket.SocketService;
 import com.connect.oneboardserver.domain.attendance.Attendance;
 import com.connect.oneboardserver.domain.attendance.AttendanceRepository;
 import com.connect.oneboardserver.domain.lecture.Lecture;
@@ -28,6 +29,7 @@ public class AttendanceService {
     private final MemberLectureRepository memberLectureRepository;
     private final LessonRepository lessonRepository;
     private final AttendanceRepository attendanceRepository;
+    private final SocketService socketService;
 
 
     public void initLessonAttendance(Long lectureId, Lesson lesson) {
@@ -231,4 +233,47 @@ public class AttendanceService {
         return new ResponseDto("SUCCESS", responseDto);
     }
 
+    public ResponseDto requestAttendanceCheck(Long lectureId, Long lessonId, String session) {
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 수업이 없습니다 : id = " + lessonId));
+
+        if(!lesson.getLecture().getId().equals(lectureId)) {
+            throw new IllegalArgumentException("올바른 과목 id와 수업 id가 아닙니다 : lecture id = " + lectureId
+                    + " lesson id = " + lessonId);
+        }
+
+        if(!lesson.getLiveMeeting().getSession().equals(session)) {
+            throw new IllegalArgumentException("올바른 세션이 아닙니다 : session = " + session);
+        }
+
+        socketService.sendAttendanceRequestEvent(session);
+
+        return new ResponseDto("SUCCESS");
+    }
+
+    @Transactional
+    public ResponseDto responseAttendanceCheck(String email, Long lectureId, Long lessonId, String session) throws Exception {
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 수업이 없습니다 : id = " + lessonId));
+
+        if(!lesson.getLecture().getId().equals(lectureId)) {
+            throw new IllegalArgumentException("올바른 과목 id와 수업 id가 아닙니다 : lecture id = " + lectureId
+                    + " lesson id = " + lessonId);
+        }
+
+        if(!lesson.getLiveMeeting().getSession().equals(session)) {
+            throw new IllegalArgumentException("올바른 세션이 아닙니다 : session = " + session);
+        }
+
+        Member member = (Member) userDetailsService.loadUserByUsername(email);
+
+        List<Attendance> attendances = attendanceRepository.findAllByMemberIdAndLessonId(member.getId(), lessonId);
+        if(attendances.size() != 1) {
+            // 동일한 학생 & 수업에 대해 출석 데이터가 없거나 2개 이상인 경우
+            throw new Exception("출석 데이터 오류");
+        }
+        attendances.get(0).updateStatus(2);     // 출석 처리
+
+        return new ResponseDto("SUCCESS");
+    }
 }
