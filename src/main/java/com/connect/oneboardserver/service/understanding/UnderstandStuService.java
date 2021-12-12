@@ -76,7 +76,7 @@ public class UnderstandStuService {
             }
 
             understandPro.updateInfo(understandOList.size(), understandXList.size());
-            ResultResponseDto responseDto = new ResultResponseDto(understandPro, understandPro.getYes(), understandPro.getNo(), understandOList, understandXList);
+            ResultResponseDto responseDto = new ResultResponseDto(understandPro, understandOList, understandXList);
 
             return new ResponseDto("SUCCESS", responseDto);
         }
