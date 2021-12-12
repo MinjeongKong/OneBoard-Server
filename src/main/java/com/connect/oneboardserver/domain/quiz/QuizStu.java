@@ -24,6 +24,9 @@ public class QuizStu {
     @Column(nullable = false)
     private Integer response;
 
+    @Column(length = 30)
+    private String mark;
+
     @Builder
     public QuizStu(Integer response) {
         this.response = response;
@@ -31,6 +34,10 @@ public class QuizStu {
 
     public void setQuizPro(QuizPro quizPro) {
         this.quizPro = quizPro;
+    }
+
+    public void setMark(String mark) {
+        this.mark = mark;
     }
 
     public void setStudent(Member student) {

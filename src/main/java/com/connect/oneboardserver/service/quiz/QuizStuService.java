@@ -64,21 +64,25 @@ public class QuizStuService {
         if (!(quizPro.getLesson().getId().equals(lessonId) && quizPro.getLesson().getLecture().getId().equals(lectureId))) {
             return new ResponseDto("FAIL");
         } else {
-            List<QuizStu> quizStuList = quizStuRepository.findAllByQuizProId(quizProId);
-            List<QuizStuFindResponseDto> quizOList = new ArrayList<>();
-            List<QuizStuFindResponseDto> quizXList = new ArrayList<>();
+            if (quizPro.getCorrectNum() == null && quizPro.getIncorrectNum() == null) {
+                List<QuizStu> quizStuList = quizStuRepository.findAllByQuizProId(quizProId);
+                List<QuizStuFindResponseDto> quizOList = new ArrayList<>();
+                List<QuizStuFindResponseDto> quizXList = new ArrayList<>();
 
-            for (int i = 0; i < quizStuList.size(); i++) {
-                QuizStu quizStu = quizStuList.get(i);
-                if (quizStu.getResponse().equals(quizPro.getAnswer())) {
-                    quizOList.add(new QuizStuFindResponseDto(quizStu));
-                } else {
-                    quizXList.add(new QuizStuFindResponseDto(quizStu));
+                for (int i = 0; i < quizStuList.size(); i++) {
+                    QuizStu quizStu = quizStuList.get(i);
+                    if (quizStu.getResponse().equals(quizPro.getAnswer())) {
+                        quizOList.add(new QuizStuFindResponseDto(quizStu));
+                        quizStu.setMark("O");
+                    } else {
+                        quizXList.add(new QuizStuFindResponseDto(quizStu));
+                        quizStu.setMark("X");
+                    }
                 }
+                quizPro.updateInfo(quizOList.size(), quizXList.size());
             }
-
             QuizStu yourQuiz = quizStuRepository.findByStudentIdAndQuizProId(student.getId(), quizProId);
-            ResultStuResponseDto responseDto = new ResultStuResponseDto(yourQuiz, quizOList.size(), quizXList.size());
+            ResultStuResponseDto responseDto = new ResultStuResponseDto(yourQuiz, quizPro.getCorrectNum(), quizPro.getIncorrectNum());
 
             return new ResponseDto("SUCCESS", responseDto);
         }
@@ -100,12 +104,17 @@ public class QuizStuService {
                 QuizStu quizStu = quizStuList.get(i);
                 if (quizStu.getResponse().equals(quizPro.getAnswer())) {
                     quizOList.add(new QuizStuFindResponseDto(quizStu));
+                    quizStu.setMark("O");
                 } else {
                     quizXList.add(new QuizStuFindResponseDto(quizStu));
+                    quizStu.setMark("X");
                 }
             }
 
-            ResultProResponseDto responseDto = new ResultProResponseDto(quizPro, quizOList.size(), quizXList.size(), quizOList, quizXList);
+            if (quizPro.getCorrectNum() == null && quizPro.getIncorrectNum() == null) {
+                quizPro.updateInfo(quizOList.size(), quizXList.size());
+            }
+            ResultProResponseDto responseDto = new ResultProResponseDto(quizPro, quizPro.getCorrectNum(), quizPro.getIncorrectNum(), quizOList, quizXList);
 
             return new ResponseDto("SUCCESS", responseDto);
         }
