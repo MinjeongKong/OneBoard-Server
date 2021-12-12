@@ -250,4 +250,34 @@ public class AttendanceService {
 
         return new ResponseDto("SUCCESS");
     }
+
+    @Transactional
+    public ResponseDto responseAttendanceCheck(String email, Long lectureId, Long lessonId, String session) throws Exception {
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 수업이 없습니다 : id = " + lessonId));
+
+        if(!lesson.getLecture().getId().equals(lectureId)) {
+            throw new IllegalArgumentException("올바른 과목 id와 수업 id가 아닙니다 : lecture id = " + lectureId
+                    + " lesson id = " + lessonId);
+        }
+
+        if(!lesson.getLiveMeeting().getSession().equals(session)) {
+            throw new IllegalArgumentException("올바른 세션이 아닙니다 : session = " + session);
+        }
+
+        Member member = (Member) userDetailsService.loadUserByUsername(email);
+
+        List<Attendance> attendances = attendanceRepository.findAllByMemberIdAndLessonId(member.getId(), lessonId);
+        if(attendances.size() != 1) {
+            // 동일한 학생 & 수업에 대해 출석 데이터가 없거나 2개 이상인 경우
+            throw new Exception("출석 데이터 오류");
+        }
+        attendances.get(0).updateStatus(2);     // 출석 처리
+
+        /*
+         * 강의자가 출석 응답 결과에 대해 비대면 수업 중 확인할 필요가 있나?
+         */
+
+        return new ResponseDto("SUCCESS");
+    }
 }
