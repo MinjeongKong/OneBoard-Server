@@ -82,7 +82,7 @@ public class QuizStuService {
                 quizPro.updateInfo(quizOList.size(), quizXList.size());
             }
             QuizStu yourQuiz = quizStuRepository.findByStudentIdAndQuizProId(student.getId(), quizProId);
-            ResultStuResponseDto responseDto = new ResultStuResponseDto(yourQuiz, quizPro.getCorrectNum(), quizPro.getIncorrectNum());
+            ResultStuResponseDto responseDto = new ResultStuResponseDto(yourQuiz);
 
             return new ResponseDto("SUCCESS", responseDto);
         }
@@ -114,7 +114,7 @@ public class QuizStuService {
             if (quizPro.getCorrectNum() == null && quizPro.getIncorrectNum() == null) {
                 quizPro.updateInfo(quizOList.size(), quizXList.size());
             }
-            ResultProResponseDto responseDto = new ResultProResponseDto(quizPro, quizPro.getCorrectNum(), quizPro.getIncorrectNum(), quizOList, quizXList);
+            ResultProResponseDto responseDto = new ResultProResponseDto(quizPro, quizOList, quizXList);
 
             return new ResponseDto("SUCCESS", responseDto);
         }

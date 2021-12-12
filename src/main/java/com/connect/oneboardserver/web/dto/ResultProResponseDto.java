@@ -21,13 +21,13 @@ public class ResultProResponseDto {
     private List<QuizStuFindResponseDto> quizOList;
     private List<QuizStuFindResponseDto> quizXList;
 
-    public ResultProResponseDto(QuizPro entity, Integer correctNum, Integer incorrectNum, List<QuizStuFindResponseDto> quizOList, List<QuizStuFindResponseDto> quizXList) {
+    public ResultProResponseDto(QuizPro entity, List<QuizStuFindResponseDto> quizOList, List<QuizStuFindResponseDto> quizXList) {
         this.lessonId = entity.getLesson().getId();
         this.lessonTitle = entity.getLesson().getTitle();
         this.quizId = entity.getId();
         this.createdDt = entity.getCreatedDt();
-        this.correctNum = correctNum;
-        this.incorrectNum = incorrectNum;
+        this.correctNum = entity.getCorrectNum();
+        this.incorrectNum = entity.getIncorrectNum();
         this.quizOList = quizOList;
         this.quizXList = quizXList;
     }
