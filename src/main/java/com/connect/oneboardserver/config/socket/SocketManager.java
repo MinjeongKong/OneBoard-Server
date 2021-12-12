@@ -125,4 +125,13 @@ public class SocketManager implements ApplicationListener<ContextClosedEvent> {
             roomClient.sendEvent("attendance request", "response for professor's attendance check request");
         }
     }
+
+    public void sendUnderstandingRequestEvent(String room) {
+        for (SocketIOClient roomClient : mainNamespace.getRoomClients(room)) {
+            if (roomClient.getSessionId().equals(roomHosts.get(room))) {
+                continue;
+            }
+            roomClient.sendEvent("understanding request", "response for professor's understanding check request");
+        }
+    }
 }
