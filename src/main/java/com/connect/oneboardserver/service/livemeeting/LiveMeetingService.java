@@ -48,8 +48,7 @@ public class LiveMeetingService {
         if(!lesson.getLiveMeeting().getSession().equals(session)) {
             throw new IllegalArgumentException("올바른 세션이 아닙니다 : session = " + session);
         }
-        // 종료된 비대면 수업에 대해 강의자는 비대면 수업 초기화 및 입장할 수 있는지 or 강의자도 입장 불가?
-        // 종료된 비대면 수업이 있는 수업의 경우 강의자가 삭제 불가 & 다른 타입으로 수정 불가한지?
+
         if(lesson.getLiveMeeting().getEndDt() != null) {
             throw new Exception("이미 종료된 비대면 수업입니다");
         }
@@ -60,16 +59,10 @@ public class LiveMeetingService {
             if(member.getRoles().get(0).equals("ROLE_S")) {     // 학생
                 throw new Exception("아직 시작되지 않은 비대면 수업입니다");
             } else {    // 강의자
-                /*
-                 * 소켓 생성 및 연결 코드 작성
-                 */
                 lesson.getLiveMeeting().startLiveMeeting();
                 return new ResponseDto("SUCCESS");
             }
         } else {    // 수업 시작 후
-            /*
-             * 소켓 생성 및 연결 코드 작성
-             */
             return new ResponseDto("SUCCESS");
         }
     }
@@ -95,9 +88,6 @@ public class LiveMeetingService {
         Member member = (Member) userDetailsService.loadUserByUsername(email);
 
         if(member.getRoles().get(0).equals("ROLE_T")) {     // 강의자
-            /*
-             *  소켓 연결 종료
-             */
             lesson.getLiveMeeting().closeLiveMeeting();
         }
 

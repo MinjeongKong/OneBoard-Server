@@ -36,11 +36,8 @@ public class SocketService implements ApplicationListener<ContextClosedEvent> {
     }
 
     public void startSocketIOServer() {
-
         addConnectListener();
-
         addInitEventListener();
-
         addDisconnectListener();
 
         server.start();
@@ -50,27 +47,27 @@ public class SocketService implements ApplicationListener<ContextClosedEvent> {
         server.addEventListener("init", InitObject.class, new DataListener<>() {
             @Override
             public void onData(SocketIOClient client, InitObject data, AckRequest ackRequest) {
-                System.out.println("==============================");
-                System.out.println("userType = " + data.getUserType());
-                System.out.println("session = " + data.getRoom());
+//                System.out.println("==============================");
+//                System.out.println("userType = " + data.getUserType());
+//                System.out.println("session = " + data.getRoom());
 
                 mainNamespace.joinRoom(data.getRoom(), client.getSessionId());
 
-                System.out.println("Room :");
-                for (String room : mainNamespace.getRooms()) {
-                    System.out.println("\t" + room);
-                }
-                System.out.println("Room Clients :");
-                for (SocketIOClient roomClient : mainNamespace.getRoomClients(data.getRoom())) {
-                    System.out.println("\t" + roomClient.getSessionId());
-                }
+//                System.out.println("Room :");
+//                for (String room : mainNamespace.getRooms()) {
+//                    System.out.println("\t" + room);
+//                }
+//                System.out.println("Room Clients :");
+//                for (SocketIOClient roomClient : mainNamespace.getRoomClients(data.getRoom())) {
+//                    System.out.println("\t" + roomClient.getSessionId());
+//                }
 
                 if (data.getUserType().equals("T")) {
                     roomHosts.putIfAbsent(data.getRoom(), client.getSessionId());
                 }
-                System.out.println("roomHosts : " + roomHosts);
+//                System.out.println("roomHosts : " + roomHosts);
 
-                client.sendEvent("echo", "userType : " + data.getUserType() + " room : " + data.getRoom());
+//                client.sendEvent("echo", "userType : " + data.getUserType() + " room : " + data.getRoom());
             }
         });
     }
@@ -80,7 +77,7 @@ public class SocketService implements ApplicationListener<ContextClosedEvent> {
             @Override
             public void onConnect(SocketIOClient client) {
                 System.out.println("Socket Connected : " + client.getSessionId());
-                server.getBroadcastOperations().sendEvent("new connection", "new client : " + client.getSessionId());
+//                server.getBroadcastOperations().sendEvent("new connection", "new client : " + client.getSessionId());
             }
         });
     }
