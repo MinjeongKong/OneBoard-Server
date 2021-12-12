@@ -42,6 +42,12 @@ public class QuizPro extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer answer;
 
+    @Column
+    private Integer correctNum;
+
+    @Column
+    private Integer incorrectNum;
+
     @Builder
     public QuizPro(String question, String answer1, String answer2, String answer3, String answer4, String answer5, Integer answer) {
         this.question = question;
@@ -55,6 +61,11 @@ public class QuizPro extends BaseTimeEntity {
 
     public void setLesson(Lesson lesson) {
         this.lesson = lesson;
+    }
+
+    public void updateInfo(Integer correctNum, Integer incorrectNum) {
+        this.correctNum = correctNum;
+        this.incorrectNum = incorrectNum;
     }
 
     public String getAnswerStr(Integer answerNum) {

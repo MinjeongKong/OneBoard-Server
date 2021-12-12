@@ -22,7 +22,7 @@ public class ResultStuResponseDto {
     private Integer incorrectNum;
 
     @Builder
-    public ResultStuResponseDto(QuizStu entity, Integer correctNum, Integer incorrectNum) {
+    public ResultStuResponseDto(QuizStu entity) {
         this.lessonId = entity.getQuizPro().getLesson().getId();
         this.lessonTitle = entity.getQuizPro().getLesson().getTitle();
         this.quizId = entity.getQuizPro().getId();
@@ -31,7 +31,7 @@ public class ResultStuResponseDto {
         this.yourAnswerStr = entity.getQuizPro().getAnswerStr(yourAnswerNum);
         this.correctAnswerNum = entity.getQuizPro().getAnswer();
         this.correctAnswerStr = entity.getQuizPro().getAnswerStr(correctAnswerNum);
-        this.correctNum = correctNum;
-        this.incorrectNum = incorrectNum;
+        this.correctNum = entity.getQuizPro().getCorrectNum();
+        this.incorrectNum = entity.getQuizPro().getIncorrectNum();
     }
 }
