@@ -1,6 +1,7 @@
 package com.connect.oneboardserver.service.quiz;
 
 import com.connect.oneboardserver.config.security.JwtTokenProvider;
+import com.connect.oneboardserver.config.socket.SocketService;
 import com.connect.oneboardserver.domain.login.Member;
 import com.connect.oneboardserver.domain.quiz.QuizPro;
 import com.connect.oneboardserver.domain.quiz.QuizProRepository;
@@ -26,9 +27,10 @@ public class QuizStuService {
     private final QuizStuRepository quizStuRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
+    private final SocketService socketService;
 
     @Transactional
-    public ResponseDto createQuizStu(Long lectureId, Long lessonId, Long quizProId, ServletRequest request, QuizStuCreateRequestDto requestDto) {
+    public ResponseDto createQuizStu(Long lectureId, Long lessonId, Long quizProId, String session, ServletRequest request, QuizStuCreateRequestDto requestDto) {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
         Member student = (Member) userDetailsService.loadUserByUsername(jwtTokenProvider.getUserPk(token));
 
@@ -43,6 +45,7 @@ public class QuizStuService {
             quizStu.setStudent(student);
 
             quizStuRepository.save(quizStu);
+            socketService.sendQuizResponseEvent(session);
             QuizStuResponseDto responseDto = new QuizStuResponseDto(quizStu);
 
             return new ResponseDto("SUCCESS", responseDto);

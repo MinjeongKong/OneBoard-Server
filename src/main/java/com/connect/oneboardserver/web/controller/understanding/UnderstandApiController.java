@@ -19,8 +19,9 @@ public class UnderstandApiController {
 
     //이해도 평가 요청 (강의자)
     @GetMapping("/lecture/{lectureId}/lesson/{lessonId}/live/understanding/professor")
-    public ResponseDto createUnderstandPro(@PathVariable Long lectureId, @PathVariable Long lessonId) {
-        return understandProService.createUnderstandPro(lectureId, lessonId);
+    public ResponseDto createUnderstandPro(@PathVariable Long lectureId, @PathVariable Long lessonId,
+                                           @RequestParam("session") String session) {
+        return understandProService.createUnderstandPro(lectureId, lessonId, session);
     }
 
     //이해도 평가 결과 확인 (강의자)
@@ -32,7 +33,8 @@ public class UnderstandApiController {
     //이해도 평가 응답 (학생)
     @PostMapping("/lecture/{lectureId}/lesson/{lessonId}/live/understanding/{understandId}/student")
     public ResponseDto createUnderstandStu(@PathVariable Long lectureId, @PathVariable Long lessonId, @PathVariable Long understandId,
-                                           ServletRequest request, @RequestBody UnderstandStuCreateRequestDto requestDto) {
-        return understandStuService.createUnderstandStu(lectureId, lessonId, understandId, request, requestDto);
+                                           @RequestParam("session") String session, ServletRequest request,
+                                           @RequestBody UnderstandStuCreateRequestDto requestDto) {
+        return understandStuService.createUnderstandStu(lectureId, lessonId, understandId, session, request, requestDto);
     }
 }

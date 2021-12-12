@@ -22,15 +22,16 @@ public class QuizApiController {
 
     //퀴즈 출제 (강의자)
     @PostMapping("/lecture/{lectureId}/lesson/{lessonId}/live/quiz/professor")
-    public ResponseDto createQuizPro(@PathVariable Long lectureId, @PathVariable Long lessonId, @RequestBody QuizProCreateRequestDto requestDto) {
-        return quizProService.createQuizPro(lectureId, lessonId, requestDto);
+    public ResponseDto createQuizPro(@PathVariable Long lectureId, @PathVariable Long lessonId,
+                                     @RequestParam("session") String session, @RequestBody QuizProCreateRequestDto requestDto) {
+        return quizProService.createQuizPro(lectureId, lessonId, session, requestDto);
     }
 
     //퀴즈 응답 (학생)
     @PostMapping("/lecture/{lectureId}/lesson/{lessonId}/live/quiz/{quizId}/student")
     public ResponseDto createQuizStu(@PathVariable Long lectureId, @PathVariable Long lessonId, @PathVariable Long quizId,
-                                     ServletRequest request, @RequestBody QuizStuCreateRequestDto requestDto) {
-        return quizStuService.createQuizStu(lectureId, lessonId, quizId, request, requestDto);
+                                     @RequestParam("session") String session, ServletRequest request, @RequestBody QuizStuCreateRequestDto requestDto) {
+        return quizStuService.createQuizStu(lectureId, lessonId, quizId, session, request, requestDto);
     }
 
     //퀴즈 결과 확인 (강의자)

@@ -1,5 +1,6 @@
 package com.connect.oneboardserver.service.quiz;
 
+import com.connect.oneboardserver.config.socket.SocketService;
 import com.connect.oneboardserver.domain.lecture.lesson.Lesson;
 import com.connect.oneboardserver.domain.lecture.lesson.LessonRepository;
 import com.connect.oneboardserver.domain.quiz.QuizPro;
@@ -18,9 +19,10 @@ public class QuizProService {
 
     private final QuizProRepository quizProRepository;
     private final LessonRepository lessonRepository;
+    private final SocketService socketService;
 
     @Transactional
-    public ResponseDto createQuizPro(Long lectureId, Long lessonId, QuizProCreateRequestDto requestDto) {
+    public ResponseDto createQuizPro(Long lectureId, Long lessonId, String session, QuizProCreateRequestDto requestDto) {
         Lesson lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(()->new IllegalArgumentException("해당 수업이 없습니다. id="+lessonId));
 
@@ -31,6 +33,7 @@ public class QuizProService {
             quizPro.setLesson(lesson);
 
             quizProRepository.save(quizPro);
+            socketService.sendQuizRequestEvent(session);
             QuizProResponseDto responseDto = new QuizProResponseDto(quizPro);
 
             return new ResponseDto("SUCCESS", responseDto);

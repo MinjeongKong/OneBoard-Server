@@ -1,6 +1,7 @@
 package com.connect.oneboardserver.service.understanding;
 
 import com.connect.oneboardserver.config.security.JwtTokenProvider;
+import com.connect.oneboardserver.config.socket.SocketService;
 import com.connect.oneboardserver.domain.lecture.LectureRepository;
 import com.connect.oneboardserver.domain.lecture.lesson.LessonRepository;
 import com.connect.oneboardserver.domain.login.Member;
@@ -29,12 +30,13 @@ public class UnderstandStuService {
 
     private final UnderstandProRepository understandProRepository;
     private final UnderstandStuRepository understandStuRepository;
+    private final SocketService socketService;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
 
     @Transactional
-    public ResponseDto createUnderstandStu(Long lectureId, Long lessonId,
-                                           Long understandProId, ServletRequest request, UnderstandStuCreateRequestDto requestDto) {
+    public ResponseDto createUnderstandStu(Long lectureId, Long lessonId, Long understandProId,
+                                           String session, ServletRequest request, UnderstandStuCreateRequestDto requestDto) {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
         Member student = (Member) userDetailsService.loadUserByUsername(jwtTokenProvider.getUserPk(token));
 
@@ -49,6 +51,7 @@ public class UnderstandStuService {
             understandStu.setStudent(student);
 
             understandStuRepository.save(understandStu);
+            socketService.sendUnderstandingResponseEvent(session);
             UnderstandStuResponseDto responseDto = new UnderstandStuResponseDto(understandStu);
 
             return new ResponseDto("SUCCESS", responseDto);
