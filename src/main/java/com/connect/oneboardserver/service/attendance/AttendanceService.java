@@ -274,10 +274,6 @@ public class AttendanceService {
         }
         attendances.get(0).updateStatus(2);     // 출석 처리
 
-        /*
-         * 강의자가 출석 응답 결과에 대해 비대면 수업 중 확인할 필요가 있나?
-         */
-
         return new ResponseDto("SUCCESS");
     }
 }
