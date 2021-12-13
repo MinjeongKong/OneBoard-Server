@@ -19,12 +19,22 @@ public class UnderstandPro extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @ManyToOne
     private Lesson lesson;
+
+    @Column
+    private Integer yes;
+
+    @Column
+    private Integer no;
 
     @Builder
     public UnderstandPro(Lesson lesson) {
         this.lesson = lesson;
+    }
+
+    public void updateInfo(Integer yes, Integer no) {
+        this.yes = yes;
+        this.no = no;
     }
 }
