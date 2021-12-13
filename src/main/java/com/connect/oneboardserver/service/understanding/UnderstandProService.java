@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 
 @RequiredArgsConstructor
 @Service
@@ -34,9 +35,10 @@ public class UnderstandProService {
                     .lesson(lesson).build();
             understandProRepository.save(understandPro);
 
-            socketService.sendUnderstandingRequestEvent(session);
-
             UnderstandProResponseDto responseDto = new UnderstandProResponseDto(understandPro);
+
+            socketService.sendUnderstandingRequestEvent(session, responseDto);
+
             return new ResponseDto("SUCCESS", responseDto);
         }
 

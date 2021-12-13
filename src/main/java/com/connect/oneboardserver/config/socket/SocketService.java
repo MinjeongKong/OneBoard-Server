@@ -155,12 +155,13 @@ public class SocketService implements ApplicationListener<ContextClosedEvent> {
         }
     }
 
-    public void sendUnderstandingRequestEvent(String room) {
+    public void sendUnderstandingRequestEvent(String room, Object data) {
         for (SocketIOClient roomClient : mainNamespace.getRoomClients(room)) {
             if (roomClient.getSessionId().equals(roomHosts.get(room))) {
                 continue;
             }
-            roomClient.sendEvent(EVENT_NAME_REQ_UNDERSTANDING, "professor's understanding check request");
+//            roomClient.sendEvent(EVENT_NAME_REQ_UNDERSTANDING, "professor's understanding check request");
+            roomClient.sendEvent(EVENT_NAME_REQ_UNDERSTANDING, data);
         }
     }
 
@@ -174,6 +175,7 @@ public class SocketService implements ApplicationListener<ContextClosedEvent> {
                 continue;
             }
             roomClient.sendEvent(EVENT_NAME_REQ_QUIZ, "professor's quiz request");
+//            roomClient.sendEvent(EVENT_NAME_REQ_QUIZ, data);
         }
     }
 
