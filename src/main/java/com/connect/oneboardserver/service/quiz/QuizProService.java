@@ -8,6 +8,7 @@ import com.connect.oneboardserver.domain.quiz.QuizProRepository;
 import com.connect.oneboardserver.web.dto.ResponseDto;
 import com.connect.oneboardserver.web.dto.quiz.QuizProCreateRequestDto;
 import com.connect.oneboardserver.web.dto.quiz.QuizProResponseDto;
+import com.connect.oneboardserver.web.dto.quiz.QuizSocketRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class QuizProService {
             quizPro.setLesson(lesson);
 
             quizProRepository.save(quizPro);
-            socketService.sendQuizRequestEvent(session);
+            socketService.sendQuizRequestEvent(session, new QuizSocketRequestDto(quizPro));
             QuizProResponseDto responseDto = new QuizProResponseDto(quizPro);
 
             return new ResponseDto("SUCCESS", responseDto);
