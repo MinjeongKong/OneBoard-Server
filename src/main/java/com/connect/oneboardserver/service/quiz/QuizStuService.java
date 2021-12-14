@@ -63,23 +63,21 @@ public class QuizStuService {
         if (!(quizPro.getLesson().getId().equals(lessonId) && quizPro.getLesson().getLecture().getId().equals(lectureId))) {
             return new ResponseDto("FAIL");
         } else {
-            if (quizPro.getCorrectNum() == null && quizPro.getIncorrectNum() == null) {
-                List<QuizStu> quizStuList = quizStuRepository.findAllByQuizProId(quizProId);
-                List<QuizStuFindResponseDto> quizOList = new ArrayList<>();
-                List<QuizStuFindResponseDto> quizXList = new ArrayList<>();
+            List<QuizStu> quizStuList = quizStuRepository.findAllByQuizProId(quizProId);
+            List<QuizStuFindResponseDto> quizOList = new ArrayList<>();
+            List<QuizStuFindResponseDto> quizXList = new ArrayList<>();
 
-                for (int i = 0; i < quizStuList.size(); i++) {
-                    QuizStu quizStu = quizStuList.get(i);
-                    if (quizStu.getResponse().equals(quizPro.getAnswer())) {
-                        quizOList.add(new QuizStuFindResponseDto(quizStu));
-                        quizStu.setMark("O");
-                    } else {
-                        quizXList.add(new QuizStuFindResponseDto(quizStu));
-                        quizStu.setMark("X");
-                    }
+            for (int i = 0; i < quizStuList.size(); i++) {
+                QuizStu quizStu = quizStuList.get(i);
+                if (quizStu.getResponse().equals(quizPro.getAnswer())) {
+                    quizOList.add(new QuizStuFindResponseDto(quizStu));
+                    quizStu.setMark("O");
+                } else {
+                    quizXList.add(new QuizStuFindResponseDto(quizStu));
+                    quizStu.setMark("X");
                 }
-                quizPro.updateInfo(quizOList.size(), quizXList.size());
             }
+            quizPro.updateInfo(quizOList.size(), quizXList.size());
 
             QuizStu yourQuiz = quizStuRepository.findByStudentIdAndQuizProId(student.getId(), quizProId);
             if (yourQuiz == null) {
@@ -116,9 +114,7 @@ public class QuizStuService {
                 }
             }
 
-            if (quizPro.getCorrectNum() == null && quizPro.getIncorrectNum() == null) {
-                quizPro.updateInfo(quizOList.size(), quizXList.size());
-            }
+            quizPro.updateInfo(quizOList.size(), quizXList.size());
             ResultProResponseDto responseDto = new ResultProResponseDto(quizPro, quizOList, quizXList);
 
             return new ResponseDto("SUCCESS", responseDto);
