@@ -46,6 +46,8 @@ Java (JDK 11), Spring Boot (v2.5.5), Junit5, MySQL (v5.7.36), Socket.io, Naver C
 
 ## 테이블 구조
 
+<img width="800" alt="ERD" src="https://user-images.githubusercontent.com/41173401/171562696-1aee5a86-ca9d-4d43-afd4-59caabdf34c6.png">
+
 ## API
 
 ```
