@@ -1,6 +1,6 @@
 # OneBoard
 
-21년 2학기 아주대 SW 캡스톤디자인 수업 OneBoard 프로젝트의 백엔드 서버 repository 입니다.
+21년 2학기 SW 캡스톤디자인 수업 OneBoard 프로젝트의 백엔드 서버 repository 입니다.
 
 ## 개요
 
